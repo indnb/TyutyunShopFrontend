@@ -1,1 +1,1 @@
-# TyutyunShop - krut`
+TYUTYUN_SHOP

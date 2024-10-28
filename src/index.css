@@ -1,0 +1,117 @@
+@media (max-width: 991.98px) {
+  .offcanvas-collapse {
+    position: fixed;
+    top: 56px; /* Height of navbar */
+    bottom: 0;
+    left: 100%;
+    width: 100%;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    overflow-y: auto;
+    visibility: hidden;
+    background-color: #1a1a1a; /* Dark black for offcanvas */
+    transition: transform 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
+  .offcanvas-collapse.open {
+    visibility: visible;
+    transform: translateX(-100%);
+  }
+}
+
+.bg-custom-light {
+  background-color: #ff9800; /* Bright orange */
+}
+
+.bg-dim {
+  background-color: rgba(0, 0, 0, 0.8); /* Dark black with opacity */
+}
+
+.cover {
+  object-fit: cover;
+}
+
+.opacity-6 {
+  opacity: 0.6;
+}
+
+.opacity-5 {
+  opacity: 0.5;
+}
+
+.image-vertical-scroller {
+  overflow-y: auto;
+  max-height: 460px;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar */
+}
+
+.image-vertical-scroller::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for WebKit */
+}
+
+.h-scroller {
+  position: relative;
+  z-index: 2;
+  height: 3.75rem;
+  overflow-y: hidden;
+}
+
+.h-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-bottom: 1rem;
+  margin-top: -1px;
+  overflow-x: auto;
+  color: rgba(255, 153, 0, 0.75); /* Light orange text with opacity */
+  text-align: center;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.h-underline .h-link {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  font-size: .875rem;
+  color: #ffcc80; /* Soft orange */
+}
+.footer {
+  color: #FFA500; /* Orange color for text */
+  background-color: #1a1a1a; /* Dark background */
+}
+
+.footer-section {
+  margin-bottom: 10px;
+}
+
+.footer-logo img {
+  width: 80px;
+  height: auto;
+}
+
+.footer-email-prefix,
+.footer-workinghours-prefix,
+.footer-paymentoptions-prefix {
+  font-weight: bold;
+  color: #FFA500;
+}
+
+.payment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.payment-list li {
+  margin: 5px 0;
+  color: #FFA500;
+}
+
+.footer-delivery {
+  color: #FFA500;
+  font-size: 0.9rem;
+}
+
+.text-orange {
+  color: #FFA500;
+}
