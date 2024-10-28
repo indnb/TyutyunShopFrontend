@@ -1,96 +1,101 @@
+// src/products/detail/ProductDetail.js
+
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
-import './ProductDetail.css';
+import axios from 'axios';
 
 function ProductDetail() {
   const { slug } = useParams();
-  const { addItem } = useContext(CartContext);
   const [product, setProduct] = useState(null);
-  const [selectedImage, setSelectedImage] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const { addItem } = useContext(CartContext);
+
+  const [selectedImage, setSelectedImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    const data = {
-      id: 1,
-      name: 'Футболка Tyutyun',
-      price: 500,
-      images: ['https://via.placeholder.com/400x400?text=Футболка+Tyutyun', 'https://via.placeholder.com/400x400?text=Інше+Фото'],
-      description: 'Опис товару...',
-      sizes: ['S', 'M', 'L', 'XL'],
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`/products/${slug}`);
+        setProduct(response.data);
+        // Set the initial selected image
+        if (response.data.images && response.data.images.length > 0) {
+          setSelectedImage(response.data.images[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching product', error);
+      }
     };
-    setProduct(data);
-    setSelectedImage(data.images[0]);
-    setSelectedSize(data.sizes[0]);
+    fetchProduct();
   }, [slug]);
 
-
-  const addToCart = () => {
-    if (!selectedSize) {
-      alert('Будь ласка, оберіть розмір');
-      return;
-    }
-
-    addItem({
+  const handleAddToCart = () => {
+    const itemToAdd = {
       ...product,
-      quantity: parseInt(quantity),
-      size: selectedSize
-    });
+      quantity,
+      size: selectedSize,
+    };
+    addItem(itemToAdd);
   };
 
-  if (!product) return <div>Завантаження...</div>;
+  if (!product) return <div>Loading...</div>;
 
   return (
-      <div className="product-detail container mt-5 py-4 px-xl-5">
-        <h1 className="text-orange text-center">{product.name}</h1>
-        <div className="product-content row justify-content-center">
-          <div className="col-md-6 text-center">
-            <img src={selectedImage} alt={product.name} className="main-image" />
-            <div className="thumbnail-images d-flex justify-content-center mt-3">
-              {product.images.map((image) => (
-                  <img
-                      key={image}
-                      src={image}
-                      alt={product.name}
-                      className="thumbnail"
-                      onClick={() => setSelectedImage(image)}
-                  />
-              ))}
+      <div className="product-detail">
+        <h1>{product.name}</h1>
+
+        {/* Display selected image */}
+        {selectedImage && (
+            <div className="selected-image">
+              <img src={selectedImage} alt={product.name} />
             </div>
-          </div>
-          <div className="col-md-6 product-info">
-            <p className="text-orange">Ціна: {product.price} грн</p>
-            <div className="mb-3">
-              <label>Розмір:</label>
+        )}
+
+        {/* Thumbnail images to select */}
+        <div className="image-thumbnails">
+          {product.images && product.images.map((image, index) => (
+              <img
+                  key={index}
+                  src={image}
+                  alt={`${product.name} ${index}`}
+                  onClick={() => setSelectedImage(image)}
+                  className={selectedImage === image ? 'active' : ''}
+              />
+          ))}
+        </div>
+
+        {/* Size selection */}
+        {product.sizes && product.sizes.length > 0 && (
+            <div className="size-selection">
+              <label htmlFor="size">Розмір:</label>
               <select
-                  className="form-select mt-1"
+                  id="size"
                   value={selectedSize}
                   onChange={(e) => setSelectedSize(e.target.value)}
               >
+                <option value="">Виберіть розмір</option>
                 {product.sizes.map((size) => (
-                    <option key={size} value={size}>
-                      {size}
-                    </option>
+                    <option key={size} value={size}>{size}</option>
                 ))}
               </select>
             </div>
-            <div className="mb-3">
-              <label>Кількість:</label>
-              <input
-                  type="number"
-                  value={quantity}
-                  min="1"
-                  onChange={(e) => setQuantity(e.target.value)}
-                  className="form-control mt-1"
-              />
-            </div>
-            <button onClick={addToCart} className="btn btn-orange mt-3">
-              Додати в кошик
-            </button>
-            <p className="mt-4">{product.description}</p>
-          </div>
+        )}
+
+        {/* Quantity selection */}
+        <div className="quantity-selection">
+          <label htmlFor="quantity">Кількість:</label>
+          <input
+              id="quantity"
+              type="number"
+              value={quantity}
+              min="1"
+              onChange={(e) => setQuantity(parseInt(e.target.value))}
+          />
         </div>
+
+        {/* Add to cart button */}
+        <button onClick={handleAddToCart}>Додати в кошик</button>
       </div>
   );
 }
