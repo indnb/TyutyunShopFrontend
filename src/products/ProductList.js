@@ -1,167 +1,95 @@
-import { Link } from "react-router-dom";
-import Product from "./Product";
-import ProductH from "./ProductH";
+// ProductList.js
+
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useParams, Link } from "react-router-dom";
 import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
 
-
-
-const brands = ["Apple", "Samsung", "Google", "HTC"];
-
-const manufacturers = ["HOCO", "Nillkin", "Remax", "Baseus"];
-
-
 function ProductList() {
-  const [viewType, setViewType] = useState({ grid: true });
+    const { category } = useParams();
 
-  function changeViewType() {
-    setViewType({
-      grid: !viewType.grid,
-    });
-  }
+    const categoryNames = {
+        caps: "Кепки",
+        hoodie: "Худі",
+        "t-shirts": "Футболки",
+    };
 
-  return (
-    <div className="container mt-5 py-4 px-xl-5">
-      <ScrollToTopOnMount />
-      <nav aria-label="breadcrumb" className="bg-custom-light rounded">
-        <ol className="breadcrumb p-3 mb-0">
-          <li className="breadcrumb-item">
-            <Link
-              className="text-decoration-none link-secondary"
-              to="/products"
-              replace
-            >
-              All Prodcuts
-            </Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            Cases &amp; Covers
-          </li>
-        </ol>
-      </nav>
+    const categoryDisplayName = categoryNames[category] || "Усі товари";
 
-      <div className="row mb-3 d-block d-lg-none">
-        <div className="col-12">
-          <div id="accordionFilter" className="accordion shadow-sm">
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingOne">
-                <button
-                  className="accordion-button fw-bold collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseFilter"
-                  aria-expanded="false"
-                  aria-controls="collapseFilter"
-                >
-                  Filter Products
-                </button>
-              </h2>
-            </div>
-            <div
-              id="collapseFilter"
-              className="accordion-collapse collapse"
-              data-bs-parent="#accordionFilter"
-            >
-            </div>
-          </div>
-        </div>
-      </div>
+    const products = [
+        {
+            id: 1,
+            name: "Футболка Tyutyun",
+            price: 500,
+            image: "https://via.placeholder.com/200x200?text=Футболка+Tyutyun",
+            slug: "tyutyun-tshirt",
+        },
+        {
+            id: 2,
+            name: "Кепка Tyutyun",
+            price: 300,
+            image: "https://via.placeholder.com/200x200?text=Кепка+Tyutyun",
+            slug: "tyutyun-cap",
+        },
+        {
+            id: 3,
+            name: "Худі Tyutyun",
+            price: 800,
+            image: "https://via.placeholder.com/200x200?text=Худі+Tyutyun",
+            slug: "tyutyun-hoodie",
+        },
+        {
+            id: 4,
+            name: "Худі Tyutyun",
+            price: 800,
+            image: "https://via.placeholder.com/200x200?text=Худі+Tyutyun",
+            slug: "tyutyun-hoodie",
+        },
+        {
+            id: 5,
+            name: "Худі Tyutyun",
+            price: 800,
+            image: "https://via.placeholder.com/200x200?text=Худі+Tyutyun",
+            slug: "tyutyun-hoodie",
+        },
+        {
+            id: 6,
+            name: "Худі Tyutyun",
+            price: 800,
+            image: "https://via.placeholder.com/200x200?text=Худі+Tyutyun",
+            slug: "tyutyun-hoodie",
+        }
+    ];
 
-      <div className="row mb-4 mt-lg-3">
-        <div className="col-lg-9">
-          <div className="d-flex flex-column h-100">
-            <div className="row mb-3">
-              <div className="col-lg-3 d-none d-lg-block">
-                <select
-                  className="form-select"
-                  aria-label="Default select example"
-                  defaultValue=""
-                >
-                  <option value="">All Models</option>
-                  <option value="1">iPhone X</option>
-                  <option value="2">iPhone Xs</option>
-                  <option value="3">iPhone 11</option>
-                </select>
-              </div>
-              <div className="col-lg-9 col-xl-5 offset-xl-4 d-flex flex-row">
-                <div className="input-group">
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder="Search products..."
-                    aria-label="search input"
-                  />
-                  <button className="btn btn-outline-dark">
-                    <FontAwesomeIcon icon={["fas", "search"]} />
-                  </button>
+    return (
+        <div className="container mt-5 py-4 px-xl-5">
+            <ScrollToTopOnMount />
+            <div className="row mb-4 mt-lg-3">
+                <div className="col-12">
+                    <h2 className="text-center text-orange">{categoryDisplayName}</h2>
+                    <div className="row justify-content-center">
+                        {products.map((product) => (
+                            <div key={product.id} className="col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
+                                <div className="card h-100 border-0 shadow-sm">
+                                    <Link to={`/products/${product.slug}`} className="text-decoration-none">
+                                        <img
+                                            src={product.image}
+                                            alt={product.name}
+                                            className="card-img-top"
+                                            style={{ objectFit: "cover", height: "200px", width: "200px" }}
+                                        />
+                                        <div className="card-body text-center">
+                                            <h5 className="card-title text-dark">{product.name}</h5>
+                                            <p className="card-text text-orange">{product.price} грн</p>
+                                        </div>
+                                    </Link>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <button
-                  className="btn btn-outline-dark ms-2 d-none d-lg-inline"
-                  onClick={changeViewType}
-                >
-                  <FontAwesomeIcon
-                    icon={["fas", viewType.grid ? "th-list" : "th-large"]}
-                  />
-                </button>
-              </div>
             </div>
-            <div
-              className={
-                "row row-cols-1 row-cols-md-2 row-cols-lg-2 g-3 mb-4 flex-shrink-0 " +
-                (viewType.grid ? "row-cols-xl-3" : "row-cols-xl-2")
-              }
-            >
-              {Array.from({ length: 10 }, (_, i) => {
-                if (viewType.grid) {
-                  return (
-                    <Product key={i} percentOff={i % 2 === 0 ? 15 : null} />
-                  );
-                }
-                return (
-                  <ProductH key={i} percentOff={i % 4 === 0 ? 15 : null} />
-                );
-              })}
-            </div>
-            <div className="d-flex align-items-center mt-auto">
-              <span className="text-muted small d-none d-md-inline">
-                Showing 10 of 100
-              </span>
-              <nav aria-label="Page navigation example" className="ms-auto">
-                <ul className="pagination my-0">
-                  <li className="page-item">
-                    <a className="page-link" href="!#">
-                      Previous
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="!#">
-                      1
-                    </a>
-                  </li>
-                  <li className="page-item active">
-                    <a className="page-link" href="!#">
-                      2
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="!#">
-                      3
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="!#">
-                      Next
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default ProductList;

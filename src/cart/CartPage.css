@@ -1,0 +1,130 @@
+/* CartPage.css */
+
+/* Общие стили страницы корзины */
+.cart-page {
+    padding: 20px;
+    color: #FFA500;
+    background-color: #1c1c1c;
+}
+
+/* Заголовок корзины */
+.cart-page h1 {
+    text-align: center;
+    color: #FFA500;
+    margin-bottom: 20px;
+}
+
+/* Кнопка очистки корзины */
+.clear-cart-button {
+    background-color: #FFA500;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+    margin-bottom: 20px;
+}
+
+.clear-cart-button:hover {
+    background-color: #ffcc66;
+}
+
+/* Таблица товаров */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.cart-table th,
+.cart-table td {
+    border: 1px solid #FFA500;
+    padding: 12px;
+    text-align: center;
+    color: #FFA500;
+}
+
+.cart-table th {
+    background-color: #333;
+}
+
+.cart-table td {
+    background-color: #1c1c1c;
+}
+
+/* Стиль блока оформления покупки */
+.purchase-block {
+    background-color: #1c1c1c;
+    border: 1px solid #FFA500;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    color: #FFA500;
+}
+
+/* Заголовок блока оформления */
+.purchase-block h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #FFA500;
+}
+
+/* Поля формы */
+.purchase-block label {
+    display: block;
+    margin-bottom: 5px;
+    color: #FFA500;
+}
+
+.purchase-block input[type="text"],
+.purchase-block input[type="email"],
+.purchase-block input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #FFA500;
+    background-color: #333;
+    color: #FFA500;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.purchase-block input[type="text"]:focus,
+.purchase-block input[type="email"]:focus,
+.purchase-block input[type="tel"]:focus {
+    outline: none;
+    border-color: #ffcc66;
+    background-color: #2a2a2a;
+}
+
+/* Кнопки подтверждения и отмены */
+.purchase-block button[type="submit"],
+.purchase-block button[type="button"] {
+    background-color: #FFA500;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    width: calc(50% - 5px);
+}
+
+.purchase-block button[type="submit"]:hover,
+.purchase-block button[type="button"]:hover {
+    background-color: #ffcc66;
+}
+
+.purchase-block button[type="button"] {
+    background-color: #555;
+}
+
+.purchase-block button[type="button"]:hover {
+    background-color: #777;
+}

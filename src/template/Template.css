@@ -1,0 +1,53 @@
+/* template/Template.css */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #FFA500;
+}
+
+.template header,
+.template footer {
+    background-color: #000;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.template .logo a {
+    color: #FFA500;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.template nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.template nav ul li {
+    margin-right: 20px;
+}
+
+.template nav ul li a {
+    color: #FFA500;
+    text-decoration: none;
+}
+
+.template .user-actions a {
+    color: #FFA500;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+.template main {
+    padding: 20px;
+}
+
+.template footer {
+    text-align: center;
+}

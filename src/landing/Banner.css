@@ -1,0 +1,8 @@
+.carousel-indicator {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-indicator.active {
+    background-color: #FFA500 !important;
+}

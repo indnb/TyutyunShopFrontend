@@ -1,0 +1,37 @@
+/* admin/AdminPage.css */
+
+.admin-page {
+    color: #FFA500;
+}
+
+.admin-page h1,
+.admin-page h2 {
+    text-align: center;
+}
+
+.admin-page button {
+    background-color: #FFA500;
+    color: #000;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.admin-table th,
+.admin-table td {
+    border: 1px solid #FFA500;
+    padding: 10px;
+    text-align: center;
+}
+
+.admin-table img {
+    width: 50px;
+    height: auto;
+}

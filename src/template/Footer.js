@@ -1,4 +1,5 @@
 import React from "react";
+import tyutyun_logo from "./tyutyun-logo.png";
 
 function Footer() {
     return (
@@ -6,7 +7,7 @@ function Footer() {
             <div className="container d-flex flex-column align-items-center text-center text-orange">
                 <div className="footer-section">
                     <div className="footer-logo">
-                        <img src="tyutyun_logo" alt="Tyutyun Shop Logo" />
+                        <img src={tyutyun_logo} alt="Tyutyun Shop Logo" />
                     </div>
                 </div>
 

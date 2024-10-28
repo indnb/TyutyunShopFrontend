@@ -1,0 +1,50 @@
+.navbar {
+    background-color: #1a1a1a; /* Dark background */
+}
+
+.navbar-brand {
+    color: #FFA500 !important; /* Orange color */
+}
+
+.text-orange {
+    color: #FFA500 !important;
+}
+
+.btn-outline-orange {
+    border-color: #FFA500;
+    color: #FFA500;
+}
+
+.btn-outline-orange:hover {
+    background-color: #FFA500;
+    color: #1a1a1a;
+}
+
+.bg-dark {
+    background-color: #1a1a1a !important;
+}
+
+.bg-orange {
+    background-color: #FFA500 !important;
+    color: #1a1a1a !important;
+}
+
+.border-bottom-orange {
+    border-bottom: 2px solid #FFA500;
+}
+
+.border-orange {
+    border-color: #FFA500 !important;
+}
+
+.dropdown-menu {
+    background-color: #1a1a1a !important;
+}
+
+.nav-link {
+    color: #FFA500 !important;
+}
+
+.nav-link:hover {
+    color: #ffffff !important;
+}

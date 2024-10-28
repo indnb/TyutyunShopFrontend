@@ -1,0 +1,14 @@
+.text-orange {
+    color: #FFA500;
+}
+
+.btn-outline-orange {
+    border-color: #FFA500;
+    color: #FFA500;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-outline-orange:hover {
+    background-color: #FFA500;
+    color: #1a1a1a;
+}

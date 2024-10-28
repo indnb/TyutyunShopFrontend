@@ -1,0 +1,60 @@
+/* products/ProductList.css */
+
+.product-list h1 {
+    text-align: center;
+    color: #FFA500;
+}
+
+.products-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-card {
+    background-color: #000;
+    border: 1px solid #FFA500;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 200px;
+    min-height: 350px; /* Минимальная высота карточки для выравнивания */
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+}
+
+
+.product-card-body {
+    min-height: 100px; /* Устанавливаем фиксированную высоту для блока с текстом */
+}
+
+
+.product-card h2,
+.product-card p {
+    color: #FFA500;
+}
+/* ProductList.css */
+
+.text-orange {
+    color: #FFA500;
+}
+
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    width: 100%;
+    height: auto;
+}
