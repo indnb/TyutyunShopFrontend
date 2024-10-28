@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from '../../axiosConfig';
 import { CartContext } from '../../context/CartContext';
-import axios from 'axios';
 
 function ProductDetail() {
-  const { slug } = useParams();
+  const { id } = useParams(); // Предполагая, что в маршруте используется `:id`
   const [product, setProduct] = useState(null);
   const { addItem } = useContext(CartContext);
 
@@ -17,18 +17,17 @@ function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`/products/${slug}`);
+        const response = await axios.get(`/product/${id}`);
         setProduct(response.data);
-        // Set the initial selected image
         if (response.data.images && response.data.images.length > 0) {
           setSelectedImage(response.data.images[0]);
         }
       } catch (error) {
-        console.error('Error fetching product', error);
+        console.error('Ошибка при получении продукта', error);
       }
     };
     fetchProduct();
-  }, [slug]);
+  }, [id]);
 
   const handleAddToCart = () => {
     const itemToAdd = {
@@ -39,7 +38,7 @@ function ProductDetail() {
     addItem(itemToAdd);
   };
 
-  if (!product) return <div>Loading...</div>;
+  if (!product) return <div>Загрузка...</div>;
 
   return (
       <div className="product-detail">

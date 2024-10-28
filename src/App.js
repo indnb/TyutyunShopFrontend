@@ -11,6 +11,7 @@ import LoginPage from './Auth/LoginPage';
 import RegisterPage from './Auth/RegisterPage';
 import UserProfile from './user/UserProfile';
 import AdminPage from './admin/AdminPage';
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
     return (
@@ -22,8 +23,8 @@ function App() {
                 <Route path="/cart" component={CartPage} />
                 <Route path="/login" component={LoginPage} />
                 <Route path="/register" component={RegisterPage} />
-                <Route path="/user/profile" component={UserProfile} />
                 <Route path="/admin" component={AdminPage} />
+                <PrivateRoute path="/user/profile" component={UserProfile} />
             </Switch>
         </Template>
     );

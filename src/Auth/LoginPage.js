@@ -1,13 +1,26 @@
+// src/Auth/LoginPage.js
+
 import React, { useState } from 'react';
+import axios from '../axiosConfig';
+import { useHistory } from 'react-router-dom';
 import './Auth.css';
 
 function LoginPage() {
     const [emailOrUsername, setEmailOrUsername] = useState('');
     const [password, setPassword] = useState('');
+    const history = useHistory();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Логіка відправки даних на сервер
+        try {
+            const response = await axios.post('/user/login', { emailOrUsername, password });
+            const { token } = response.data;
+            localStorage.setItem('token', token);
+            history.push('/user/profile'); // Перенаправляем пользователя после успешного входа
+        } catch (error) {
+            console.error('Ошибка при входе', error);
+            alert('Ошибка при входе. Пожалуйста, проверьте свои данные.');
+        }
     };
 
     return (

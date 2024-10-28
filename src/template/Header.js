@@ -1,24 +1,68 @@
+// src/template/Header.js
+
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+import axios from "../axiosConfig";
 import './Header.css';
 
 function Header() {
   const { cartItems } = useContext(CartContext);
   const [openedDrawer, setOpenedDrawer] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const history = useHistory();
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  function toggleDrawer() {
-    setOpenedDrawer(!openedDrawer);
-  }
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        setIsAuthenticated(true);
+        try {
+          const response = await axios.get('/user/role', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setIsAdmin(response.data.role === 'ADMIN');
+        } catch (error) {
+          console.error("Ошибка при получении роли пользователя:", error);
+          setIsAuthenticated(false);
+        }
+      }
+    };
 
-  function changeNav() {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('/categories'); // Получаем категории из базы данных
+        setCategories(response.data); // Сохраняем категории в состоянии
+      } catch (error) {
+        console.error("Ошибка при получении категорий:", error);
+      }
+    };
+
+    fetchUserRole();
+    fetchCategories();
+  }, []);
+
+  const toggleDrawer = () => {
+    setOpenedDrawer(!openedDrawer);
+  };
+
+  const changeNav = () => {
     if (openedDrawer) {
       setOpenedDrawer(false);
     }
-  }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    setIsAdmin(false);
+    history.push('/login');
+  };
 
   return (
       <header>
@@ -30,21 +74,23 @@ function Header() {
 
             <div className={"navbar-collapse offcanvas-collapse " + (openedDrawer ? 'open' : '')}>
               <div className="d-flex justify-content-center w-100">
-                <Link to="/products/category/caps" className="nav-link text-center text-orange mx-3">
-                  Кепки
-                </Link>
-                <Link to="/products/category/hoodie" className="nav-link text-center text-orange mx-3">
-                  Худі
-                </Link>
-                <Link to="/products/category/t-shirts" className="nav-link text-center text-orange mx-3">
-                  Футболки
-                </Link>
+                {categories.map((category) => (
+                    <Link
+                        key={category.id}
+                        to={`/products/category/${category.id}`}
+                        className="nav-link text-center text-orange mx-3"
+                        onClick={changeNav}
+                    >
+                      {category.name}
+                    </Link>
+                ))}
               </div>
 
               <Link to="/cart" className="btn btn-outline-orange me-3 d-none d-lg-inline" style={{width: 100}}>
                 <FontAwesomeIcon icon={["fas", "shopping-cart"]}/>
                 <span className="ms-3 badge rounded-pill bg-orange">{totalItems}</span>
               </Link>
+
               <ul className="navbar-nav mb-2 mb-lg-0">
                 <li className="nav-item dropdown">
                   <a
@@ -57,17 +103,41 @@ function Header() {
                   >
                     <FontAwesomeIcon icon={["fas", "user-alt"]}/>
                   </a>
-                  <ul className="dropdown-menu dropdown-menu-end bg-dark border-orange" aria-labelledby="user-dropdown">
-                    <li>
-                      <Link to="/login" className="dropdown-item text-orange" onClick={changeNav}>
-                        Login
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/register" className="dropdown-item text-orange" onClick={changeNav}>
-                        Sign Up
-                      </Link>
-                    </li>
+                  <ul className="dropdown-menu dropdown-menu-end bg-dark border-orange" aria-labelledby="userDropdown">
+                    {isAuthenticated ? (
+                        <>
+                          <li>
+                            <Link to="/user/profile" className="dropdown-item text-orange" onClick={changeNav}>
+                              Профіль
+                            </Link>
+                          </li>
+                          {isAdmin && (
+                              <li>
+                                <Link to="/admin" className="dropdown-item text-orange" onClick={changeNav}>
+                                  Адмін-панель
+                                </Link>
+                              </li>
+                          )}
+                          <li>
+                            <button className="dropdown-item text-orange" onClick={handleLogout}>
+                              Вийти
+                            </button>
+                          </li>
+                        </>
+                    ) : (
+                        <>
+                          <li>
+                            <Link to="/login" className="dropdown-item text-orange" onClick={changeNav}>
+                              Вхід
+                            </Link>
+                          </li>
+                          <li>
+                            <Link to="/register" className="dropdown-item text-orange" onClick={changeNav}>
+                              Реєстрація
+                            </Link>
+                          </li>
+                        </>
+                    )}
                   </ul>
                 </li>
               </ul>

@@ -1,4 +1,8 @@
+// src/Auth/RegisterPage.js
+
 import React, { useState } from 'react';
+import axios from '../axiosConfig';
+import { useHistory } from 'react-router-dom';
 import './Auth.css';
 
 function RegisterPage() {
@@ -10,14 +14,22 @@ function RegisterPage() {
         last_name: '',
         phone_number: '',
     });
+    const history = useHistory();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Логіка відправки даних на сервер
+        try {
+            await axios.post('/user/registration', formData);
+            alert('Регистрация успешна! Теперь вы можете войти.');
+            history.push('/login');
+        } catch (error) {
+            console.error('Ошибка при регистрации', error);
+            alert('Ошибка при регистрации. Пожалуйста, проверьте введенные данные.');
+        }
     };
 
     return (

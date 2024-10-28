@@ -1,56 +1,80 @@
 // controllers/productController.js
-const { Product, ProductImage, Category, ProductSize } = require('../models/models');
-const ApiError = require('../error/ApiError');
+const { Product, Category } = require('../models/models');
 
 class ProductController {
-    async create(req, res, next) {
+    // Метод для создания продукта
+    async create(req, res) {
         try {
-            let { name, description, price, category_id, stock_quantity } = req.body;
-            const product = await Product.create({
+            const { name, price, category_id } = req.body;
+            const image = req.file;
+
+            if (!image) {
+                return res.status(400).json({ message: 'Изображение не загружено' });
+            }
+
+            // Получаем имя файла, сохраненного multer
+            const fileName = image.filename; // Это имя файла, сгенерированное multer
+
+            // Формируем URL для сохранения в базе данных
+            const image_url = `/image/${fileName}`;
+
+            // Сохраняем продукт в базе данных
+            const newProduct = await Product.create({
                 name,
-                description,
                 price,
                 category_id,
-                stock_quantity,
+                image_url,
             });
-            // Добавьте логику для обработки изображений и размеров, если необходимо
-            return res.json(product);
+
+            res.json(newProduct);
         } catch (error) {
-            next(ApiError.badRequest(error.message));
+            console.error('Ошибка при добавлении товара на сервере:', error);
+            res.status(500).json({ message: 'Ошибка при добавлении товара' });
         }
     }
-
     async getAll(req, res) {
-        let { category_id, limit, page } = req.query;
-        limit = limit || 9;
-        page = page || 1;
-        let offset = limit * (page - 1);
-        let products;
-        if (category_id) {
-            products = await Product.findAndCountAll({
-                where: { category_id },
-                limit,
-                offset,
-                include: [ProductImage, Category, ProductSize],
-            });
-        } else {
-            products = await Product.findAndCountAll({
-                limit,
-                offset,
-                include: [ProductImage, Category, ProductSize],
-            });
+        try {
+            const { category_id } = req.query;
+            let products;
+
+            if (category_id) {
+                products = await Product.findAll({
+                    where: { category_id },
+                    include: [{ model: Category, attributes: ['name'] }],
+                });
+            } else {
+                products = await Product.findAll({
+                    include: [{ model: Category, attributes: ['name'] }],
+                });
+            }
+
+            res.json(products);
+        } catch (error) {
+            console.error('Ошибка при получении списка товаров:', error);
+            res.status(500).json({ message: 'Ошибка при получении списка товаров' });
         }
-        return res.json(products);
     }
 
+    // Метод для получения одного продукта по ID
     async getOne(req, res) {
-        const { id } = req.params;
-        const product = await Product.findOne({
-            where: { id },
-            include: [ProductImage, Category, ProductSize],
-        });
-        return res.json(product);
+        try {
+            const { id } = req.params;
+            const product = await Product.findOne({
+                where: { id },
+                include: [{ model: Category, attributes: ['name'] }],
+            });
+
+            if (!product) {
+                return res.status(404).json({ message: 'Товар не найден' });
+            }
+
+            res.json(product);
+        } catch (error) {
+            console.error('Ошибка при получении товара:', error);
+            res.status(500).json({ message: 'Ошибка при получении товара' });
+        }
     }
+
 }
 
 module.exports = new ProductController();

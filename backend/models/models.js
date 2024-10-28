@@ -3,6 +3,8 @@ const sequelize = require("../db");
 const { DataTypes } = require("sequelize");
 
 // Модель User
+// models/models.js
+
 const User = sequelize.define("users", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     username: { type: DataTypes.STRING(255), allowNull: false, unique: true },
@@ -11,11 +13,14 @@ const User = sequelize.define("users", {
     first_name: { type: DataTypes.STRING(100) },
     last_name: { type: DataTypes.STRING(100) },
     phone_number: { type: DataTypes.STRING(20), unique: true },
+    address: { type: DataTypes.STRING(255) },
+    role: { type: DataTypes.STRING, allowNull: false, defaultValue: 'USER' },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
 }, {
     timestamps: false,
 });
+
 
 // Модель ShippingAddress
 const ShippingAddress = sequelize.define("shipping_addresses", {
@@ -43,12 +48,14 @@ const ShippingAddress = sequelize.define("shipping_addresses", {
     },
 });
 
-// Модель Product
+// models/models.js
+
 const Product = sequelize.define("products", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING(255), allowNull: false },
     description: { type: DataTypes.TEXT },
     primary_image_id: { type: DataTypes.INTEGER },
+    image_url: { type: DataTypes.STRING(255) }, // Добавлено поле image_url
     price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
     stock_quantity: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
     category_id: { type: DataTypes.INTEGER },

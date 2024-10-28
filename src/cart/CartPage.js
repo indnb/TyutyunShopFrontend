@@ -1,16 +1,39 @@
-// cart/CartPage.js
+// src/cart/CartPage.js
 
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
+import axios from '../axiosConfig';
 import './CartPage.css';
 
 function CartPage() {
     const { cartItems, addItem, removeItem, clearCart } = useContext(CartContext);
+    const [shippingData, setShippingData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        address: '',
+    });
 
     const totalCost = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    const handlePurchase = () => {
-        // Логика оформления покупки
+    const handlePurchase = async (e) => {
+        e.preventDefault();
+        try {
+            const orderData = {
+                items: cartItems,
+                shippingData,
+                totalCost,
+            };
+            await axios.post('/order', orderData, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            });
+            alert('Заказ успешно оформлен!');
+            clearCart();
+        } catch (error) {
+            console.error('Ошибка при оформлении заказа', error);
+            alert('Ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз.');
+        }
     };
 
     return (
@@ -77,7 +100,6 @@ function CartPage() {
                 </form>
             </div>
         </div>
-    );
-}
+    );}
 
 export default CartPage;
