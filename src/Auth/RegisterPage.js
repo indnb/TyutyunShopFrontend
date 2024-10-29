@@ -13,6 +13,7 @@ function RegisterPage() {
         first_name: '',
         last_name: '',
         phone_number: '',
+        address: '',
     });
     const history = useHistory();
 
@@ -90,6 +91,15 @@ function RegisterPage() {
                         type="tel"
                         name="phone_number"
                         value={formData.phone_number}
+                        onChange={handleChange}
+                    />
+                </label>
+                <label>
+                    Адреса:
+                    <input
+                        type="text"
+                        name="address"
+                        value={formData.address}
                         onChange={handleChange}
                     />
                 </label>

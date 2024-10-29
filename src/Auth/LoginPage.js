@@ -6,14 +6,14 @@ import { useHistory } from 'react-router-dom';
 import './Auth.css';
 
 function LoginPage() {
-    const [emailOrUsername, setEmailOrUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/user/login', { email: emailOrUsername, password });
+            const response = await axios.post('/user/login', { email, password });
             const { token } = response.data;
             localStorage.setItem('token', token);
             history.push('/user/profile');
@@ -23,17 +23,16 @@ function LoginPage() {
         }
     };
 
-
     return (
         <div className="auth-container margin-top margin-bottom">
             <h2>Вхід</h2>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Логін або Email:
+                    Email:
                     <input
                         type="text"
-                        value={emailOrUsername}
-                        onChange={(e) => setEmailOrUsername(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </label>
