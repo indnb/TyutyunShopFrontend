@@ -1,6 +1,6 @@
 // src/admin/AdminPage.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import CreateProductModal from './modals/CreateProductModal';
 import CreateCategoryModal from './modals/CreateCategoryModal';

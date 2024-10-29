@@ -13,8 +13,8 @@ function ProductList() {
         const fetchProducts = async () => {
             try {
                 const response = category
-                    ? await axios.get(`/products`, { params: { category_id: category } })
-                    : await axios.get('/products');
+                    ? await axios.get(`/product`, { params: { category_id: category } })
+                    : await axios.get('/product');
 
                 console.log("Полученные товары:", response.data); // Проверка структуры ответа
                 setProducts(response.data.rows || response.data); // Используем правильное поле для товаров

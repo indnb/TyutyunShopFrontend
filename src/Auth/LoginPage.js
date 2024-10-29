@@ -13,15 +13,16 @@ function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/user/login', { emailOrUsername, password });
+            const response = await axios.post('/user/login', { email: emailOrUsername, password });
             const { token } = response.data;
             localStorage.setItem('token', token);
-            history.push('/user/profile'); // Перенаправляем пользователя после успешного входа
+            history.push('/user/profile');
         } catch (error) {
             console.error('Ошибка при входе', error);
             alert('Ошибка при входе. Пожалуйста, проверьте свои данные.');
         }
     };
+
 
     return (
         <div className="auth-container margin-top margin-bottom">

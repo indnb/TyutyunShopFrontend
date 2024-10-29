@@ -37,10 +37,10 @@ function CreateProductModal({ show, onHide }) {
             const formData = new FormData();
             formData.append('name', productData.name);
             formData.append('price', productData.price);
-            formData.append('category_id', productData.category_id);
+            formData.append('category_id', 2);
             formData.append('image', file);
 
-            const response = await axios.post('/products', formData, {
+            const response = await axios.post('/product', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -52,7 +52,7 @@ function CreateProductModal({ show, onHide }) {
             setFile(null);
             onHide();
         } catch (error) {
-            console.error('Ошибка при добавлении товара:', error.response?.data || error.message);
+            console.error('!!!Ошибка при добавлении товара:', error.response?.data || error.message);
         }
     };
 
