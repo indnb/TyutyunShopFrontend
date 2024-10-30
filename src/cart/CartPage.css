@@ -1,20 +1,16 @@
-/* CartPage.css */
-
-/* Общие стили страницы корзины */
 .cart-page {
     padding: 20px;
     color: #FFA500;
     background-color: #1c1c1c;
+    min-height: 100vh;
 }
 
-/* Заголовок корзины */
 .cart-page h1 {
     text-align: center;
     color: #FFA500;
     margin-bottom: 20px;
 }
 
-/* Кнопка очистки корзины */
 .clear-cart-button {
     background-color: #FFA500;
     color: #000;
@@ -24,16 +20,14 @@
     cursor: pointer;
     font-size: 16px;
     display: block;
-    margin: 0 auto;
     width: fit-content;
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
 }
 
 .clear-cart-button:hover {
     background-color: #ffcc66;
 }
 
-/* Таблица товаров */
 .cart-table {
     width: 100%;
     border-collapse: collapse;
@@ -56,7 +50,6 @@
     background-color: #1c1c1c;
 }
 
-/* Стиль блока оформления покупки */
 .purchase-block {
     background-color: #1c1c1c;
     border: 1px solid #FFA500;
@@ -67,14 +60,12 @@
     color: #FFA500;
 }
 
-/* Заголовок блока оформления */
 .purchase-block h2 {
     text-align: center;
     margin-bottom: 20px;
     color: #FFA500;
 }
 
-/* Поля формы */
 .purchase-block label {
     display: block;
     margin-bottom: 5px;
@@ -102,7 +93,6 @@
     background-color: #2a2a2a;
 }
 
-/* Кнопки подтверждения и отмены */
 .purchase-block button[type="submit"],
 .purchase-block button[type="button"] {
     background-color: #FFA500;
@@ -127,4 +117,14 @@
 
 .purchase-block button[type="button"]:hover {
     background-color: #777;
+}
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button-group button {
+    padding: 10px 20px;
+    font-size: 16px;
 }

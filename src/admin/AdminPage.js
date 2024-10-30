@@ -1,5 +1,3 @@
-// src/admin/AdminPage.js
-
 import React, { useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import CreateProductModal from './modals/CreateProductModal';

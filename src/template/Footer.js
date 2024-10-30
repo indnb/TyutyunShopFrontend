@@ -1,6 +1,5 @@
 import React from "react";
 import tyutyun_logo from "./tyutyun-logo.png";
-import Landing from "../landing/Landing";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function Footer() {

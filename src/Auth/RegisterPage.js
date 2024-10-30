@@ -25,7 +25,7 @@ function RegisterPage() {
         e.preventDefault();
         try {
             await axios.post('/user/registration', formData);
-//            alert('Реєстрація успішна! Тепер ви можете увійти.');
+//.            alert('Реєстрація успішна! Тепер ви можете увійти.');
             history.push('/login');
         } catch (error) {
             console.error('Error registration', error);

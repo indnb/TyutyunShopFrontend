@@ -26,8 +26,9 @@ function Header() {
           });
           setIsAdmin(response.data.role === 'ADMIN');
         } catch (error) {
-          console.error("Ошибка при получении роли пользователя:", error);
-          setIsAuthenticated(false);
+          console.error("Error get user`s role:", error);
+          //setIsAdmin(true);
+          //setIsAuthenticated(true);
         }
       }
     };
@@ -38,6 +39,11 @@ function Header() {
         setCategories(response.data);
       } catch (error) {
         console.error("Error get category:", error);
+        setCategories([
+          { id: 1, name: "Кепки" },
+          { id: 2, name: "Футболки" },
+          { id: 3, name: "Худі" }
+        ]);
       }
     };
 

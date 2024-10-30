@@ -1,10 +1,14 @@
-/* products/ProductList.css */
-
 .product-list h1 {
     text-align: center;
     color: #FFA500;
 }
-
+.product-list-page {
+    padding: 20px;
+    color: #FFA500;
+    background-color: #1c1c1c;
+    min-height: 100vh;
+    margin: 55px auto;
+}
 .products-grid {
     display: flex;
     flex-wrap: wrap;
@@ -12,16 +16,17 @@
 }
 
 .product-card {
-    background-color: #000;
+    background: rgba(0, 0, 0, 0.7);
     border: 1px solid #FFA500;
     margin: 10px;
     padding: 10px;
     text-align: center;
     width: 200px;
-    min-height: 350px; /* Минимальная высота карточки для выравнивания */
+    min-height: 350px;
     display: flex;
     flex-direction: column;
 }
+
 
 .product-card img {
     width: 100%;
@@ -30,7 +35,7 @@
 
 
 .product-card-body {
-    min-height: 100px; /* Устанавливаем фиксированную высоту для блока с текстом */
+    min-height: 100px;
 }
 
 
@@ -38,7 +43,6 @@
 .product-card p {
     color: #FFA500;
 }
-/* ProductList.css */
 
 .text-orange {
     color: #FFA500;
@@ -57,4 +61,47 @@
 .card-img-top {
     width: 100%;
     height: auto;
+}
+.body {
+    background-image: url('../background.png');
+}
+.category-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.product-card {
+    background-color: #111;
+    border: 1px solid #FFA500;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 200px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 10px;
+}
+
+.product-title,
+.product-price {
+    margin: 5px 0;
 }

@@ -10,6 +10,7 @@ import RegisterPage from './Auth/RegisterPage';
 import UserProfile from './user/UserProfile';
 import AdminPage from './admin/AdminPage';
 import PrivateRoute from "./PrivateRoute";
+import './App.css';
 
 function App() {
     return (
