@@ -4,38 +4,36 @@ import axios from '../axiosConfig';
 import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
 
 function ProductList() {
-    const { category } = useParams(); // `category` будет ID категории
+    const { category } = useParams();
     const [products, setProducts] = useState([]);
-    const [categoryName, setCategoryName] = useState("Все товары"); // Название категории по умолчанию
+    const [categoryName, setCategoryName] = useState("");
 
     useEffect(() => {
-        // Функция для получения товаров
         const fetchProducts = async () => {
             try {
                 const response = category
                     ? await axios.get(`/product`, { params: { category_id: category } })
                     : await axios.get('/product');
 
-                console.log("Полученные товары:", response.data); // Проверка структуры ответа
-                setProducts(response.data.rows || response.data); // Используем правильное поле для товаров
+                console.log("Get product:", response.data);
+                setProducts(response.data.rows || response.data);
             } catch (error) {
-                console.error('Ошибка при получении продуктов', error);
+                console.error('Error get product', error);
             }
         };
 
-        // Функция для получения названия категории
         const fetchCategoryName = async () => {
             if (category) {
                 try {
-                    const response = await axios.get(`/categories/${category}`); // Получаем категорию по ID
-                    console.log("Полученные данные категории:", response.data); // Проверка данных категории
-                    setCategoryName(response.data.name || "Категория не найдена"); // Устанавливаем имя категории
+                    const response = await axios.get(`/categories/${category}`);
+                    console.log("Get data category:", response.data);
+                    setCategoryName(response.data.name || "Category didn`t find");
                 } catch (error) {
-                    console.error('Ошибка при получении категории', error);
-                    setCategoryName("Ошибка загрузки категории");
+                    console.error('Error get category', error);
+                    setCategoryName("Error load category");
                 }
             } else {
-                setCategoryName("Все товары");
+                setCategoryName("");
             }
         };
 

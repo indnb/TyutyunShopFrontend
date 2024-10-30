@@ -22,15 +22,13 @@ function CreateProductModal({ show, onHide }) {
             const response = await axios.get('/categories');
             setCategories(response.data);
         } catch (error) {
-            console.error('Ошибка при получении категорий:', error);
+            console.error('Error get category:', error);
         }
     };
 
     const selectFile = (e) => {
         setFile(e.target.files[0]);
     };
-
-// src/admin/modals/CreateProductModal.js
 
     const addProduct = async () => {
         try {
@@ -45,14 +43,13 @@ function CreateProductModal({ show, onHide }) {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log('Ответ от сервера:', response.data);
+            console.log('Answer from server:', response.data);
 
-            // Сброс полей после успешного добавления
             setProductData({ name: '', price: 0, category_id: null });
             setFile(null);
             onHide();
         } catch (error) {
-            console.error('!!!Ошибка при добавлении товара:', error.response?.data || error.message);
+            console.error('Error add new product:', error.response?.data || error.message);
         }
     };
 

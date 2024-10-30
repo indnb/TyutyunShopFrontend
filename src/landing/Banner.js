@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Carousel } from 'react-bootstrap';
-import BannerZero from './bc1.jpg';
-import BannerOne from './bc2.jpg';
-import BannerTwo from './bc3.JPG';
+import Banner1 from './bc1.jpg';
+import Banner2 from './bc2.jpg';
+import Banner7 from './bc7.JPG';
+import Banner5 from './bc5.jpg';
 
 const banners = [
-    { image: BannerZero, backgroundColor: '#1a1a1a' },
-    { image: BannerOne, backgroundColor: '#333333' },
-    { image: BannerTwo, backgroundColor: '#4a4a4a' },
+    { image: Banner1, backgroundColor: '#1a1a1a' },
+    { image: Banner2, backgroundColor: '#333333' },
+    { image: Banner7, backgroundColor: '#4a4a4a' },
+    { image: Banner5, backgroundColor: '#4a4a4a' },
 ];
 
 function Banner() {
@@ -39,7 +41,7 @@ function Banner() {
                             className="ratio"
                             style={{
                                 '--bs-aspect-ratio': '50%',
-                                maxHeight: '1100px',
+                                maxHeight: '1300px',
                             }}
                         >
                             <img

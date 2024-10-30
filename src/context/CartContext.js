@@ -1,5 +1,3 @@
-// src/context/CartContext.js
-
 import React, { createContext, useState, useEffect } from 'react';
 import axios from '../axiosConfig';
 
@@ -8,7 +6,6 @@ export const CartContext = createContext();
 export function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState([]);
 
-    // Загрузка товаров корзины при загрузке компонента
     useEffect(() => {
         const fetchCartItems = async () => {
             try {
@@ -17,7 +14,7 @@ export function CartProvider({ children }) {
                 });
                 setCartItems(response.data);
             } catch (error) {
-                console.error('Ошибка при получении товаров корзины', error);
+                console.error('Error get product`s category', error);
             }
         };
         fetchCartItems();
@@ -30,11 +27,9 @@ export function CartProvider({ children }) {
             });
             setCartItems((prevItems) => [...prevItems, item]);
         } catch (error) {
-            console.error('Ошибка при добавлении товара в корзину', error);
+            console.error('Error to add basket', error);
         }
     };
-
-    // Реализуйте методы removeItem и clearCart аналогично
 
     return (
         <CartContext.Provider value={{ cartItems, addItem }}>

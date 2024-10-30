@@ -1,12 +1,10 @@
-// src/products/detail/ProductDetail.js
-
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '../../axiosConfig';
 import { CartContext } from '../../context/CartContext';
 
 function ProductDetail() {
-  const { id } = useParams(); // Предполагая, что в маршруте используется `:id`
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
   const { addItem } = useContext(CartContext);
 
@@ -23,7 +21,7 @@ function ProductDetail() {
           setSelectedImage(response.data.images[0]);
         }
       } catch (error) {
-        console.error('Ошибка при получении продукта', error);
+        console.error('Error get product', error);
       }
     };
     fetchProduct();
@@ -44,14 +42,12 @@ function ProductDetail() {
       <div className="product-detail">
         <h1>{product.name}</h1>
 
-        {/* Display selected image */}
         {selectedImage && (
             <div className="selected-image">
               <img src={selectedImage} alt={product.name} />
             </div>
         )}
 
-        {/* Thumbnail images to select */}
         <div className="image-thumbnails">
           {product.images && product.images.map((image, index) => (
               <img
@@ -64,7 +60,6 @@ function ProductDetail() {
           ))}
         </div>
 
-        {/* Size selection */}
         {product.sizes && product.sizes.length > 0 && (
             <div className="size-selection">
               <label htmlFor="size">Розмір:</label>
@@ -81,7 +76,6 @@ function ProductDetail() {
             </div>
         )}
 
-        {/* Quantity selection */}
         <div className="quantity-selection">
           <label htmlFor="quantity">Кількість:</label>
           <input
@@ -93,7 +87,6 @@ function ProductDetail() {
           />
         </div>
 
-        {/* Add to cart button */}
         <button onClick={handleAddToCart}>Додати в кошик</button>
       </div>
   );

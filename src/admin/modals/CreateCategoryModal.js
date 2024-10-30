@@ -13,7 +13,7 @@ function CreateCategoryModal({ show, onHide }) {
             setName('');
             onHide();
         } catch (error) {
-            console.error('Ошибка при добавлении категории:', error);
+            console.error('Error add new category:', error);
         }
     };
 
@@ -25,7 +25,7 @@ function CreateCategoryModal({ show, onHide }) {
             <Modal.Body>
                 <Form>
                     <Form.Control
-                        placeholder="Название категории"
+                        placeholder="Назва категорії"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />

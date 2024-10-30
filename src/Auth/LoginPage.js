@@ -1,6 +1,4 @@
-// src/Auth/LoginPage.js
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../axiosConfig';
 import { useHistory } from 'react-router-dom';
 import './Auth.css';
@@ -18,8 +16,8 @@ function LoginPage() {
             localStorage.setItem('token', token);
             history.push('/user/profile');
         } catch (error) {
-            console.error('Ошибка при входе', error);
-            alert('Ошибка при входе. Пожалуйста, проверьте свои данные.');
+            console.error('Error login user', error);
+            alert('Помилка при вході. Будь ластка, перевірте свої дані.');
         }
     };
 

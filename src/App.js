@@ -1,5 +1,3 @@
-// App.js
-
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Template from './template/Template';

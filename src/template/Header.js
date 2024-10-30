@@ -1,5 +1,3 @@
-// src/template/Header.js
-
 import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useHistory } from "react-router-dom";
@@ -36,10 +34,10 @@ function Header() {
 
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('/categories'); // Получаем категории из базы данных
-        setCategories(response.data); // Сохраняем категории в состоянии
+        const response = await axios.get('/categories');
+        setCategories(response.data);
       } catch (error) {
-        console.error("Ошибка при получении категорий:", error);
+        console.error("Error get category:", error);
       }
     };
 

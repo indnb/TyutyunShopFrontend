@@ -25,11 +25,11 @@ function RegisterPage() {
         e.preventDefault();
         try {
             await axios.post('/user/registration', formData);
-            alert('Регистрация успешна! Теперь вы можете войти.');
+//            alert('Реєстрація успішна! Тепер ви можете увійти.');
             history.push('/login');
         } catch (error) {
-            console.error('Ошибка при регистрации', error);
-            alert('Ошибка при регистрации. Пожалуйста, проверьте введенные данные.');
+            console.error('Error registration', error);
+            alert('Помилка при реєстрації. Будь ласка, перевірте введені дані.');
         }
     };
 

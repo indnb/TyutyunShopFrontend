@@ -1,5 +1,3 @@
-// src/cart/CartPage.js
-
 import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
 import axios from '../axiosConfig';
@@ -28,11 +26,11 @@ function CartPage() {
             await axios.post('/order', orderData, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             });
-            alert('Заказ успешно оформлен!');
+            alert('Замовлення успішно оформлено!');
             clearCart();
         } catch (error) {
-            console.error('Ошибка при оформлении заказа', error);
-            alert('Ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз.');
+            console.error('Error ', error);
+            alert('Помилка при оформленні замовлення');
         }
     };
 
@@ -69,7 +67,6 @@ function CartPage() {
             </table>
             <h3>Загальна вартість: {totalCost} грн</h3>
 
-            {/* Блок покупки */}
             <div className="purchase-block">
                 <h2>Дані для відправки</h2>
                 <form onSubmit={handlePurchase}>
@@ -94,9 +91,7 @@ function CartPage() {
                         <input type="text" name="address" required />
                     </div>
                     <button type="submit">Підтвердити купівлю</button>
-                    <button type="button" onClick={() => { /* Логика отмены покупки */ }}>
-                        Відмінити
-                    </button>
+                    <button type="button">Відмінити</button>
                 </form>
             </div>
         </div>
