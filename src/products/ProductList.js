@@ -16,42 +16,28 @@ function ProductList() {
                     ? await axios.get(`/product`, { params: { category_id: category } })
                     : await axios.get('/product');
 
-                console.log("Get product:", response.data);
-                setProducts(response.data.rows || response.data);
+                const productsWithImages = await Promise.all(
+                    response.data.map(async (product) => {
+                        const imageResponse = await axios.get(`/product_image/${product.primary_image_id}`);
+                        return { ...product, imageUrl: imageResponse.data.image_url };
+                    })
+                );
+
+                console.log("Get product:", productsWithImages);
+                setProducts(productsWithImages);
             } catch (error) {
-                console.error('Error get product', error);
-                setProducts([
-                    {
-                        id: 1,
-                        slug: "test-product-1",
-                        name: "Кепка \"Кепкую\" чорна",
-                        price: 100,
-                        image_url: "https://via.placeholder.com/200"
-                    },
-                    {
-                        id: 2,
-                        slug: "test-product-2",
-                        name: "Кепка \"Кепкую\" жовта",
-                        price: 200,
-                        image_url: "https://via.placeholder.com/200"
-                    }
-                ]);
+                console.error('Error getting product', error);
             }
         };
-        const categoryMap = {
-            1: "Кепки",
-            2: "Футболки",
-            3: "Худі"
-        };
+
         const fetchCategoryName = async () => {
             if (category) {
                 try {
-                    const response = await axios.get(`/categories/${category}`);
-                    console.log("Get data category:", response.data);
-                    setCategoryName(response.data.name || "Category didn`t find");
+                    const response = await axios.get(`/category/${category}`);
+                    console.log("Get data category:", category);
+                    setCategoryName(response.data.name || "Category didn’t find");
                 } catch (error) {
-                    console.error('Error get category', error);
-                    setCategoryName(categoryMap[category] || "");
+                    console.error('Error getting category', error);
                 }
             } else {
                 setCategoryName("");
@@ -64,7 +50,7 @@ function ProductList() {
 
     return (
         <div className="product-list-page">
-            <ScrollToTopOnMount />
+            <ScrollToTopOnMount/>
             <div className="category-header">
                 <h2 className="text-center text-orange">{categoryName}</h2>
             </div>
@@ -74,12 +60,12 @@ function ProductList() {
                         <div key={product.id} className="product-card">
                             <Link to={`/products/${product.slug}`} className="text-decoration-none">
                                 <img
-                                    src={product.image_url}
+                                    src={product.imageUrl}
                                     alt={product.name}
                                     className="product-image"
                                 />
                                 <div className="product-info">
-                                    <h5 className="product-title text-dark">{product.name}</h5>
+                                    <h5 className="product-title text-white">{product.name}</h5>
                                     <p className="product-price text-orange">{product.price} грн</p>
                                 </div>
                             </Link>

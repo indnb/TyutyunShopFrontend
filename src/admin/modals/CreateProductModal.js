@@ -38,7 +38,7 @@ function CreateProductModal({ show, onHide }) {
             formData.append('category_id', 2);
             formData.append('image', file);
 
-            const response = await axios.post('/product', formData, {
+            const response = await axios.post('/product_image', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

@@ -9,7 +9,7 @@ function CreateCategoryModal({ show, onHide }) {
 
     const addCategory = async () => {
         try {
-            await axios.post('/categories', { name });
+            await axios.post('/category', { name });
             setName('');
             onHide();
         } catch (error) {

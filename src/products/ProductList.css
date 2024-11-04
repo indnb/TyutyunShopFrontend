@@ -22,7 +22,7 @@
     padding: 10px;
     text-align: center;
     width: 200px;
-    min-height: 350px;
+    min-height: 250px;
     display: flex;
     flex-direction: column;
 }
