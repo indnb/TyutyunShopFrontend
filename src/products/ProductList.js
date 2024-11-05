@@ -58,7 +58,7 @@ function ProductList() {
                 {products.length > 0 ? (
                     products.map((product) => (
                         <div key={product.id} className="product-card">
-                            <Link to={`/products/${product.slug}`} className="text-decoration-none">
+                            <Link to={`/product/${product.id}`} className="text-decoration-none">
                                 <img
                                     src={product.imageUrl}
                                     alt={product.name}
@@ -72,7 +72,7 @@ function ProductList() {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center mt-4">Товары не найдены</p>
+                    <p className="text-center mt-4">Товари не завантажено (</p>
                 )}
             </div>
         </div>

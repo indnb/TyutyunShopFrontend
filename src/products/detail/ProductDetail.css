@@ -41,6 +41,7 @@
 
 .recommended-products .card {
     width: 100%;
+    margin-top: 1rem;
 }
 
 .recommended-products .card-img-top {

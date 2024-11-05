@@ -7,55 +7,66 @@ import './ProductDetail.css';
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [images, setImages] = useState([]);
   const { addItem } = useContext(CartContext);
 
-  const [selectedImage, setSelectedImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Mock recommended products data for testing
+  const [recommendedProducts, setRecommendedProducts] = useState([
+    {
+      id: 1,
+      name: "Recommended Product 1",
+      slug: "recommended-product-1",
+      image_url: "https://via.placeholder.com/200",
+      price: 100,
+    },
+    {
+      id: 2,
+      name: "Recommended Product 2",
+      slug: "recommended-product-2",
+      image_url: "https://via.placeholder.com/200",
+      price: 150,
+    },
+    {
+      id: 3,
+      name: "Recommended Product 3",
+      slug: "recommended-product-3",
+      image_url: "https://via.placeholder.com/200",
+      price: 200,
+    },
+  ]);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProductData = async () => {
       try {
         const response = await axios.get(`/product/${id}`);
-        setProduct(response.data);
-        if (response.data.images && response.data.images.length > 0) {
-          setSelectedImage(response.data.images[0]);
-        }
+        const productData = response.data;
+        setProduct(productData);
+
+        const imagesResponse = await axios.get(`/product_image_all/${id}`);
+        const imageUrls = imagesResponse.data.map((url) => `${url}`);
+        setImages(imageUrls);
+        setSelectedImage(imageUrls[0] || null);
+
+        const sizeResponse = await axios.get(`/size/${id}`);
+        const sizeData = sizeResponse.data;
+        const sizes = [];
+        if (sizeData.s) sizes.push('S');
+        if (sizeData.m) sizes.push('M');
+        if (sizeData.l) sizes.push('L');
+        if (sizeData.xl) sizes.push('XL');
+        if (sizeData.xxl) sizes.push('XXL');
+        setAvailableSizes(sizes);
       } catch (error) {
-        console.error('Error get product', error);
-        const testProduct = {
-          id: id,
-          name: "Тестовий товар",
-          images: [
-            "https://via.placeholder.com/400x500.png?text=Product+Image+1",
-            "https://via.placeholder.com/400x500.png?text=Product+Image+2",
-            "https://via.placeholder.com/400x500.png?text=Product+Image+3"
-          ],
-          sizes: ["S", "M", "L", "XL"],
-          price: 300,
-          description: "Це опис тестового товару.",
-          recommendedProducts: [
-            {
-              id: 2,
-              slug: "test-product-2",
-              name: "Рекомендований товар 1",
-              price: 250,
-              image_url: "https://via.placeholder.com/200x250.png?text=Recommended+1"
-            },
-            {
-              id: 3,
-              slug: "test-product-3",
-              name: "Рекомендований товар 2",
-              price: 350,
-              image_url: "https://via.placeholder.com/200x250.png?text=Recommended+2"
-            }
-          ]
-        };
-        setProduct(testProduct);
-        setSelectedImage(testProduct.images[0]);
+        console.error('Error fetching product data or images:', error);
       }
     };
-    fetchProduct();
+
+    fetchProductData();
   }, [id]);
 
   const handleAddToCart = () => {
@@ -76,16 +87,21 @@ function ProductDetail() {
 
   if (!product) return <div>Завантаження...</div>;
 
-  return (<div className="product-detail-page">
+  return (
+      <div className="product-detail-page">
         <div className="container mt-5 py-4 px-xl-5">
           <div className="row">
             <div className="col-lg-6">
               <div className="product-images">
                 <div className="main-image text-center">
-                  <img src={selectedImage} alt={product.name} className="img-fluid"/>
+                  {selectedImage ? (
+                      <img src={selectedImage} alt={product.name} className="img-fluid" />
+                  ) : (
+                      <p>Зображення не знайдено</p>
+                  )}
                 </div>
                 <div className="image-thumbnails d-flex justify-content-center mt-3">
-                  {product.images && product.images.map((image, index) => (
+                  {images.map((image, index) => (
                       <img
                           key={index}
                           src={image}
@@ -101,7 +117,7 @@ function ProductDetail() {
               <h1 className="product-name text-center text-orange">{product.name}</h1>
               <p className="product-price text-center text-orange">{product.price} грн</p>
               <div className="product-options">
-                {product.sizes && product.sizes.length > 0 && (
+                {availableSizes.length > 0 && (
                     <div className="size-selection mb-3">
                       <label htmlFor="size" className="form-label text-orange">Розмір:</label>
                       <select
@@ -111,7 +127,7 @@ function ProductDetail() {
                           className="form-select"
                       >
                         <option value="">Оберіть розмір</option>
-                        {product.sizes.map((size) => (
+                        {availableSizes.map((size) => (
                             <option key={size} value={size}>{size}</option>
                         ))}
                       </select>
@@ -134,13 +150,19 @@ function ProductDetail() {
                 <h5 className="text-orange">Опис товару:</h5>
                 <p>{product.description}</p>
               </div>
+              <div className="product-comments mt-5">
+                <h4 className="text-center text-orange">Коментарі</h4>
+                <p className="text-center">Коментарі до цього товару поки відсутні.</p>
+              </div>
             </div>
           </div>
-          {product.recommendedProducts && product.recommendedProducts.length > 0 && (
+
+          {/* Recommended Products Section */}
+          {recommendedProducts && recommendedProducts.length > 0 && (
               <div className="recommended-products mt-5">
                 <h4 className="text-center text-orange">Рекомендовані товари</h4>
                 <div className="row">
-                  {product.recommendedProducts.map((recProduct) => (
+                  {recommendedProducts.map((recProduct) => (
                       <div key={recProduct.id} className="col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
                         <div className="card h-100 border-0 shadow-sm">
                           <Link to={`/products/${recProduct.slug}`} className="text-decoration-none">
@@ -148,7 +170,7 @@ function ProductDetail() {
                                 src={recProduct.image_url}
                                 alt={recProduct.name}
                                 className="card-img-top"
-                                style={{objectFit: "cover", height: "200px", width: "100%"}}
+                                style={{ objectFit: "cover", height: "200px", width: "100%" }}
                             />
                             <div className="card-body text-center">
                               <h5 className="card-title text-dark">{recProduct.name}</h5>
@@ -161,10 +183,6 @@ function ProductDetail() {
                 </div>
               </div>
           )}
-          <div className="product-comments mt-5">
-            <h4 className="text-center text-orange">Коментарі</h4>
-            <p className="text-center">Коментарі до цього товару поки відсутні.</p>
-          </div>
         </div>
       </div>
   );
