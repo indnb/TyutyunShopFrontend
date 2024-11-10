@@ -15,7 +15,6 @@ function ProductDetail() {
   const [availableSizes, setAvailableSizes] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Mock recommended products data for testing
   const [recommendedProducts, setRecommendedProducts] = useState([
     {
       id: 1,
@@ -55,11 +54,19 @@ function ProductDetail() {
         const sizeResponse = await axios.get(`/size/${id}`);
         const sizeData = sizeResponse.data;
         const sizes = [];
-        if (sizeData.s) sizes.push('S');
-        if (sizeData.m) sizes.push('M');
-        if (sizeData.l) sizes.push('L');
-        if (sizeData.xl) sizes.push('XL');
-        if (sizeData.xxl) sizes.push('XXL');
+        if (sizeData.single_size <= 0)
+        {
+          if (sizeData.s > 0) sizes.push('S');
+          if (sizeData.m > 0) sizes.push('M');
+          if (sizeData.l > 0) sizes.push('L');
+          if (sizeData.xl > 0) sizes.push('XL');
+          if (sizeData.xxl > 0) sizes.push('XXL');
+        }
+        else
+        {
+          sizes.push("single_size");
+          setSelectedSize("single_size")
+        }
         setAvailableSizes(sizes);
       } catch (error) {
         console.error('Error fetching product data or images:', error);
@@ -117,7 +124,7 @@ function ProductDetail() {
               <h1 className="product-name text-center text-orange">{product.name}</h1>
               <p className="product-price text-center text-orange">{product.price} грн</p>
               <div className="product-options">
-                {availableSizes.length > 0 && (
+                {availableSizes.length > 0 && availableSizes[0] !== "single_size" && (
                     <div className="size-selection mb-3">
                       <label htmlFor="size" className="form-label text-orange">Розмір:</label>
                       <select
@@ -157,7 +164,6 @@ function ProductDetail() {
             </div>
           </div>
 
-          {/* Recommended Products Section */}
           {recommendedProducts && recommendedProducts.length > 0 && (
               <div className="recommended-products mt-5">
                 <h4 className="text-center text-orange">Рекомендовані товари</h4>
