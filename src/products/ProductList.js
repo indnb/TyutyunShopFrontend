@@ -65,7 +65,7 @@ function ProductList() {
                                     className="product-image"
                                 />
                                 <div className="product-info">
-                                    <h5 className="product-title text-white">{product.name}</h5>
+                                    <h5 className="product-title text-orange">{product.name}</h5>
                                     <p className="product-price text-orange">{product.price} грн</p>
                                 </div>
                             </Link>
