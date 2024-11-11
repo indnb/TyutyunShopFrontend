@@ -1,67 +1,43 @@
+.text-orange, .product-name, .product-price, .btn-orange, .form-label, .size-selection .form-select option, .quantity-selection .form-control {
+    color: #FFA500;
+}
+.btn-orange {
+    background-color: #1c1c1c;
+    border: 1px solid #FFA500;
+    border-radius: 4px;
+    font-size: 18px;
+    width: 100%;
+    height: 45px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-orange:hover {
+    background-color: #1c1c1c;
+    border: 1px solid #FFA500;
+    border-radius: 4px;
+    font-size: 20px;
+    width: 100%;
+    height: 45px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+
 .product-name {
     font-size: 2rem;
     margin-bottom: 1rem;
 }
-
 .product-price {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
 }
-
-.product-options .form-label {
-    font-weight: bold;
-}
-
-
-.text-orange {
-    color: #ff6600;
-}
-
-.main-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.image-thumbnails img {
-    width: 80px;
-    height: 100px;
-    object-fit: cover;
-    margin: 0 5px;
-    cursor: pointer;
-    border: 2px solid transparent;
-}
-
-.image-thumbnails img.active {
-    border-color: #ff6600;
-}
-
-.product-description {
+.product-description, .recommended-products .card {
     margin-top: 2rem;
 }
-
 .recommended-products .card {
     width: 100%;
     margin-top: 1rem;
-}
-
-.recommended-products .card-img-top {
-    height: 200px;
-    object-fit: cover;
-}
-
-
-.product-name, .product-price, .text-orange, .btn-orange, .form-label {
-    color: #ff6600;
-}
-
-.btn-orange {
-    background-color: #ff6600;
-    border: none;
-    color: #fff;
-}
-
-.btn-orange:hover {
-    background-color: #e65c00;
 }
 .product-detail-page {
     padding: 20px;
@@ -75,24 +51,44 @@
     gap: 10px;
 }
 
+.main-image img {
+    max-width: 100%;
+    height: auto;
+}
+.image-thumbnails img {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    margin: 0 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+.image-thumbnails img.active {
+    border-color: #ff6600;
+}
+.recommended-products .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.size-selection .form-select, .quantity-selection .form-control {
+    background-color: #1c1c1c;
+    border: 1px solid #FFA500;
+    border-radius: 4px;
+    font-size: 18px;
+    width: 100%;
+    height: 45px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+.size-selection .form-select:focus, .quantity-selection .form-control:focus {
+    background-color: #444;
+    outline: none;
+}
 .quantity-button {
     width: 30px;
     height: 30px;
-    background-color: #FFA500;
-    color: #000;
-    border: none;
     border-radius: 4px;
     font-size: 18px;
-    cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-.quantity-button:hover {
-    background-color: #e59400;
-}
-
-.quantity {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
 }

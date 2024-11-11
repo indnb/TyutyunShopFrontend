@@ -50,12 +50,12 @@ body {
   overflow-y: auto;
   max-height: 460px;
   -webkit-overflow-scrolling: touch;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Hide scrollbar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .image-vertical-scroller::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for WebKit */
+  display: none;
 }
 
 .h-scroller {
@@ -71,7 +71,7 @@ body {
   padding-bottom: 1rem;
   margin-top: -1px;
   overflow-x: auto;
-  color: rgba(255, 153, 0, 0.75); /* Light orange text with opacity */
+  color: rgba(255, 153, 0, 0.75);
   text-align: center;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
@@ -81,11 +81,11 @@ body {
   padding-top: .75rem;
   padding-bottom: .75rem;
   font-size: .875rem;
-  color: #ffcc80; /* Soft orange */
+  color: #ffcc80;
 }
 .footer {
-  color: #FFA500; /* Orange color for text */
-  background-color: #1a1a1a; /* Dark background */
+  color: #FFA500;
+  background-color: #1a1a1a;
 }
 
 .footer-section {

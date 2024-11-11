@@ -58,7 +58,7 @@ export function CartProvider({ children }) {
     };
 
     const removeOneItem = (item) => {
-        setCartItems((prevItems) => {
+            setCartItems((prevItems) => {
             const existingItemIndex = prevItems.findIndex(
                 (cartItem) =>
                     cartItem.id === item.id &&
@@ -66,10 +66,17 @@ export function CartProvider({ children }) {
                     cartItem.name === item.name &&
                     cartItem.category === item.category
             );
+
             if (existingItemIndex >= 0) {
                 const updatedItems = [...prevItems];
-                if (updatedItems[existingItemIndex].quantity > 1) {
-                    updatedItems[existingItemIndex].quantity -= 1;
+                const currentItem = updatedItems[existingItemIndex];
+
+                if (currentItem.quantity > 1) {
+                    console.log('Removing one item:', item);
+                    updatedItems[existingItemIndex] = {
+                        ...currentItem,
+                        quantity: currentItem.quantity - 1,
+                    };
                 } else {
                     updatedItems.splice(existingItemIndex, 1);
                 }
@@ -78,6 +85,7 @@ export function CartProvider({ children }) {
             return prevItems;
         });
     };
+
 
     const removeItem = (item) => {
         setCartItems((prevItems) =>

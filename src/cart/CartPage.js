@@ -48,16 +48,6 @@ function CartPage() {
         });
     };
 
-    const handleCancelPurchase = () => {
-        setShippingData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            address: '',
-        });
-    };
-
     return (
         <div className="cart-page" style={{ marginTop: '56px' }}>
             <h1>Кошик</h1>
@@ -87,18 +77,23 @@ function CartPage() {
                                     <div className="quantity-controls">
                                         <button
                                             className="quantity-button"
-                                            onClick={() => removeOneItem(item)}
+                                            onClick={(e) => {
+                                                removeOneItem(item);
+                                            }}
                                         >
                                             -
                                         </button>
                                         <span className="quantity">{item.quantity}</span>
                                         <button
                                             className="quantity-button"
-                                            onClick={() => addOneItem(item)}
+                                            onClick={(e) => {
+                                                addOneItem(item);
+                                            }}
                                         >
                                             +
                                         </button>
                                     </div>
+
                                 </td>
                                 <td>{item.price} грн</td>
                                 <td>

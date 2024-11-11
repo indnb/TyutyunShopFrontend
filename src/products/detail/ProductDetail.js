@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from '../../axiosConfig';
 import { CartContext } from '../../context/CartContext';
@@ -92,6 +92,10 @@ function ProductDetail() {
     addItem(itemToAdd);
   };
 
+  const handleSizeChange = (e) => {
+    setSelectedSize(e.target.value);
+
+  };
   if (!product) return <div>Завантаження...</div>;
 
   return (
@@ -130,12 +134,15 @@ function ProductDetail() {
                       <select
                           id="size"
                           value={selectedSize}
-                          onChange={(e) => setSelectedSize(e.target.value)}
+                          onChange={handleSizeChange}
                           className="form-select"
+                          style={{color: '#FFA500'}}
                       >
-                        <option value="">Оберіть розмір</option>
+                        <option value="" style={{color: '#6c757d'}}>Оберіть розмір</option>
                         {availableSizes.map((size) => (
-                            <option key={size} value={size}>{size}</option>
+                            <option key={size} value={size} style={{color: '#FFA500'}}>
+                              {size}
+                            </option>
                         ))}
                       </select>
                     </div>
