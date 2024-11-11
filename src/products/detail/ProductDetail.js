@@ -54,18 +54,15 @@ function ProductDetail() {
         const sizeResponse = await axios.get(`/size/${id}`);
         const sizeData = sizeResponse.data;
         const sizes = [];
-        if (sizeData.single_size <= 0)
-        {
+        if (sizeData.single_size <= 0) {
           if (sizeData.s > 0) sizes.push('S');
           if (sizeData.m > 0) sizes.push('M');
           if (sizeData.l > 0) sizes.push('L');
           if (sizeData.xl > 0) sizes.push('XL');
           if (sizeData.xxl > 0) sizes.push('XXL');
-        }
-        else
-        {
+        } else {
           sizes.push("single_size");
-          setSelectedSize("Базовий розмір")
+          setSelectedSize("Базовий розмір");
         }
         setAvailableSizes(sizes);
       } catch (error) {
@@ -92,6 +89,33 @@ function ProductDetail() {
     addItem(itemToAdd);
   };
 
+  const handleImageClick = (e) => {
+    const clickPositionX = e.nativeEvent.offsetX;
+    const imageWidth = e.target.clientWidth;
+
+    if (clickPositionX < imageWidth / 2) {
+      handlePreviousImage(); // Нажатие на левую часть изображения
+    } else {
+      handleNextImage(); // Нажатие на правую часть изображения
+    }
+  };
+
+  const handleNextImage = () => {
+    if (images.length > 1) {
+      const currentIndex = images.indexOf(selectedImage);
+      const nextIndex = (currentIndex + 1) % images.length;
+      setSelectedImage(images[nextIndex]);
+    }
+  };
+
+  const handlePreviousImage = () => {
+    if (images.length > 1) {
+      const currentIndex = images.indexOf(selectedImage);
+      const prevIndex = (currentIndex - 1 + images.length) % images.length;
+      setSelectedImage(images[prevIndex]);
+    }
+  };
+
   if (!product) return <div>Завантаження...</div>;
 
   return (
@@ -100,9 +124,16 @@ function ProductDetail() {
           <div className="row">
             <div className="col-lg-6">
               <div className="product-images">
-                <div className="main-image text-center">
+                <div
+                    className="main-image text-center"
+                    onClick={handleImageClick}
+                >
                   {selectedImage ? (
-                      <img src={selectedImage} alt={product.name} className="img-fluid" />
+                      <img
+                          src={selectedImage}
+                          alt={product.name}
+                          className="img-fluid"
+                      />
                   ) : (
                       <p>Зображення не знайдено</p>
                   )}
@@ -144,6 +175,7 @@ function ProductDetail() {
                   <label htmlFor="quantity" className="form-label text-orange">Кількість:</label>
                   <input
                       id="quantity"
+                      type="number"
                       value={quantity}
                       min="1"
                       onChange={(e) => setQuantity(parseInt(e.target.value))}

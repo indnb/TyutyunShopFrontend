@@ -1,3 +1,16 @@
+/* Дефолтное соотношение для десктопов */
+.banner-ratio {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+/* Изменение соотношения сторон на мобильных устройствах */
+@media (max-width: 768px) {
+    .banner-ratio {
+        aspect-ratio: 9 / 16;
+    }
+}
+
 .carousel-indicator {
     cursor: pointer;
     transition: background-color 0.3s ease;
