@@ -4,6 +4,7 @@ import Banner1 from './bc1.jpg';
 import Banner2 from './bc2.jpg';
 import Banner7 from './bc7.JPG';
 import Banner5 from './bc5.jpg';
+import './Banner.css';
 
 const banners = [
     { image: Banner1, backgroundColor: '#1a1a1a' },
@@ -38,10 +39,7 @@ function Banner() {
                 {banners.map((banner, index) => (
                     <Carousel.Item key={index}>
                         <div
-                            className="ratio"
-                            style={{
-                                '--bs-aspect-ratio': '50%',
-                            }}
+                            className="banner-ratio"  // Класс для настройки пропорций
                         >
                             <img
                                 className="d-block w-100 h-100 cover"

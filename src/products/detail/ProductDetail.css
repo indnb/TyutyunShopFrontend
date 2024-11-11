@@ -23,28 +23,47 @@
     cursor: pointer;
 }
 
+.product-options .form-label {
+    font-weight: bold;
+}
 
-.product-name {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+.text-orange {
+    color: #ff6600;
 }
-.product-price {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+
+.main-image img {
+    max-width: 100%;
+    height: auto;
 }
-.product-description, .recommended-products .card {
+
+.image-thumbnails img {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    margin: 0 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.image-thumbnails img.active {
+    border-color: #ff6600;
+}
+
+.product-description {
     margin-top: 2rem;
 }
 .recommended-products .card {
     width: 100%;
     margin-top: 1rem;
 }
+
 .product-detail-page {
     padding: 20px;
     color: #FFA500;
     background-color: #1c1c1c;
     min-height: 100vh;
 }
+
 .quantity-controls {
     display: flex;
     align-items: center;
