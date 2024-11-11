@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from '../axiosConfig';
 import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import './Auth.css';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const history = useHistory();
+    const { setIsAuthenticated, setIsAdmin } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('/user/login', { email, password });
-            const { token } = response.data;
+            const { token, role } = response.data;
             localStorage.setItem('token', token);
+            setIsAuthenticated(true);
+            setIsAdmin(role === 'ADMIN');
             history.push('/user/profile');
         } catch (error) {
-            console.error('Error login user', error);
-            alert('Помилка при вході. Будь ластка, перевірте свої дані.');
+            console.error('Error logging in user', error);
         }
     };
 

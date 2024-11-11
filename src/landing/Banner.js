@@ -41,7 +41,6 @@ function Banner() {
                             className="ratio"
                             style={{
                                 '--bs-aspect-ratio': '50%',
-                                maxHeight: '1300px',
                             }}
                         >
                             <img

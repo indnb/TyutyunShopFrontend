@@ -1,5 +1,3 @@
-// src/admin/modals/CreateCategoryModal.js
-
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import axios from '../../axiosConfig';

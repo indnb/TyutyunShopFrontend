@@ -1,48 +1,29 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useHistory } from "react-router-dom";
-import { CartContext } from "../context/CartContext";
-import axios from "../axiosConfig";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, useHistory } from 'react-router-dom';
+import { CartContext } from '../context/CartContext';
+import { AuthContext } from '../context/AuthContext';
+import axios from '../axiosConfig';
 import './Header.css';
 
 function Header() {
   const { cartItems } = useContext(CartContext);
+  const { isAuthenticated, isAdmin, logout } = useContext(AuthContext);
   const [openedDrawer, setOpenedDrawer] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [categories, setCategories] = useState([]);
   const history = useHistory();
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   useEffect(() => {
-    const fetchUserRole = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        setIsAuthenticated(true);
-        try {
-          const response = await axios.get('/user/role', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          setIsAdmin(response.data.role === 'ADMIN');
-        } catch (error) {
-          console.error("Error get user`s role:", error);
-          setIsAdmin(true);
-          setIsAuthenticated(true);
-        }
-      }
-    };
-
     const fetchCategories = async () => {
       try {
         const response = await axios.get('/categories');
         setCategories(response.data);
       } catch (error) {
-        console.error("Error get category:", error);
+        console.error('Error fetching categories:', error);
       }
     };
-
-    fetchUserRole();
     fetchCategories();
   }, []);
 
@@ -57,9 +38,7 @@ function Header() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    setIsAdmin(false);
+    logout();
     history.push('/login');
   };
 
@@ -71,7 +50,7 @@ function Header() {
               <span className="ms-2 h5">Tyutyun.shop</span>
             </Link>
 
-            <div className={"navbar-collapse offcanvas-collapse " + (openedDrawer ? 'open' : '')}>
+            <div className={'navbar-collapse offcanvas-collapse ' + (openedDrawer ? 'open' : '')}>
               <div className="d-flex justify-content-center w-100">
                 {categories.map((category) => (
                     <Link
@@ -85,8 +64,8 @@ function Header() {
                 ))}
               </div>
 
-              <Link to="/cart" className="btn btn-outline-orange me-3 d-none d-lg-inline" style={{width: 100}}>
-                <FontAwesomeIcon icon={["fas", "shopping-cart"]}/>
+              <Link to="/cart" className="btn btn-outline-orange me-3 d-none d-lg-inline" style={{ width: 120 }}>
+                <FontAwesomeIcon icon={['fas', 'shopping-cart']} />
                 <span className="ms-3 badge rounded-pill bg-orange">{totalItems}</span>
               </Link>
 
@@ -100,7 +79,7 @@ function Header() {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                   >
-                    <FontAwesomeIcon icon={["fas", "user-alt"]}/>
+                    <FontAwesomeIcon icon={['fas', 'user-alt']} />
                   </a>
                   <ul className="dropdown-menu dropdown-menu-end bg-dark border-orange" aria-labelledby="userDropdown">
                     {isAuthenticated ? (
@@ -144,7 +123,7 @@ function Header() {
 
             <div className="d-inline-block d-lg-none">
               <button type="button" className="btn btn-outline-orange">
-                <FontAwesomeIcon icon={["fas", "shopping-cart"]}/>
+                <FontAwesomeIcon icon={['fas', 'shopping-cart']} />
                 <span className="ms-3 badge rounded-pill bg-orange">{totalItems}</span>
               </button>
               <button className="navbar-toggler p-0 border-0 ms-3" type="button" onClick={toggleDrawer}>

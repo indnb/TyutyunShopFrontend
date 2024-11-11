@@ -4,7 +4,7 @@ import axios from '../axiosConfig';
 import './CartPage.css';
 
 function CartPage() {
-    const { cartItems, addItem, removeItem, clearCart } = useContext(CartContext);
+    const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
     const [shippingData, setShippingData] = useState({
         firstName: '',
         lastName: '',
@@ -36,8 +36,7 @@ function CartPage() {
                 address: '',
             });
         } catch (error) {
-            console.error('Error ', error);
-            alert('Помилка при оформленні замовлення');
+            console.error('Error placing new order', error);
         }
     };
 
@@ -60,13 +59,13 @@ function CartPage() {
     };
 
     return (
-        <div className="cart-page" style={{
-            marginTop: '56px',
-        }}>
+        <div className="cart-page" style={{ marginTop: '56px' }}>
             <h1>Кошик</h1>
-            {cartItems.length > 0 ? (<button className="clear-cart-button" onClick={clearCart}>
-                Очистити кошик
-            </button>) : <></>}
+            {cartItems.length > 0 ? (
+                <button className="clear-cart-button" onClick={clearCart}>
+                    Очистити кошик
+                </button>
+            ) : null}
             {cartItems.length > 0 ? (
                 <>
                     <table className="cart-table">
@@ -80,15 +79,35 @@ function CartPage() {
                         </tr>
                         </thead>
                         <tbody>
-                        {cartItems.map(item => (
+                        {cartItems.map((item) => (
                             <tr key={`${item.id}-${item.size}-${item.name}`}>
                                 <td>{item.name}</td>
-                                <td>{item.size || 'N/A'}</td>
-                                <td>{item.quantity}</td>
+                                <td>{item.size}</td>
+                                <td>
+                                    <div className="quantity-controls">
+                                        <button
+                                            className="quantity-button"
+                                            onClick={() => removeOneItem(item)}
+                                        >
+                                            -
+                                        </button>
+                                        <span className="quantity">{item.quantity}</span>
+                                        <button
+                                            className="quantity-button"
+                                            onClick={() => addOneItem(item)}
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                </td>
                                 <td>{item.price} грн</td>
                                 <td>
-                                    <button onClick={() => addItem({ ...item, quantity: 1 })}>+</button>
-                                    <button onClick={() => removeItem({ ...item, quantity: 1 })}>-</button>
+                                    <button
+                                        className="quantity-button-del"
+                                        onClick={() => removeItem(item)}
+                                    >
+                                        Видалити
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -101,39 +120,62 @@ function CartPage() {
                         <form onSubmit={handlePurchase}>
                             <div>
                                 <label>Ім'я</label>
-                                <input type="text" name="firstName" value={shippingData.firstName}
-                                       onChange={handleInputChange} required/>
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    value={shippingData.firstName}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div>
                                 <label>Прізвище</label>
-                                <input type="text" name="lastName" value={shippingData.lastName}
-                                       onChange={handleInputChange} required/>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    value={shippingData.lastName}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div>
                                 <label>Email</label>
-                                <input type="email" name="email" value={shippingData.email} onChange={handleInputChange}
-                                       required/>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={shippingData.email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div>
                                 <label>Телефон</label>
-                                <input type="tel" name="phone" value={shippingData.phone} onChange={handleInputChange}
-                                       required/>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={shippingData.phone}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div>
                                 <label>Адреса доставки</label>
-                                <input type="text" name="address" value={shippingData.address}
-                                       onChange={handleInputChange} required/>
+                                <input
+                                    type="text"
+                                    name="address"
+                                    value={shippingData.address}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
-                            <div className="button-group">
-                                <button type="button" onClick={handleCancelPurchase}>Відмінити</button>
-                                <button type="submit">Підтвердити купівлю</button>
-                            </div>
-
+                            <button className="w-100" type="submit">
+                                Підтвердити купівлю
+                            </button>
                         </form>
                     </div>
                 </>
             ) : (
-                <h4>Ваш кошик порожній</h4>
+                <h2 className="text-center">порожній (</h2>
             )}
         </div>
     );

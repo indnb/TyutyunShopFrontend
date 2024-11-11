@@ -7,7 +7,7 @@ import './Template.css';
 function Template(props) {
     return (
         <div className="template-container">
-            <Header />
+            <Header className="header" />
             <Content>{props.children}</Content>
             <Footer />
         </div>

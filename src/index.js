@@ -12,15 +12,18 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { HashRouter as Router } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
 
 library.add(fas, far, fab);
 
 ReactDOM.render(
     <React.StrictMode>
         <Router>
-            <CartProvider>
-                <App />
-            </CartProvider>
+            <AuthProvider>
+                <CartProvider>
+                    <App />
+                </CartProvider>
+            </AuthProvider>
         </Router>
     </React.StrictMode>,
     document.getElementById("root")

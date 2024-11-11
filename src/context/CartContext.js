@@ -4,61 +4,72 @@ import axios from '../axiosConfig';
 export const CartContext = createContext();
 
 export function CartProvider({ children }) {
-    const [cartItems, setCartItems] = useState([]);
+    const [cartItems, setCartItems] = useState(() => {
+        const savedCart = localStorage.getItem('cartItems');
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
 
     useEffect(() => {
         const fetchCartItems = async () => {
-            try {
-                const response = await axios.get('/cart', {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-                });
-                setCartItems(response.data);
-            } catch (error) {
-                console.error('Error getting cart items', error);
-                setCartItems([]);
+            if (!localStorage.getItem('cartItems')) {
+                try {
+                    const response = await axios.get('/cart', {
+                        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                    });
+                    setCartItems(response.data);
+                    localStorage.setItem('cartItems', JSON.stringify(response.data));
+                } catch (error) {
+                    console.error('Error getting cart items', error);
+                    setCartItems([]);
+                }
             }
         };
         fetchCartItems();
     }, []);
 
-    const addItem = async (item) => {
+    useEffect(() => {
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }, [cartItems]);
+
+    const addItem = (item) => {
         setCartItems((prevItems) => {
             const existingItemIndex = prevItems.findIndex(
                 (cartItem) =>
                     cartItem.id === item.id &&
                     cartItem.size === item.size &&
-                    cartItem.name === item.name
+                    cartItem.name === item.name &&
+                    cartItem.category === item.category
             );
             if (existingItemIndex >= 0) {
                 const updatedItems = [...prevItems];
-                updatedItems[existingItemIndex].quantity += item.quantity;
+                updatedItems[existingItemIndex] = {
+                    ...updatedItems[existingItemIndex],
+                    quantity: updatedItems[existingItemIndex].quantity + (item.quantity || 1),
+                };
                 return updatedItems;
             } else {
-                return [...prevItems, item];
+                return [...prevItems, { ...item, quantity: item.quantity || 1 }];
             }
         });
-
-        try {
-            await axios.post('/cart', item, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
-        } catch (error) {
-            console.error('Error adding to cart', error);
-        }
     };
 
-    const removeItem = async (item) => {
+    const addOneItem = (item) => {
+        addItem({ ...item, quantity: 1 });
+    };
+
+    const removeOneItem = (item) => {
         setCartItems((prevItems) => {
             const existingItemIndex = prevItems.findIndex(
                 (cartItem) =>
                     cartItem.id === item.id &&
                     cartItem.size === item.size &&
-                    cartItem.name === item.name
+                    cartItem.name === item.name &&
+                    cartItem.category === item.category
             );
             if (existingItemIndex >= 0) {
                 const updatedItems = [...prevItems];
                 if (updatedItems[existingItemIndex].quantity > 1) {
-                    updatedItems[existingItemIndex].quantity -= item.quantity;
+                    updatedItems[existingItemIndex].quantity -= 1;
                 } else {
                     updatedItems.splice(existingItemIndex, 1);
                 }
@@ -66,23 +77,27 @@ export function CartProvider({ children }) {
             }
             return prevItems;
         });
+    };
 
-        try {
-            await axios.delete('/cart', {
-                data: item,
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
-        } catch (error) {
-            console.error('Error removing from cart', error);
-        }
+    const removeItem = (item) => {
+        setCartItems((prevItems) =>
+            prevItems.filter(
+                (cartItem) =>
+                    cartItem.id !== item.id ||
+                    cartItem.size !== item.size ||
+                    cartItem.name !== item.name ||
+                    cartItem.category !== item.category
+            )
+        );
     };
 
     const clearCart = () => {
         setCartItems([]);
+        localStorage.removeItem('cartItems');
     };
 
     return (
-        <CartContext.Provider value={{ cartItems, addItem, removeItem, clearCart }}>
+        <CartContext.Provider value={{ cartItems, addItem, removeItem, clearCart, addOneItem, removeOneItem }}>
             {children}
         </CartContext.Provider>
     );

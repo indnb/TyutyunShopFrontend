@@ -65,7 +65,7 @@ function ProductDetail() {
         else
         {
           sizes.push("single_size");
-          setSelectedSize("single_size")
+          setSelectedSize("Базовий розмір")
         }
         setAvailableSizes(sizes);
       } catch (error) {
@@ -144,7 +144,6 @@ function ProductDetail() {
                   <label htmlFor="quantity" className="form-label text-orange">Кількість:</label>
                   <input
                       id="quantity"
-                      type="number"
                       value={quantity}
                       min="1"
                       onChange={(e) => setQuantity(parseInt(e.target.value))}

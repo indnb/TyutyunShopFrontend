@@ -1,5 +1,8 @@
-.template header,
 .template footer {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+}
+.template header {
     background: rgba(0, 0, 0, 0.7);
     padding: 10px 20px;
 }
@@ -12,7 +15,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #000;
+    background-color: #1c1c1c;
 }
 
 .template-container > * {
@@ -23,9 +26,11 @@
 .template-container > *:not(footer) {
     flex: 1;
 }
-
+header {
+    max-height: 50px;
+}
 footer {
-    background-color: #000;
+    background-color: #1c1c1c;
     color: #FFA500;
     padding: 20px;
     text-align: center;

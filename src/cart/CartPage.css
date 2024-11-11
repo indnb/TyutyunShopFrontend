@@ -1,31 +1,60 @@
+:root {
+    --main-color: #FFA500;
+    --background-color: #1c1c1c;
+    --hover-color: #ffcc66;
+    --text-color: #FFA500;
+    --secondary-background: #333;
+    --font-size: 16px;
+    --button-bg-color: #FFA500;
+    --button-text-color: #000;
+    --button-hover-bg-color: #ffcc66;
+    --border-color: #FFA500;
+    --focus-border-color: #ffcc66;
+    --input-bg-color: #333;
+    --input-focus-bg-color: #2a2a2a;
+}
+
 .cart-page {
     padding: 20px;
-    color: #FFA500;
-    background-color: #1c1c1c;
+    color: var(--text-color);
+    background-color: var(--background-color);
     min-height: 100vh;
 }
 
 .cart-page h1 {
     text-align: center;
-    color: #FFA500;
     margin-bottom: 20px;
 }
 
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    font-size: var(--font-size);
+}
+
+.quantity-button-del,
 .clear-cart-button {
-    background-color: #FFA500;
-    color: #000;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: var(--font-size);
     display: block;
+}
+
+.quantity-button-del {
+    margin: 0 auto;
+}
+
+.clear-cart-button {
     width: fit-content;
     margin: 0 auto 20px;
 }
 
 .clear-cart-button:hover {
-    background-color: #ffcc66;
+    background-color: var(--button-hover-bg-color);
 }
 
 .cart-table {
@@ -36,79 +65,73 @@
 
 .cart-table th,
 .cart-table td {
-    border: 1px solid #FFA500;
+    border: 1px solid var(--border-color);
     padding: 12px;
     text-align: center;
-    color: #FFA500;
+    color: var(--text-color);
 }
 
 .cart-table th {
-    background-color: #333;
+    background-color: var(--secondary-background);
 }
 
 .cart-table td {
-    background-color: #1c1c1c;
+    background-color: var(--background-color);
 }
 
 .purchase-block {
-    background-color: #1c1c1c;
-    border: 1px solid #FFA500;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
     padding: 20px;
     border-radius: 8px;
     max-width: 600px;
     margin: 0 auto;
-    color: #FFA500;
+    color: var(--text-color);
 }
 
 .purchase-block h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #FFA500;
 }
 
 .purchase-block label {
     display: block;
     margin-bottom: 5px;
-    color: #FFA500;
 }
 
-.purchase-block input[type="text"],
-.purchase-block input[type="email"],
-.purchase-block input[type="tel"] {
+.purchase-block input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #FFA500;
-    background-color: #333;
-    color: #FFA500;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
     border-radius: 5px;
     margin-bottom: 15px;
-    font-size: 16px;
+    font-size: var(--font-size);
 }
 
-.purchase-block input[type="text"]:focus,
-.purchase-block input[type="email"]:focus,
-.purchase-block input[type="tel"]:focus {
+.purchase-block input:focus {
     outline: none;
-    border-color: #ffcc66;
-    background-color: #2a2a2a;
+    border-color: var(--focus-border-color);
+    background-color: var(--input-focus-bg-color);
 }
 
-.purchase-block button[type="submit"],
-.purchase-block button[type="button"] {
-    background-color: #FFA500;
-    color: #000;
+.purchase-block button {
+    color: var(--button-text-color);
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: var(--font-size);
     margin-right: 10px;
-    width: calc(50% - 5px);
 }
 
-.purchase-block button[type="submit"]:hover,
-.purchase-block button[type="button"]:hover {
-    background-color: #ffcc66;
+.purchase-block button[type="submit"] {
+    background-color: var(--button-bg-color);
+}
+
+.purchase-block button[type="submit"]:hover {
+    background-color: var(--button-hover-bg-color);
 }
 
 .purchase-block button[type="button"] {
@@ -118,6 +141,7 @@
 .purchase-block button[type="button"]:hover {
     background-color: #777;
 }
+
 .button-group {
     display: flex;
     justify-content: space-between;
@@ -126,5 +150,25 @@
 
 .button-group button {
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: var(--font-size);
+}
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-button {
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: var(--font-size);
+}
+
+.quantity {
+    margin: 0 10px;
+    color: var(--text-color);
 }

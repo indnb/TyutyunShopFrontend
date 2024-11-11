@@ -1,5 +1,5 @@
 .auth-container {
-    background-color: #000;
+    background-color: #1c1c1c;
     color: #ffa500;
     padding: 40px;
     max-width: 400px;
@@ -8,11 +8,11 @@
 }
 
 .margin-top {
-    margin-top: 100px; /* настройте по необходимости */
+    margin-top: 100px;
 }
 
 .margin-bottom {
-    margin-bottom: 100px; /* настройте по необходимости */
+    margin-bottom: 100px;
 }
 
 .auth-container h2 {

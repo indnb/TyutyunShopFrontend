@@ -1,5 +1,3 @@
-// src/admin/modals/CreateProductModal.js
-
 import React, { useState, useEffect } from 'react';
 import { Button, Col, Dropdown, Form, Modal, Row } from 'react-bootstrap';
 import axios from '../../axiosConfig';
