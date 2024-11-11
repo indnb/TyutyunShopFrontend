@@ -98,9 +98,9 @@ function ProductDetail() {
     const imageWidth = e.target.clientWidth;
 
     if (clickPositionX < imageWidth / 2) {
-      handlePreviousImage(); // Нажатие на левую часть изображения
+      handlePreviousImage();
     } else {
-      handleNextImage(); // Нажатие на правую часть изображения
+      handleNextImage();
     }
   };
 
@@ -182,7 +182,6 @@ function ProductDetail() {
                   <label htmlFor="quantity" className="form-label text-orange">Кількість:</label>
                   <input
                       id="quantity"
-                      type="number"
                       value={quantity}
                       min="1"
                       onChange={(e) => setQuantity(parseInt(e.target.value))}

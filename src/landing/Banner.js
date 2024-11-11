@@ -39,7 +39,7 @@ function Banner() {
                 {banners.map((banner, index) => (
                     <Carousel.Item key={index}>
                         <div
-                            className="banner-ratio"  // Класс для настройки пропорций
+                            className="banner-ratio"
                         >
                             <img
                                 className="d-block w-100 h-100 cover"
