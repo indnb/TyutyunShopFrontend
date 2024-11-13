@@ -15,6 +15,12 @@ function UserProfile() {
         phone_number: '',
         address: '',
     });
+    const [errors, setErrors] = useState({
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone_number: '',
+    });
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -28,15 +34,54 @@ function UserProfile() {
             } catch (error) {
                 console.error('Error fetching profile info:', error);
                 if (error.response && error.response.status === 401) {
-                    logout(); // Use the context logout function if token is invalid
+                    logout();
                 }
             }
         };
         fetchUserData();
     }, [logout]);
 
+    const validateField = (fieldName, value) => {
+        let error = '';
+        switch (fieldName) {
+            case 'first_name':
+            case 'last_name':
+                if (!value) {
+                    error = 'Це поле є обов’язковим';
+                }
+                break;
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    error = 'Некоректний формат email';
+                }
+                break;
+            case 'phone_number':
+                const phoneRegex = /^\+?\d{10,13}$/;
+                if (!phoneRegex.test(value)) {
+                    error = 'Некоректний номер телефону';
+                }
+                break;
+            default:
+                break;
+        }
+        setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: error }));
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUserData({ ...userData, [name]: value });
+        validateField(name, value);
+    };
+
     const handleSave = async (e) => {
         e.preventDefault();
+        // Validate all fields before submitting
+        Object.keys(userData).forEach((field) => validateField(field, userData[field]));
+        if (Object.values(errors).some((error) => error)) {
+            console.error('Please correct the errors before saving.');
+            return;
+        }
         try {
             await axios.post('/user/update', userData, {
                 headers: {
@@ -80,21 +125,25 @@ function UserProfile() {
                                 <label>Ім'я</label>
                                 <input
                                     type="text"
+                                    name="first_name"
                                     className="form-control"
                                     value={userData.first_name}
-                                    onChange={(e) => setUserData({ ...userData, first_name: e.target.value })}
+                                    onChange={handleChange}
                                     required
                                 />
+                                {errors.first_name && <small className="error-text">{errors.first_name}</small>}
                             </div>
                             <div className="form-group">
                                 <label>Прізвище</label>
                                 <input
                                     type="text"
+                                    name="last_name"
                                     className="form-control"
                                     value={userData.last_name}
-                                    onChange={(e) => setUserData({ ...userData, last_name: e.target.value })}
+                                    onChange={handleChange}
                                     required
                                 />
+                                {errors.last_name && <small className="error-text">{errors.last_name}</small>}
                             </div>
                         </div>
                         <div className="form-row">
@@ -102,21 +151,25 @@ function UserProfile() {
                                 <label>Email</label>
                                 <input
                                     type="email"
+                                    name="email"
                                     className="form-control"
                                     value={userData.email}
-                                    onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                                    onChange={handleChange}
                                     required
                                 />
+                                {errors.email && <small className="error-text">{errors.email}</small>}
                             </div>
                             <div className="form-group">
                                 <label>Телефон</label>
                                 <input
                                     type="tel"
+                                    name="phone_number"
                                     className="form-control"
                                     value={userData.phone_number}
-                                    onChange={(e) => setUserData({ ...userData, phone_number: e.target.value })}
+                                    onChange={handleChange}
                                     required
                                 />
+                                {errors.phone_number && <small className="error-text">{errors.phone_number}</small>}
                             </div>
                         </div>
                         <div className="section-title">
@@ -125,9 +178,10 @@ function UserProfile() {
                         <div className="form-group">
                             <input
                                 type="text"
+                                name="address"
                                 className="form-control"
                                 value={userData.address}
-                                onChange={(e) => setUserData({ ...userData, address: e.target.value })}
+                                onChange={handleChange}
                                 required
                             />
                         </div>

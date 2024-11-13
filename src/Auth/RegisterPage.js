@@ -1,5 +1,3 @@
-// src/Auth/RegisterPage.js
-
 import React, { useState } from 'react';
 import axios from '../axiosConfig';
 import { useHistory } from 'react-router-dom';
@@ -15,17 +13,57 @@ function RegisterPage() {
         phone_number: '',
         address: '',
     });
+    const [errors, setErrors] = useState({});
     const history = useHistory();
 
+    const validateField = (name, value) => {
+        let error = '';
+        switch (name) {
+            case 'username':
+                if (!value) {
+                    error = 'Логін є обов’язковим';
+                }
+                break;
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    error = 'Некоректний формат email';
+                }
+                break;
+            case 'password':
+                if (value.length < 6) {
+                    error = 'Пароль має містити щонайменше 6 символів';
+                }
+                break;
+            case 'phone_number':
+                const phoneRegex = /^\+?\d{10,13}$/;
+                if (!phoneRegex.test(value)) {
+                    error = 'Некоректний номер телефону';
+                }
+                break;
+            default:
+                break;
+        }
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+    };
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        validateField(name, value);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Validate all fields before submitting
+        Object.keys(formData).forEach((field) => validateField(field, formData[field]));
+        if (Object.values(errors).some((error) => error)) {
+            console.error('Please correct the errors before submitting.');
+            return;
+        }
         try {
             await axios.post('/user/registration', formData);
-//.            alert('Реєстрація успішна! Тепер ви можете увійти.');
+            alert('Реєстрація успішна! Тепер ви можете увійти.');
             history.push('/login');
         } catch (error) {
             console.error('Error registration', error);
@@ -46,6 +84,7 @@ function RegisterPage() {
                         onChange={handleChange}
                         required
                     />
+                    {errors.username && <small className="error-text">{errors.username}</small>}
                 </label>
                 <label>
                     Email:
@@ -56,6 +95,7 @@ function RegisterPage() {
                         onChange={handleChange}
                         required
                     />
+                    {errors.email && <small className="error-text">{errors.email}</small>}
                 </label>
                 <label>
                     Пароль:
@@ -66,6 +106,7 @@ function RegisterPage() {
                         onChange={handleChange}
                         required
                     />
+                    {errors.password && <small className="error-text">{errors.password}</small>}
                 </label>
                 <label>
                     Ім'я:
@@ -93,15 +134,7 @@ function RegisterPage() {
                         value={formData.phone_number}
                         onChange={handleChange}
                     />
-                </label>
-                <label>
-                    Адреса:
-                    <input
-                        type="text"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                    />
+                    {errors.phone_number && <small className="error-text">{errors.phone_number}</small>}
                 </label>
                 <button type="submit">Зареєструватися</button>
             </form>

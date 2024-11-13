@@ -152,6 +152,7 @@
     padding: 10px 20px;
     font-size: var(--font-size);
 }
+
 .quantity-controls {
     display: flex;
     align-items: center;

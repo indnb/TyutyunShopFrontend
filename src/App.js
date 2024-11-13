@@ -11,6 +11,10 @@ import UserProfile from './user/UserProfile';
 import AdminPage from './admin/AdminPage';
 import PrivateRoute from "./PrivateRoute";
 import './App.css';
+import OrderManagement from "./admin/OrderManagement";
+import PhotoGallery from "./admin/PhotoGallery";
+import CategoryManagement from "./admin/CategoryManagement";
+import ProductManagement from "./admin/ProductManagement";
 
 function App() {
     return (
@@ -22,7 +26,11 @@ function App() {
                 <Route path="/cart" component={CartPage} />
                 <Route path="/login" component={LoginPage} />
                 <Route path="/register" component={RegisterPage} />
-                <Route path="/admin" component={AdminPage} />
+                <PrivateRoute path="/admin" exact component={AdminPage} />
+                <PrivateRoute path="/admin/products" component={ProductManagement} />
+                <PrivateRoute path="/admin/categories" component={CategoryManagement} />
+                <PrivateRoute path="/admin/orders" component={OrderManagement} />
+                <PrivateRoute path="/admin/photos" component={PhotoGallery} />
                 <PrivateRoute path="/user/profile" component={UserProfile} />
             </Switch>
         </Template>

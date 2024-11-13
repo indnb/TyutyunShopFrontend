@@ -9,21 +9,21 @@ export function AuthProvider({ children }) {
     const [isAdmin, setIsAdmin] = useState(false);
     const history = useHistory();
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                setIsAuthenticated(true);
-                try {
-                    const response = await axios.get('/user/role', {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
-                    setIsAdmin(response.data.role === 'ADMIN');
-                } catch (error) {
-                    console.error("Error fetching user's role:", error);
-                }
+    const checkAuth = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setIsAuthenticated(true);
+            try {
+                const response = await axios.get('/user/role', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setIsAdmin(response.data.role === 'ADMIN');
+            } catch (error) {
+                console.error("Error fetching user's role:", error);
             }
-        };
+        }
+    };
+    useEffect(() => {
         checkAuth();
     }, []);
 
@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, isAdmin, setIsAuthenticated, setIsAdmin, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, isAdmin, setIsAuthenticated, setIsAdmin, logout, checkAuth }}>
             {children}
         </AuthContext.Provider>
     );

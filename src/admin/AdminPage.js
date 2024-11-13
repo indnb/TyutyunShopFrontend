@@ -1,38 +1,26 @@
-import React, { useState } from 'react';
-import { Button, Container } from 'react-bootstrap';
-import CreateProductModal from './modals/CreateProductModal';
-import CreateCategoryModal from './modals/CreateCategoryModal';
+// src/components/AdminPage.js
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 function AdminPage() {
-    const [productModalVisible, setProductModalVisible] = useState(false);
-    const [categoryModalVisible, setCategoryModalVisible] = useState(false);
-
     return (
-        <Container className="d-flex flex-column">
-            <Button
-                variant="outline-dark"
-                className="mt-4 p-2"
-                onClick={() => setCategoryModalVisible(true)}
-            >
-                Добавить категорию
-            </Button>
-            <Button
-                variant="outline-dark"
-                className="mt-4 p-2"
-                onClick={() => setProductModalVisible(true)}
-            >
-                Добавить товар
-            </Button>
-
-            <CreateCategoryModal
-                show={categoryModalVisible}
-                onHide={() => setCategoryModalVisible(false)}
-            />
-            <CreateProductModal
-                show={productModalVisible}
-                onHide={() => setProductModalVisible(false)}
-            />
-        </Container>
+        <div className="container mt-5">
+            <h1 className="mb-4">Тютюн панель)</h1>
+            <div className="list-group">
+                <Link to="/admin/products" className="list-group-item list-group-item-action">
+                    Управління товарами
+                </Link>
+                <Link to="/admin/categories" className="list-group-item list-group-item-action">
+                    Управління категоріями
+                </Link>
+                <Link to="/admin/orders" className="list-group-item list-group-item-action">
+                    Управління замовленнями
+                </Link>
+                <Link to="/admin/photos" className="list-group-item list-group-item-action">
+                    Управління фото
+                </Link>
+            </div>
+        </div>
     );
 }
 

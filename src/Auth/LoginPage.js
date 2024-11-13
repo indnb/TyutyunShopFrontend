@@ -8,16 +8,16 @@ function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const history = useHistory();
-    const { setIsAuthenticated, setIsAdmin } = useContext(AuthContext);
+    const { checkAuth } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('/user/login', { email, password });
             const { token, role } = response.data;
+            console.log(role);
             localStorage.setItem('token', token);
-            setIsAuthenticated(true);
-            setIsAdmin(role === 'ADMIN');
+            await checkAuth();
             history.push('/user/profile');
         } catch (error) {
             console.error('Error logging in user', error);

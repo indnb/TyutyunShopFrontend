@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
 import axios from '../axiosConfig';
 import './CartPage.css';
+import ToggleSwitch from "./ToggleSwitch";
 
 function CartPage() {
     const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
@@ -12,40 +13,78 @@ function CartPage() {
         phone: '',
         address: '',
     });
+    const [errors, setErrors] = useState({});
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [paymentType, setPaymentType] = useState("Оплата картою");
 
     const totalCost = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
+    const validateField = (name, value) => {
+        let error = '';
+        switch (name) {
+            case 'firstName':
+            case 'lastName':
+                if (!value) error = 'Це поле є обов’язковим';
+                break;
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) error = 'Некоректний формат email';
+                break;
+            case 'phone':
+                const phoneRegex = /^\+?\d{10,13}$/;
+                if (!phoneRegex.test(value)) error = 'Некоректний номер телефону';
+                break;
+            case 'address':
+                if (!value) error = 'Це поле є обов’язковим';
+                break;
+            default:
+                break;
+        }
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setShippingData({ ...shippingData, [name]: value });
+        validateField(name, value);
+    };
+
+
+    const handlePaymentToggle = (isChecked) => {
+        setPaymentType(isChecked ? "Наложний платіж" : "Оплата картою");
+    };
     const handlePurchase = async (e) => {
         e.preventDefault();
+        Object.keys(shippingData).forEach((field) => validateField(field, shippingData[field]));
+        if (Object.values(errors).some((error) => error)) {
+            console.error('Please correct the errors before submitting.');
+            return;
+        }
+
+        setIsProcessing(true);
         try {
             const orderData = {
                 items: cartItems,
                 shippingData,
                 totalCost,
+                paymentType,
             };
-            await axios.post('/order', orderData, {
+
+            const response = await axios.post('/order', orderData, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             });
-            alert('Замовлення успішно оформлено!');
-            clearCart();
-            setShippingData({
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: '',
-                address: '',
-            });
+
+            if (response.data && response.data.paymentUrl) {
+                window.location.href = response.data.paymentUrl;
+            } else {
+                alert('Помилка при створенні посилання для оплати');
+            }
         } catch (error) {
             console.error('Error placing new order', error);
+            alert('Помилка при оформленні замовлення. Спробуйте ще раз.');
+        } finally {
+            setIsProcessing(false);
         }
-    };
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setShippingData({
-            ...shippingData,
-            [name]: value,
-        });
     };
 
     return (
@@ -77,23 +116,18 @@ function CartPage() {
                                     <div className="quantity-controls">
                                         <button
                                             className="quantity-button"
-                                            onClick={(e) => {
-                                                removeOneItem(item);
-                                            }}
+                                            onClick={() => removeOneItem(item)}
                                         >
                                             -
                                         </button>
                                         <span className="quantity">{item.quantity}</span>
                                         <button
                                             className="quantity-button"
-                                            onClick={(e) => {
-                                                addOneItem(item);
-                                            }}
+                                            onClick={() => addOneItem(item)}
                                         >
                                             +
                                         </button>
                                     </div>
-
                                 </td>
                                 <td>{item.price} грн</td>
                                 <td>
@@ -122,6 +156,7 @@ function CartPage() {
                                     onChange={handleInputChange}
                                     required
                                 />
+                                {errors.firstName && <small className="error-text">{errors.firstName}</small>}
                             </div>
                             <div>
                                 <label>Прізвище</label>
@@ -132,6 +167,7 @@ function CartPage() {
                                     onChange={handleInputChange}
                                     required
                                 />
+                                {errors.lastName && <small className="error-text">{errors.lastName}</small>}
                             </div>
                             <div>
                                 <label>Email</label>
@@ -142,6 +178,7 @@ function CartPage() {
                                     onChange={handleInputChange}
                                     required
                                 />
+                                {errors.email && <small className="error-text">{errors.email}</small>}
                             </div>
                             <div>
                                 <label>Телефон</label>
@@ -152,6 +189,7 @@ function CartPage() {
                                     onChange={handleInputChange}
                                     required
                                 />
+                                {errors.phone && <small className="error-text">{errors.phone}</small>}
                             </div>
                             <div>
                                 <label>Адреса доставки</label>
@@ -162,9 +200,21 @@ function CartPage() {
                                     onChange={handleInputChange}
                                     required
                                 />
+                                {errors.address && <small className="error-text">{errors.address}</small>}
                             </div>
-                            <button className="w-100" type="submit">
-                                Підтвердити купівлю
+
+                            <div className="payment-method mt-4">
+                                <h3>Вибір способу оплати</h3>
+                                <div>
+                                    <ToggleSwitch
+                                        label={paymentType}
+                                        onChange={handlePaymentToggle}
+                                    />
+                                </div>
+                            </div>
+
+                            <button className="w-100 mt-4" type="submit" disabled={isProcessing}>
+                                {isProcessing ? 'Обробка...' : 'Підтвердити купівлю'}
                             </button>
                         </form>
                     </div>

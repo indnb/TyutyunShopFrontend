@@ -23,7 +23,7 @@ function ProductDetail() {
                 const productData = response.data;
                 setProduct(productData);
 
-                const imagesResponse = await axios.get(`/product_image_all/${id}`);
+                const imagesResponse = await axios.get(`/product_image_all`, {params: {product_id: id}});
                 const imageUrls = imagesResponse.data.map((url) => `${url}`);
                 setImages(imageUrls);
                 setSelectedImage(imageUrls[0] || null);

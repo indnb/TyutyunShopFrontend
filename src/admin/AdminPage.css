@@ -1,35 +1,22 @@
 .admin-page {
+    padding: 20px;
+}
+
+.admin-nav {
+    list-style-type: none;
+    padding: 0;
+}
+
+.admin-nav li {
+    margin: 10px 0;
+}
+
+.admin-nav a {
+    text-decoration: none;
+    font-size: 18px;
     color: #FFA500;
 }
 
-.admin-page h1,
-.admin-page h2 {
-    text-align: center;
-}
-
-.admin-page button {
-    background-color: #FFA500;
-    color: #000;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-}
-
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-.admin-table th,
-.admin-table td {
-    border: 1px solid #FFA500;
-    padding: 10px;
-    text-align: center;
-}
-
-.admin-table img {
-    width: 50px;
-    height: auto;
+.admin-nav a:hover {
+    text-decoration: underline;
 }
