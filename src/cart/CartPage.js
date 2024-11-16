@@ -1,19 +1,20 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { CartContext } from '../context/CartContext';
+import React, {useContext, useState, useEffect} from 'react';
+import {CartContext} from '../context/CartContext';
 import axios from '../axiosConfig';
 import './CartPage.css';
 import ToggleSwitch from './ToggleSwitch';
 
 function CartPage() {
-    const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
+    const {cartItems, addOneItem, removeOneItem, removeItem, clearCart} = useContext(CartContext);
     const [shippingData, setShippingData] = useState({
-        id: null,
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        address: '',
-    });
+            order_id: 0,
+            address: '',
+            first_name: '',
+            last_name: '',
+            phone_number: '',
+            email: '',
+        })
+    ;
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentType, setPaymentType] = useState('Оплата картою');
@@ -31,10 +32,10 @@ function CartPage() {
 
                 setShippingData({
                     id: response.data.id || null,
-                    firstName: response.data.first_name || '',
-                    lastName: response.data.last_name || '',
+                    first_name: response.data.first_name || '',
+                    last_name: response.data.last_name || '',
                     email: response.data.email || '',
-                    phone: response.data.phone_number || '',
+                    phone_number: response.data.phone_number || '',
                     address: response.data.address || '',
                 });
 
@@ -67,12 +68,12 @@ function CartPage() {
             default:
                 break;
         }
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+        setErrors((prevErrors) => ({...prevErrors, [name]: error}));
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setShippingData({ ...shippingData, [name]: value });
+        const {name, value} = e.target;
+        setShippingData({...shippingData, [name]: value});
         validateField(name, value);
     };
 
@@ -123,10 +124,16 @@ function CartPage() {
             };
 
             const response = await axios.post('/order', orderData, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
+            });
+            console.log('Order placed successfully:', response.data);
+
+            shippingData.order_id = response.data;
+
+            await axios.post(`/shipping`, shippingData, {
+                headers: {Authorization: `Bearer ${token}`},
             });
 
-            console.log('Order placed successfully:', response.data);
             alert('Замовлення оформлено успішно!');
             clearCart();
         } catch (error) {
@@ -139,7 +146,7 @@ function CartPage() {
 
 
     return (
-        <div className="cart-page" style={{ marginTop: '56px' }}>
+        <div className="cart-page" style={{marginTop: '56px'}}>
             <h1>Кошик</h1>
             {cartItems.length > 0 ? (
                 <button className="clear-cart-button" onClick={clearCart}>
@@ -203,7 +210,7 @@ function CartPage() {
                                 <input
                                     type="text"
                                     name="firstName"
-                                    value={shippingData.firstName}
+                                    value={shippingData.first_name}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -214,7 +221,7 @@ function CartPage() {
                                 <input
                                     type="text"
                                     name="lastName"
-                                    value={shippingData.lastName}
+                                    value={shippingData.last_name}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -236,7 +243,7 @@ function CartPage() {
                                 <input
                                     type="tel"
                                     name="phone"
-                                    value={shippingData.phone}
+                                    value={shippingData.phone_number}
                                     onChange={handleInputChange}
                                     required
                                 />

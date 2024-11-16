@@ -71,11 +71,11 @@ function PhotoGallery() {
             </Form>
 
             {photos.length > 0 ? (
-                <Row xs={1} md={6} className="g-4">
+                <Row className="g-4">
                     {photos.map(photo => (
                         <Col key={photo.id}>
                             <Card>
-                                <Card.Img variant="top" src={photo.image_url} alt="Фото товару" style={{width: 200}}/>
+                                <Card.Img variant="top" src={photo.image_url} alt="Фото товару"/>
                                 <Card.Body style={{margin: 'auto'}}>
                                     <Button variant="danger" onClick={() => handleDelete(photo.id)}>
                                         Видалити
