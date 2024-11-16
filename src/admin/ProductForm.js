@@ -1,4 +1,3 @@
-// src/components/admin/ProductForm.js
 import React, { useState, useEffect } from 'react';
 import axios from '../axiosConfig';
 import { Form, Button } from 'react-bootstrap';
@@ -11,6 +10,14 @@ function ProductForm({ product, onClose }) {
         category_id: 0,
         primary_image_id: 0,
     });
+    const [sizes, setSizes] = useState({
+        single_size: 0,
+        s: 0,
+        m: 0,
+        l: 0,
+        xl: 0,
+        xxl: 0,
+    });
     const [categories, setCategories] = useState([]);
     const [photos, setPhotos] = useState([]);
 
@@ -19,33 +26,64 @@ function ProductForm({ product, onClose }) {
         fetchPhotos();
         if (product) {
             setFormData(product);
+            setSizes({
+                single_size: 0,
+                s: 0,
+                m: 0,
+                l: 0,
+                xl: 0,
+                xxl: 0,
+            });
         }
     }, [product]);
 
     const fetchCategories = () => {
         axios.get('/categories')
-            .then(response => setCategories(response.data))
-            .catch(error => console.error('Error get categories:', error));
+            .then((response) => setCategories(response.data))
+            .catch((error) => console.error('Error getting categories:', error));
     };
 
     const fetchPhotos = () => {
         axios.get('/product_image_all')
-            .then(response => setPhotos(response.data))
-            .catch(error => console.error('Error get photos:', error));
+            .then((response) => setPhotos(response.data))
+            .catch((error) => console.error('Error getting photos:', error));
     };
 
-    const handleSubmit = (e) => {
+    const handleSizeChange = (size, value) => {
+        setSizes((prevSizes) => ({
+            ...prevSizes,
+            [size]: Number(value),
+        }));
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (product) {
-            axios.put(`/product/${product.id}`, formData)
-                .then(() => onClose())
-                .catch(error => console.error('Error update product:', error));
-        } else {
-            axios.post('/product', formData)
-                .then(() => onClose())
-                .catch(error => console.error('Error add product', error));
+        console.log("Sizes:", sizes);
+        try {
+            let createdProductId;
+
+            if (product) {
+                await axios.put(`/product/${product.id}`, formData);
+                createdProductId = product.id;
+            } else {
+                const response = await axios.post('/product', formData);
+                createdProductId = response.data;
+            }
+
+            if (createdProductId) {
+                await axios.post('/size', { ...sizes, product_id: createdProductId });
+                alert('Продукт та розміри успішно збережено!');
+            } else {
+                throw new Error('Failed to retrieve created product ID.');
+            }
+
+            onClose();
+        } catch (error) {
+            console.error('Error saving product or sizes:', error);
+            alert('Помилка при збереженні продукту чи розмірів. Перевірте дані та спробуйте ще раз.');
         }
     };
+
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -54,7 +92,7 @@ function ProductForm({ product, onClose }) {
                 <Form.Control
                     type="text"
                     value={formData.name}
-                    onChange={e => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                 />
             </Form.Group>
@@ -69,14 +107,13 @@ function ProductForm({ product, onClose }) {
                 />
             </Form.Group>
 
-
             <Form.Group controlId="productDescription" className="mt-3">
                 <Form.Label>Опис</Form.Label>
                 <Form.Control
                     as="textarea"
                     rows={3}
                     value={formData.description}
-                    onChange={e => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
             </Form.Group>
 
@@ -84,12 +121,14 @@ function ProductForm({ product, onClose }) {
                 <Form.Label>Категорія</Form.Label>
                 <Form.Select
                     value={formData.category_id}
-                    onChange={e => setFormData({...formData, category_id: Number(e.target.value)})}
+                    onChange={(e) => setFormData({ ...formData, category_id: Number(e.target.value) })}
                     required
                 >
                     <option value="">Обрати категорію</option>
-                    {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                            {cat.name}
+                        </option>
                     ))}
                 </Form.Select>
             </Form.Group>
@@ -97,7 +136,7 @@ function ProductForm({ product, onClose }) {
             <Form.Group controlId="productImage" className="mt-3">
                 <Form.Label>Основне фото</Form.Label>
                 <div className="image-selection d-flex flex-wrap">
-                    {photos.map(photo => (
+                    {photos.map((photo) => (
                         <div key={photo.id} className="image-option me-3 mb-3">
                             <Form.Check
                                 type="radio"
@@ -105,16 +144,32 @@ function ProductForm({ product, onClose }) {
                                 id={`photo-${photo.id}`}
                                 value={photo.id}
                                 checked={String(formData.primary_image_id) === String(photo.id)}
-                                onChange={e => setFormData({ ...formData, primary_image_id: Number(e.target.value) })}
+                                onChange={(e) => setFormData({ ...formData, primary_image_id: Number(e.target.value) })}
                                 label={
                                     <div>
-                                        <img src={photo.image_url} style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+                                        <img
+                                            src={photo.image_url}
+                                            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                        />
                                     </div>
                                 }
                             />
                         </div>
                     ))}
                 </div>
+            </Form.Group>
+
+            <Form.Group controlId="productSizes" className="mt-3">
+                <Form.Label>Розміри</Form.Label>
+                {["single_size", "s", "m", "l", "xl", "xxl"].map((size) => (
+                    <Form.Control
+                        key={size}
+                        type="number"
+                        placeholder={`Кількість розміру ${size}`}
+                        onChange={(e) => handleSizeChange(size, e.target.value)}
+                        className="mt-2"
+                    />
+                ))}
             </Form.Group>
 
             <Button variant="primary" type="submit" className="mt-4">
