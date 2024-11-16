@@ -99,7 +99,7 @@ function CategoryManagement() {
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="categoryName">
-                            <Form.Label>Название категории</Form.Label>
+                            <Form.Label>Назва категорії</Form.Label>
                             <Form.Control
                                 type="text"
                                 value={categoryName}

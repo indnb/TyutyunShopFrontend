@@ -15,7 +15,7 @@ function OrderManagement() {
     const fetchOrders = () => {
         axios.get('/orders', { params: { status: statusFilter } })
             .then((response) => {
-                const sortedOrders = response.data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+                const sortedOrders = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
                 setOrders(sortedOrders);
             })
             .catch((error) => console.error('Error fetching orders:', error));
@@ -31,14 +31,14 @@ function OrderManagement() {
     };
 
     const handleStatusChange = (orderId, newStatus) => {
-        axios.put(`/orders/${orderId}`, { status: newStatus })
+        axios.put(`/order/${orderId}`, {status: newStatus})
             .then(() => fetchOrders())
             .catch((error) => console.error('Error updating order status:', error));
     };
 
     const handleDelete = (orderId) => {
         if (window.confirm('Ви впевнені що хочете видалити це замовлення?')) {
-            axios.delete(`/orders/${orderId}`)
+            axios.delete(`/order/${orderId}`)
                 .then(() => fetchOrders())
                 .catch((error) => console.error('Error deleting order:', error));
         }
@@ -121,7 +121,7 @@ function OrderManagement() {
                             <p><strong>Адреса:</strong> {orderDetails.shipping.address}</p>
                             <p><strong>Ім'я:</strong> {orderDetails.shipping.first_name} {orderDetails.shipping.last_name}</p>
                             <p><strong>Телефон:</strong> {orderDetails.shipping.phone_number}</p>
-                            <p><strong>Елкектронна пошта:</strong> {orderDetails.shipping.email}</p>
+                            <p><strong>Пошта:</strong> {orderDetails.shipping.email}</p>
                             <hr />
                             <h5>Товари</h5>
                             <Table striped bordered hover>

@@ -197,7 +197,7 @@ function UserProfile() {
                         </div>
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Email</label>
+                                <label>Пошта</label>
                                 <input
                                     type="email"
                                     name="email"

@@ -51,7 +51,6 @@ function Footer() {
                 <div className="footer-section mt-3">
                     <div className="footer-delivery text-center">
                         Доставка по Україні здійснюється службою доставки: Нова Пошта.
-                        Доставляємо по всьому світу службою доставки: Укр Пошта, Нова Пошта.
                     </div>
                 </div>
 

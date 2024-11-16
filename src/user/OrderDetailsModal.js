@@ -14,7 +14,7 @@ function OrderDetailsModal({ orderDetails, showModal, setShowModal }) {
                         <p><strong>Адреса:</strong> {orderDetails.shipping.address}</p>
                         <p><strong>Ім'я:</strong> {orderDetails.shipping.first_name} {orderDetails.shipping.last_name}</p>
                         <p><strong>Телефон:</strong> {orderDetails.shipping.phone_number}</p>
-                        <p><strong>Email:</strong> {orderDetails.shipping.email}</p>
+                        <p><strong>Пошта:</strong> {orderDetails.shipping.email}</p>
                         <hr />
                         <h5>Товари</h5>
                         <Table striped bordered hover>

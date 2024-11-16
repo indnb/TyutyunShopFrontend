@@ -16,7 +16,7 @@ function OrdersTable({ orders, fetchOrderDetails }) {
     };
     return (
         <div className="orders-section mt-4">
-            <Table striped bordered hover>
+            {sortedOrders.length > 0 ? (<Table striped bordered hover>
                 <thead>
                 <tr>
                     <th>Дата замовлення</th>
@@ -44,7 +44,7 @@ function OrdersTable({ orders, fetchOrderDetails }) {
                 ))}
                 </tbody>
 
-            </Table>
+            </Table>) : <span>{"Немає варіантів"}</span>}
         </div>
     );
 }
