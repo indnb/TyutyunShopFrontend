@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import Template from './template/Template';
 import Landing from './landing/Landing';
 import ProductList from './products/ProductList';

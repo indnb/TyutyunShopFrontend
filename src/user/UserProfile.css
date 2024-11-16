@@ -87,3 +87,203 @@
     display: flex;
     flex-direction: column;
 }
+.orders-section {
+    color: #FFA500;
+    background-color: #1c1c1c;
+    font-family: Namu, sans-serif;
+    margin-top: 20px;
+}
+
+.orders-section .table {
+    color: #e59400;
+    background-color: #1111;
+    border: 1px solid #FFA500;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.orders-section .table thead th {
+    background-color: #FFA500;
+    color: #000;
+    text-align: center;
+    font-weight: bold;
+}
+
+.orders-section .table tbody tr {
+    background-color: #1c1c1c;
+    transition: background-color 0.3s;
+}
+
+.orders-section .table tbody tr:hover {
+    background-color: #333333;
+}
+
+.orders-section .table tbody td {
+    text-align: center;
+    padding: 12px;
+    border: 1px solid #FFA500;
+    color: #e59400;
+    background-color: #1a1a1a;
+}
+
+.orders-section .table tbody td .btn-info {
+    background-color: #FFA500;
+    color: #000;
+    border: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.orders-section .table tbody td .btn-info:hover {
+    background-color: #e59400;
+    color: #1a1a1a;
+    transform: scale(1.05);
+}
+
+.orders-section .table-bordered {
+    border: 1px solid #FFA500;
+}
+
+.orders-section .table-hover tbody tr:hover {
+    background-color: #333333;
+}
+.modal-content {
+    background-color: #1c1c1c;
+    color: #FFA500;
+    border: 1px solid #FFA500;
+    border-radius: 8px;
+    font-family: Namu, sans-serif;
+}
+
+.modal-header {
+    border-bottom: 1px solid #FFA500;
+}
+
+.modal-header .modal-title {
+    color: #FFA500;
+    font-weight: bold;
+}
+
+.modal-header .btn-close {
+    background-color: transparent;
+    border: none;
+    color: #FFA500;
+}
+
+.modal-header .btn-close:hover {
+    color: #e59400;
+}
+
+.modal-body {
+    color: #e59400;
+}
+
+.modal-body h5 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #FFA500;
+}
+
+.modal-body p {
+    margin-bottom: 8px;
+}
+
+.modal-body hr {
+    border-top: 1px solid #FFA500;
+}
+
+.modal-body .table {
+    color: #e59400;
+    background-color: #1111;
+    border: 1px solid #FFA500;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.modal-body .table thead th {
+    background-color: #FFA500;
+    color: #000;
+    text-align: center;
+    font-weight: bold;
+}
+
+.modal-body .table tbody tr {
+    background-color: #1c1c1c;
+    transition: background-color 0.3s;
+}
+
+.modal-body .table tbody tr:hover {
+    background-color: #333333;
+}
+
+.modal-body .table tbody td {
+    text-align: center;
+    padding: 12px;
+    border: 1px solid #FFA500;
+    color: #e59400;
+    background-color: #1a1a1a;
+}
+
+.modal-footer {
+    border-top: 1px solid #FFA500;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #FFA500;
+    color: #000;
+    border: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #e59400;
+    color: #1a1a1a;
+    transform: scale(1.05);
+}
+.form-group {
+    margin-bottom: 20px;
+    color: #FFA500;
+}
+
+.form-group label {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+    color: #FFA500;
+    font-family: Namu, sans-serif;
+}
+
+.form-select {
+    background-color: #1c1c1c;
+    color: #FFA500;
+    border: 1px solid #FFA500;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1em;
+    font-family: Namu, sans-serif;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.form-select:focus {
+    background-color: #333333;
+    color: #FFA500;
+    border-color: #e59400;
+    outline: none;
+    box-shadow: none;
+}
+
+.form-select option {
+    background-color: #1c1c1c;
+    color: #e59400;
+}

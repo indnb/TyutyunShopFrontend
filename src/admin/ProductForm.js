@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
-import { Form, Button } from 'react-bootstrap';
+import {Button, Form} from 'react-bootstrap';
 
 function ProductForm({ product, onClose }) {
     const [formData, setFormData] = useState({

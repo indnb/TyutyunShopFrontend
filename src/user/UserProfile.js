@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from '../axiosConfig';
 import './UserProfile.css';
-import { useHistory } from 'react-router-dom';
 import Logo from './user_logo.png';
-import { AuthContext } from '../context/AuthContext';
+import {AuthContext} from '../context/AuthContext';
+import OrdersTable from "./OrdersTable";
+import OrderDetailsModal from "./OrderDetailsModal";
+import {Form} from 'react-bootstrap';
 
 function UserProfile() {
     const { logout } = useContext(AuthContext);
     const [userData, setUserData] = useState({
+        id: 0,
         username: '',
         first_name: '',
         last_name: '',
@@ -21,26 +24,73 @@ function UserProfile() {
         email: '',
         phone_number: '',
     });
+    const [orders, setOrders] = useState([]);
+    const [orderDetails, setOrderDetails] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [statusFilter, setStatusFilter] = useState(null);
 
+
+    const fetchUserOrders = async (status = null) => {
+        try {
+            const response = await axios.get('/orders', {
+                params: { status, user_id: userData.id },
+            });
+            setOrders(response.data);
+        } catch (error) {
+            console.error('Error fetching user orders:', error);
+        }
+    };
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('/user/profile', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            setUserData(response.data);
+        } catch (error) {
+            console.error('Error fetching profile info:', error);
+            if (error.response && error.response.status === 401) {
+                logout();
+            }
+        }
+    };
+    const handleStatusChange = (e) => {
+        const selectedStatus = e.target.value || null;
+        setStatusFilter(selectedStatus);
+        fetchUserOrders(selectedStatus);
+    };
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get('/user/profile', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-                setUserData(response.data);
+                await fetchUserData();
             } catch (error) {
-                console.error('Error fetching profile info:', error);
-                if (error.response && error.response.status === 401) {
-                    logout();
-                }
+                console.error('Error fetching user data:', error);
             }
         };
-        fetchUserData();
+
+        fetchData();
     }, [logout]);
 
+    useEffect(() => {
+        if (userData.id) {
+            fetchUserOrders(statusFilter);
+        }
+    }, [userData.id, statusFilter]);
+
+
+    const fetchOrderDetails = (orderId) => {
+        axios.get(`/orders/${orderId}/details`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        })
+            .then((response) => {
+                setOrderDetails(response.data);
+                setShowModal(true);
+            })
+            .catch((error) => console.error('Error fetching order details:', error));
+    };
     const validateField = (fieldName, value) => {
         let error = '';
         switch (fieldName) {
@@ -76,7 +126,6 @@ function UserProfile() {
 
     const handleSave = async (e) => {
         e.preventDefault();
-        // Validate all fields before submitting
         Object.keys(userData).forEach((field) => validateField(field, userData[field]));
         if (Object.values(errors).some((error) => error)) {
             console.error('Please correct the errors before saving.');
@@ -104,7 +153,7 @@ function UserProfile() {
             <div className="profile-content">
                 <div className="profile-header">
                     <div className="user-image">
-                        <img src={Logo} alt="User" />
+                        <img src={Logo} alt="User"/>
                     </div>
                     <div className="form-buttons">
                         <button type="submit" className="btn btn-secondary save-button" onClick={handleSave}>
@@ -188,7 +237,24 @@ function UserProfile() {
                     </form>
                 </div>
             </div>
+            <h3 style={{marginTop: 10}}>Мої замовлення</h3>
+            <Form.Group controlId="statusFilter" className="mb-3">
+                <Form.Label>Фільтр по статусу:</Form.Label>
+                <Form.Select value={statusFilter} onChange={handleStatusChange}>
+                    <option value="">Всі</option>
+                    <option value="pending">В очікуванні</option>
+                    <option value="processing">В обробці</option>
+                    <option value="completed">Завершено</option>
+                </Form.Select>
+            </Form.Group>
+            <OrdersTable orders={orders} fetchOrderDetails={fetchOrderDetails}/>
+            <OrderDetailsModal
+                orderDetails={orderDetails}
+                showModal={showModal}
+                setShowModal={setShowModal}
+            />
         </div>
+
     );
 }
 

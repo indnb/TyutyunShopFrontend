@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
-import { Table, Button, Form, Modal } from 'react-bootstrap';
+import {Button, Form, Modal, Table} from 'react-bootstrap';
 
 function OrderManagement() {
     const [orders, setOrders] = useState([]);
     const [statusFilter, setStatusFilter] = useState(null);
-    const [selectedOrder, setSelectedOrder] = useState(null);
     const [orderDetails, setOrderDetails] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -15,7 +14,10 @@ function OrderManagement() {
 
     const fetchOrders = () => {
         axios.get('/orders', { params: { status: statusFilter } })
-            .then((response) => setOrders(response.data))
+            .then((response) => {
+                const sortedOrders = response.data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+                setOrders(sortedOrders);
+            })
             .catch((error) => console.error('Error fetching orders:', error));
     };
 
@@ -58,35 +60,49 @@ function OrderManagement() {
             <Table striped bordered hover>
                 <thead>
                 <tr>
-                    <th>ID замовлення</th>
+                    <th>ID</th>
                     <th>Клієнт</th>
                     <th>Статус</th>
                     <th>Загальна ціна</th>
+                    <th>Дата створення</th>
                     <th>Дія</th>
                 </tr>
                 </thead>
                 <tbody>
-                {orders.map(order => (
+                {orders.map((order) => (
                     <tr key={order.id}>
                         <td>{order.id}</td>
                         <td>{order.user_id}</td>
                         <td>{order.status}</td>
                         <td>{order.total_price} грн</td>
+                        <td>{new Date(order.date).toLocaleDateString()}</td>
                         <td>
-                            <Button variant="info" size="sm" onClick={() => handleStatusChange(order.id, 'processing')}
-                                    className="me-2">
-                                В обробці
+                            <Button
+                                variant="info"
+                                size="sm"
+                                onClick={() => handleStatusChange(order.id, 'processing')}
+                                className="me-2"
+                            >
+                                В обробку
                             </Button>
-                            <Button variant="success" size="sm"
-                                    onClick={() => handleStatusChange(order.id, 'completed')} className="me-2">
-                                Завершено
-                            </Button>
-                            <Button variant="warning" size="sm"
-                                    onClick={() => fetchOrderDetails(order.id)} className="me-2">
-                                Деталі
+                            <Button
+                                variant="success"
+                                size="sm"
+                                onClick={() => handleStatusChange(order.id, 'completed')}
+                                className="me-2"
+                            >
+                                Завершити
                             </Button>
                             <Button variant="danger" size="sm" onClick={() => handleDelete(order.id)}>
                                 Видалити
+                            </Button>
+                            <Button
+                                variant="warning"
+                                size="sm"
+                                onClick={() => fetchOrderDetails(order.id)}
+                                className="me-2"
+                            >
+                                Деталі
                             </Button>
                         </td>
                     </tr>
@@ -95,16 +111,17 @@ function OrderManagement() {
             </Table>
 
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <Modal.Title>Деталі замовлення</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {orderDetails ? (
                         <>
                             <h5>Інформація про доставку</h5>
-                            <p><strong>Адреса:</strong> {orderDetails.shipping.address_line1}, {orderDetails.shipping.city}</p>
-                            <p><strong>Ім'я:</strong> {orderDetails.shipping.guest_first_name} {orderDetails.shipping.guest_last_name}</p>
-                            <p><strong>Телефон:</strong> {orderDetails.shipping.guest_phone_number}</p>
+                            <p><strong>Адреса:</strong> {orderDetails.shipping.address}</p>
+                            <p><strong>Ім'я:</strong> {orderDetails.shipping.first_name} {orderDetails.shipping.last_name}</p>
+                            <p><strong>Телефон:</strong> {orderDetails.shipping.phone_number}</p>
+                            <p><strong>Елкектронна пошта:</strong> {orderDetails.shipping.email}</p>
                             <hr />
                             <h5>Товари</h5>
                             <Table striped bordered hover>
@@ -114,7 +131,6 @@ function OrderManagement() {
                                     <th>Кількість</th>
                                     <th>Розмір</th>
                                     <th>Ціна</th>
-                                    <th>Загальна ціна</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -123,7 +139,6 @@ function OrderManagement() {
                                         <td>{item.product_name}</td>
                                         <td>{item.quantity}</td>
                                         <td>{item.size || 'N/A'}</td>
-                                        <td>{item.price} грн</td>
                                         <td>{item.total_price} грн</td>
                                     </tr>
                                 ))}

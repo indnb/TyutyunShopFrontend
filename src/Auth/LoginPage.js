@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, {useContext, useState} from 'react';
 import axios from '../axiosConfig';
-import { useHistory } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import {useHistory} from 'react-router-dom';
+import {AuthContext} from '../context/AuthContext';
 import './Auth.css';
 
 function LoginPage() {

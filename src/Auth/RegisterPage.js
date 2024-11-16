@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from '../axiosConfig';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import './Auth.css';
 
 function RegisterPage() {

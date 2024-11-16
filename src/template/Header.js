@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link, useHistory } from 'react-router-dom';
-import { CartContext } from '../context/CartContext';
-import { AuthContext } from '../context/AuthContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Link, useHistory} from 'react-router-dom';
+import {CartContext} from '../context/CartContext';
+import {AuthContext} from '../context/AuthContext';
 import axios from '../axiosConfig';
 import './Header.css';
 

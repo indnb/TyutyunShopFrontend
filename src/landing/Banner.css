@@ -2,12 +2,16 @@
     aspect-ratio: 2;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
+    .banner-ratio {
+        aspect-ratio: 1;
+    }
+}
+@media (max-width: 600px) {
     .banner-ratio {
         aspect-ratio: 9 / 16;
     }
 }
-
 .carousel-indicator {
     cursor: pointer;
     transition: background-color 0.3s ease;

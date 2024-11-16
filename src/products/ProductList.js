@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, useParams} from "react-router-dom";
 import axios from '../axiosConfig';
 import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
 import './ProductList.css';

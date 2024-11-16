@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
 import ProductForm from './ProductForm';
-import { Table, Button, Modal } from 'react-bootstrap';
+import {Button, Modal, Table} from 'react-bootstrap';
 
 function ProductManagement() {
     const [products, setProducts] = useState([]);

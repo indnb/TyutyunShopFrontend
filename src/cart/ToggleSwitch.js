@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './ToggleSwitch.css';
 
 function ToggleSwitch({ label, onChange }) {

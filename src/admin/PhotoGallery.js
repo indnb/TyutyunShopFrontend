@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
-import { Button, Form, Card, Col, Row } from 'react-bootstrap';
+import {Button, Card, Col, Form, Row} from 'react-bootstrap';
 
 function PhotoGallery() {
     const [photos, setPhotos] = useState([]);

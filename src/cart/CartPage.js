@@ -1,20 +1,21 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {CartContext} from '../context/CartContext';
 import axios from '../axiosConfig';
 import './CartPage.css';
 import ToggleSwitch from './ToggleSwitch';
+import {AuthContext} from "../context/AuthContext";
 
 function CartPage() {
-    const {cartItems, addOneItem, removeOneItem, removeItem, clearCart} = useContext(CartContext);
+    const { isAuthenticated } = useContext(AuthContext);
+    const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
     const [shippingData, setShippingData] = useState({
-            order_id: 0,
-            address: '',
-            first_name: '',
-            last_name: '',
-            phone_number: '',
-            email: '',
-        })
-    ;
+        order_id: 0,
+        address: '',
+        first_name: '',
+        last_name: '',
+        phone_number: '',
+        email: '',
+    });
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentType, setPaymentType] = useState('Оплата картою');
@@ -24,41 +25,42 @@ function CartPage() {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await axios.get('/user/profile', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
+                if (isAuthenticated) {
+                    const response = await axios.get('/user/profile', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        },
+                    });
 
-                setShippingData({
-                    id: response.data.id || null,
-                    first_name: response.data.first_name || '',
-                    last_name: response.data.last_name || '',
-                    email: response.data.email || '',
-                    phone_number: response.data.phone_number || '',
-                    address: response.data.address || '',
-                });
-
+                    setShippingData({
+                        id: response.data.id || null,
+                        first_name: response.data.first_name || '',
+                        last_name: response.data.last_name || '',
+                        email: response.data.email || '',
+                        phone_number: response.data.phone_number || '',
+                        address: response.data.address || '',
+                    });
+                }
             } catch (error) {
                 console.error('Error fetching user profile data:', error);
             }
         };
 
         fetchUserData();
-    }, []);
+    }, [isAuthenticated]);
 
     const validateField = (name, value) => {
         let error = '';
         switch (name) {
-            case 'firstName':
-            case 'lastName':
+            case 'first_name':
+            case 'last_name':
                 if (!value) error = 'Це поле є обов’язковим';
                 break;
             case 'email':
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(value)) error = 'Некоректний формат email';
                 break;
-            case 'phone':
+            case 'phone_number':
                 const phoneRegex = /^\+?\d{10,13}$/;
                 if (!phoneRegex.test(value)) error = 'Некоректний номер телефону';
                 break;
@@ -68,12 +70,12 @@ function CartPage() {
             default:
                 break;
         }
-        setErrors((prevErrors) => ({...prevErrors, [name]: error}));
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
     };
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setShippingData({...shippingData, [name]: value});
+        const { name, value } = e.target;
+        setShippingData({ ...shippingData, [name]: value });
         validateField(name, value);
     };
 
@@ -107,7 +109,6 @@ function CartPage() {
 
             const online_payment = check_payment(paymentType);
             if (!online_payment) {
-                console.error('Offline payment is not selected. Please resolve the issue.');
                 alert('Помилка: Поки тільки наложний платіж. Змініть оплату.');
                 setIsProcessing(false);
                 return;
@@ -124,14 +125,13 @@ function CartPage() {
             };
 
             const response = await axios.post('/order', orderData, {
-                headers: {Authorization: `Bearer ${token}`},
+                headers: { Authorization: `Bearer ${token}` },
             });
-            console.log('Order placed successfully:', response.data);
 
             shippingData.order_id = response.data;
 
             await axios.post(`/shipping`, shippingData, {
-                headers: {Authorization: `Bearer ${token}`},
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             alert('Замовлення оформлено успішно!');
@@ -144,15 +144,14 @@ function CartPage() {
         }
     };
 
-
     return (
-        <div className="cart-page" style={{marginTop: '56px'}}>
+        <div className="cart-page" style={{ marginTop: '56px' }}>
             <h1>Кошик</h1>
-            {cartItems.length > 0 ? (
+            {cartItems.length > 0 && (
                 <button className="clear-cart-button" onClick={clearCart}>
                     Очистити кошик
                 </button>
-            ) : null}
+            )}
             {cartItems.length > 0 ? (
                 <>
                     <table className="cart-table">
@@ -209,23 +208,25 @@ function CartPage() {
                                 <label>Ім'я</label>
                                 <input
                                     type="text"
-                                    name="firstName"
+                                    name="first_name"
                                     value={shippingData.first_name}
+                                    placeholder="Введіть ваше ім'я"
                                     onChange={handleInputChange}
                                     required
                                 />
-                                {errors.firstName && <small className="error-text">{errors.firstName}</small>}
+                                {errors.first_name && <small className="error-text">{errors.first_name}</small>}
                             </div>
                             <div>
                                 <label>Прізвище</label>
                                 <input
                                     type="text"
-                                    name="lastName"
+                                    name="last_name"
                                     value={shippingData.last_name}
+                                    placeholder="Введіть ваше прізвище"
                                     onChange={handleInputChange}
                                     required
                                 />
-                                {errors.lastName && <small className="error-text">{errors.lastName}</small>}
+                                {errors.last_name && <small className="error-text">{errors.last_name}</small>}
                             </div>
                             <div>
                                 <label>Email</label>
@@ -233,6 +234,7 @@ function CartPage() {
                                     type="email"
                                     name="email"
                                     value={shippingData.email}
+                                    placeholder="example@gmail.com"
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -242,12 +244,13 @@ function CartPage() {
                                 <label>Телефон</label>
                                 <input
                                     type="tel"
-                                    name="phone"
+                                    name="phone_number"
                                     value={shippingData.phone_number}
+                                    placeholder="+380XXXXXXXXX"
                                     onChange={handleInputChange}
                                     required
                                 />
-                                {errors.phone && <small className="error-text">{errors.phone}</small>}
+                                {errors.phone_number && <small className="error-text">{errors.phone_number}</small>}
                             </div>
                             <div>
                                 <label>Адреса доставки</label>
@@ -255,6 +258,7 @@ function CartPage() {
                                     type="text"
                                     name="address"
                                     value={shippingData.address}
+                                    placeholder="Введіть адресу доставки"
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -278,7 +282,7 @@ function CartPage() {
                     </div>
                 </>
             ) : (
-                <h2 className="text-center">порожній (</h2>
+                <h2 className="text-center">Кошик порожній :(</h2>
             )}
         </div>
     );

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, {useContext, useEffect, useState} from 'react';
+import {Link, useParams} from 'react-router-dom';
 import axios from '../../axiosConfig';
-import { CartContext } from '../../context/CartContext';
+import {CartContext} from '../../context/CartContext';
 import './ProductDetail.css';
 
 function ProductDetail() {

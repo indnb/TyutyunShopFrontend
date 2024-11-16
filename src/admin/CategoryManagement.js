@@ -1,7 +1,7 @@
 // src/components/admin/CategoryManagement.js
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
-import { Table, Button, Form, Modal } from 'react-bootstrap';
+import {Button, Form, Modal, Table} from 'react-bootstrap';
 
 function CategoryManagement() {
     const [categories, setCategories] = useState([]);
