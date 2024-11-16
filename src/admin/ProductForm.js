@@ -6,10 +6,10 @@ import { Form, Button } from 'react-bootstrap';
 function ProductForm({ product, onClose }) {
     const [formData, setFormData] = useState({
         name: '',
-        price: '',
+        price: 0,
         description: '',
-        category_id: '',
-        primary_image_id: '',
+        category_id: 0,
+        primary_image_id: 0,
     });
     const [categories, setCategories] = useState([]);
     const [photos, setPhotos] = useState([]);
@@ -64,10 +64,11 @@ function ProductForm({ product, onClose }) {
                 <Form.Control
                     type="number"
                     value={formData.price}
-                    onChange={e => setFormData({...formData, price: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
                     required
                 />
             </Form.Group>
+
 
             <Form.Group controlId="productDescription" className="mt-3">
                 <Form.Label>Опис</Form.Label>
@@ -83,7 +84,7 @@ function ProductForm({ product, onClose }) {
                 <Form.Label>Категорія</Form.Label>
                 <Form.Select
                     value={formData.category_id}
-                    onChange={e => setFormData({...formData, category_id: e.target.value})}
+                    onChange={e => setFormData({...formData, category_id: Number(e.target.value)})}
                     required
                 >
                     <option value="">Обрати категорію</option>
@@ -104,10 +105,10 @@ function ProductForm({ product, onClose }) {
                                 id={`photo-${photo.id}`}
                                 value={photo.id}
                                 checked={String(formData.primary_image_id) === String(photo.id)}
-                                onChange={e => setFormData({ ...formData, primary_image_id: e.target.value })}
+                                onChange={e => setFormData({ ...formData, primary_image_id: Number(e.target.value) })}
                                 label={
                                     <div>
-                                        <img src={photo} thumbnail style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+                                        <img src={photo.image_url} style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
                                     </div>
                                 }
                             />

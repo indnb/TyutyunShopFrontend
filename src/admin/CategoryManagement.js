@@ -36,7 +36,7 @@ function CategoryManagement() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (editingCategory) {
-            axios.put(`/categories/${editingCategory.id}`, { name: categoryName })
+            axios.put(`/category/${editingCategory.id}`, { name: categoryName })
                 .then(() => {
                     setEditingCategory(null);
                     setCategoryName('');
@@ -45,7 +45,7 @@ function CategoryManagement() {
                 })
                 .catch(error => console.error('Error update category:', error));
         } else {
-            axios.post('/categories', { name: categoryName })
+            axios.post('/category', { name: categoryName })
                 .then(() => {
                     setCategoryName('');
                     setShowForm(false);

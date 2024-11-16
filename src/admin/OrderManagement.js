@@ -5,7 +5,7 @@ import { Table, Button, Form } from 'react-bootstrap';
 
 function OrderManagement() {
     const [orders, setOrders] = useState([]);
-    const [statusFilter, setStatusFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState(null);
 
     useEffect(() => {
         fetchOrders();
@@ -36,7 +36,7 @@ function OrderManagement() {
             <h2 className="mb-4">Управління замовленнями</h2>
             <Form.Group controlId="statusFilter" className="mb-3">
                 <Form.Label>Фільтр по статусу:</Form.Label>
-                <Form.Select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+                <Form.Select value={statusFilter} onChange={e => setStatusFilter(e.target.value || null)}>
                     <option value="">Всі</option>
                     <option value="pending">В очікуванні</option>
                     <option value="processing">В обробці</option>
@@ -58,14 +58,16 @@ function OrderManagement() {
                 {orders.map(order => (
                     <tr key={order.id}>
                         <td>{order.id}</td>
-                        <td>{order.customer_name}</td>
+                        <td>{order.user_id}</td>
                         <td>{order.status}</td>
-                        <td>{order.total_cost} грн</td>
+                        <td>{order.total_price} грн</td>
                         <td>
-                            <Button variant="info" size="sm" onClick={() => handleStatusChange(order.id, 'processing')} className="me-2">
+                            <Button variant="info" size="sm" onClick={() => handleStatusChange(order.id, 'processing')}
+                                    className="me-2">
                                 В обробці
                             </Button>
-                            <Button variant="success" size="sm" onClick={() => handleStatusChange(order.id, 'completed')} className="me-2">
+                            <Button variant="success" size="sm"
+                                    onClick={() => handleStatusChange(order.id, 'completed')} className="me-2">
                                 Завершено
                             </Button>
                             <Button variant="danger" size="sm" onClick={() => handleDelete(order.id)}>

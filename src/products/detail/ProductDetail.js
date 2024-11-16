@@ -19,14 +19,13 @@ function ProductDetail() {
     useEffect(() => {
         const fetchProductData = async () => {
             try {
-                const response = await axios.get(`/product/${id}`);
-                const productData = response.data;
+                const response = await axios.get(`/product`, { params: { product_id: id } });
+                const productData = response.data[0];
                 setProduct(productData);
 
-                const imagesResponse = await axios.get(`/product_image_all`, {params: {product_id: id}});
-                const imageUrls = imagesResponse.data.map((url) => `${url}`);
-                setImages(imageUrls);
-                setSelectedImage(imageUrls[0] || null);
+                const imagesResponse = await axios.get(`/product_image_all`, { params: { product_id: id } });
+                setImages(imagesResponse.data.map((img) => img.image_url));
+                setSelectedImage(imagesResponse.data[0]?.image_url || null);
 
                 const sizeResponse = await axios.get(`/size/${id}`);
                 const sizeData = sizeResponse.data;

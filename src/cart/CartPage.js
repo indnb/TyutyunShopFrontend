@@ -1,12 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { CartContext } from '../context/CartContext';
 import axios from '../axiosConfig';
 import './CartPage.css';
-import ToggleSwitch from "./ToggleSwitch";
+import ToggleSwitch from './ToggleSwitch';
 
 function CartPage() {
     const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
     const [shippingData, setShippingData] = useState({
+        id: null,
         firstName: '',
         lastName: '',
         email: '',
@@ -15,9 +16,35 @@ function CartPage() {
     });
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
-    const [paymentType, setPaymentType] = useState("Оплата картою");
+    const [paymentType, setPaymentType] = useState('Оплата картою');
 
     const totalCost = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get('/user/profile', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+
+                setShippingData({
+                    id: response.data.id || null,
+                    firstName: response.data.first_name || '',
+                    lastName: response.data.last_name || '',
+                    email: response.data.email || '',
+                    phone: response.data.phone_number || '',
+                    address: response.data.address || '',
+                });
+
+            } catch (error) {
+                console.error('Error fetching user profile data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const validateField = (name, value) => {
         let error = '';
@@ -49,12 +76,17 @@ function CartPage() {
         validateField(name, value);
     };
 
+    function check_payment() {
+        return paymentType === "Наложний платіж";
+    }
 
     const handlePaymentToggle = (isChecked) => {
-        setPaymentType(isChecked ? "Наложний платіж" : "Оплата картою");
+        setPaymentType(isChecked ? 'Наложний платіж' : 'Оплата картою');
     };
+
     const handlePurchase = async (e) => {
         e.preventDefault();
+
         Object.keys(shippingData).forEach((field) => validateField(field, shippingData[field]));
         if (Object.values(errors).some((error) => error)) {
             console.error('Please correct the errors before submitting.');
@@ -63,29 +95,48 @@ function CartPage() {
 
         setIsProcessing(true);
         try {
+            const token = localStorage.getItem('token');
+            const orderItems = cartItems.map((item) => ({
+                product_id: item.id,
+                quantity: item.quantity,
+                price: item.price,
+                total_price: item.price * item.quantity,
+                size: item.size,
+            }));
+
+            const online_payment = check_payment(paymentType);
+            if (!online_payment) {
+                console.error('Offline payment is not selected. Please resolve the issue.');
+                alert('Помилка: Поки тільки наложний платіж. Змініть оплату.');
+                setIsProcessing(false);
+                return;
+            }
+
             const orderData = {
-                items: cartItems,
-                shippingData,
-                totalCost,
-                paymentType,
+                order: {
+                    user_id: Number(shippingData.id),
+                    total_price: totalCost,
+                    status: 'pending',
+                    online_payment: online_payment,
+                },
+                order_items: orderItems,
             };
 
             const response = await axios.post('/order', orderData, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                headers: { Authorization: `Bearer ${token}` },
             });
 
-            if (response.data && response.data.paymentUrl) {
-                window.location.href = response.data.paymentUrl;
-            } else {
-                alert('Помилка при створенні посилання для оплати');
-            }
+            console.log('Order placed successfully:', response.data);
+            alert('Замовлення оформлено успішно!');
+            clearCart();
         } catch (error) {
-            console.error('Error placing new order', error);
+            console.error('Error placing new order:', error);
             alert('Помилка при оформленні замовлення. Спробуйте ще раз.');
         } finally {
             setIsProcessing(false);
         }
     };
+
 
     return (
         <div className="cart-page" style={{ marginTop: '56px' }}>
