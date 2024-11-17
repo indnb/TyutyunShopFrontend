@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {CartContext} from '../context/CartContext';
 import axios from '../axiosConfig';
 import './CartPage.css';
-import ToggleSwitch from './ToggleSwitch';
+import ToggleButtons from './ToggleButtons';
 import {AuthContext} from "../context/AuthContext";
 
 function CartPage() {
@@ -84,7 +84,7 @@ function CartPage() {
     }
 
     const handlePaymentToggle = (isChecked) => {
-        setPaymentType(isChecked ? 'Наложний платіж' : 'Оплата картою');
+        setPaymentType(isChecked);
     };
 
     const handlePurchase = async (e) => {
@@ -203,7 +203,7 @@ function CartPage() {
 
                     <div className="purchase-block">
                         <h2>Дані для відправки</h2>
-                        <form onSubmit={handlePurchase}>
+                        <form>
                             <div>
                                 <label>Ім'я</label>
                                 <input
@@ -268,14 +268,15 @@ function CartPage() {
                             <div className="payment-method mt-4">
                                 <h3>Вибір способу оплати</h3>
                                 <div>
-                                    <ToggleSwitch
-                                        label={paymentType}
+                                    <ToggleButtons
+                                        label1="Оплата картою"
+                                        label2="Наложний платіж"
                                         onChange={handlePaymentToggle}
                                     />
                                 </div>
                             </div>
 
-                            <button className="w-100 mt-4" type="submit" disabled={isProcessing}>
+                            <button className="w-100 mt-4" type="submit" disabled={isProcessing} onClick={handlePurchase} n>
                                 {isProcessing ? 'Обробка...' : 'Підтвердити купівлю'}
                             </button>
                         </form>

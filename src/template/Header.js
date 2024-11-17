@@ -51,7 +51,7 @@ function Header() {
             </Link>
 
             <div className={'navbar-collapse offcanvas-collapse ' + (openedDrawer ? 'open' : '')}>
-              <div className="d-flex justify-content-center w-100">
+              <div className="d-flex justify-content-center w-100" style={{marginBottom: 0, fontSize: '20px'}}>
                 {categories.map((category) => (
                     <Link
                         key={category.id}
@@ -63,8 +63,7 @@ function Header() {
                     </Link>
                 ))}
               </div>
-
-              <Link to="/cart" className="btn btn-outline-orange me-3 d-none d-lg-inline" style={{ width: 120 }}>
+              <Link to="/cart" className="btn btn-outline-orange me-3" >
                 <FontAwesomeIcon icon={['fas', 'shopping-cart']} />
                 <span className="ms-3 badge rounded-pill bg-orange">{totalItems}</span>
               </Link>
@@ -122,10 +121,6 @@ function Header() {
             </div>
 
             <div className="d-inline-block d-lg-none">
-              <button type="button" className="btn btn-outline-orange">
-                <FontAwesomeIcon icon={['fas', 'shopping-cart']} />
-                <span className="ms-3 badge rounded-pill bg-orange">{totalItems}</span>
-              </button>
               <button className="navbar-toggler p-0 border-0 ms-3" type="button" onClick={toggleDrawer}>
                 <span className="navbar-toggler-icon"></span>
               </button>

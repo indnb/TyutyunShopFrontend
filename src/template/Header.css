@@ -48,3 +48,25 @@
 .nav-link:hover {
     color: #ffffff !important;
 }
+.cart-button-in-drawer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.cart-button-in-drawer .btn {
+    width: 100%;
+    max-width: 200px;
+}
+.navbar-collapse .d-flex {
+    margin-bottom: 1rem;
+}
+
+.nav-link {
+    text-decoration: none;
+}
+
+.navbar-collapse .btn {
+    display: inline-flex;
+    align-items: center;
+}

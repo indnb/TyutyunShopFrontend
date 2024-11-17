@@ -27,7 +27,7 @@ function CategoryManagement() {
 
     const handleDelete = (categoryId) => {
         if (window.confirm('Ви впевнені зо хочете видалити цю категорію?')) {
-            axios.delete(`/categories/${categoryId}`)
+            axios.delete(`/category/${categoryId}`)
                 .then(() => fetchCategories())
                 .catch(error => console.error('Error delete category:', error));
         }

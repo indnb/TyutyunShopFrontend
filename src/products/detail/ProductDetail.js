@@ -145,7 +145,7 @@ function ProductDetail() {
                                     <p>Зображення не знайдено</p>
                                 )}
                             </div>
-                            <div className="image-thumbnails d-flex justify-content-center mt-3">
+                            <div className="image-thumbnails d-flex justify-content-center mt-3" style={{marginBottom: 30}}>
                                 {images.map((image, index) => (
                                     <img
                                         key={index}

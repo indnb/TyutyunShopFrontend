@@ -46,7 +46,7 @@ function OrderManagement() {
 
     return (
         <div className="container mt-5">
-            <h2 className="mb-4">Управління замовленнями</h2>
+            <h2 className="mb-4 margin-top">Управління замовленнями</h2>
             <Form.Group controlId="statusFilter" className="mb-3">
                 <Form.Label>Фільтр по статусу:</Form.Label>
                 <Form.Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value || null)}>
