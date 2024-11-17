@@ -51,7 +51,7 @@ function Header() {
             </Link>
 
             <div className={'navbar-collapse offcanvas-collapse ' + (openedDrawer ? 'open' : '')}>
-              <div className="d-flex justify-content-center w-100" style={{marginBottom: 0, fontSize: '20px'}}>
+              <div className="d-flex justify-content-center w-100" style={{marginBottom: 5, fontSize: '20px'}}>
                 {categories.map((category) => (
                     <Link
                         key={category.id}
