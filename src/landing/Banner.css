@@ -9,7 +9,7 @@
 }
 @media (max-width: 600px) {
     .banner-ratio {
-        aspect-ratio: 9 / 16;
+        aspect-ratio: 0.51;
     }
 }
 .carousel-indicator {
