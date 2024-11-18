@@ -1,145 +1,191 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from "react";
 import axios from '../axiosConfig';
-import {useHistory} from 'react-router-dom';
-import './Auth.css';
+import "./Auth.css";
 
-function RegisterPage() {
+const RegisterPage = () => {
     const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        password: '',
-        first_name: '',
-        last_name: '',
-        phone_number: '',
-        address: '',
+        username: "",
+        email: "",
+        password: "",
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+        address: "",
     });
     const [errors, setErrors] = useState({});
-    const history = useHistory();
+    const [serverMessage, setServerMessage] = useState("");
+    const [timer, setTimer] = useState(0);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
     const validateField = (name, value) => {
-        let error = '';
-        switch (name) {
-            case 'username':
-                if (!value) {
-                    error = 'Логін є обов’язковим';
-                }
-                break;
-            case 'email':
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                    error = 'Некоректний формат email';
-                }
-                break;
-            case 'password':
-                if (value.length < 6) {
-                    error = 'Пароль має містити щонайменше 6 символів';
-                }
-                break;
-            case 'phone_number':
-                const phoneRegex = /^\+?\d{10,13}$/;
-                if (!phoneRegex.test(value)) {
-                    error = 'Некоректний номер телефону';
-                }
-                break;
-            default:
-                break;
+        let error = "";
+
+        if (name === "username") {
+            const usernameRegex = /^[A-Za-z]{3,}$/;
+            if (!usernameRegex.test(value)) {
+                error = "Логін повинен містити лише англійські літери та бути не коротшим за 3 символи.";
+            }
+        } else if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
+            error = "Некоректна електронна адреса.";
+        } else if (name === "password") {
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+            if (!passwordRegex.test(value)) {
+                error = "Пароль повинен містити мінімум 8 символів, одну велику літеру, одну цифру та один спеціальний символ.";
+            }
+        } else if (name === "phone_number") {
+            const phoneRegex = /^\+380\d{9}$/;
+            if (!phoneRegex.test(value)) {
+                error = "Телефон повинен бути у форматі +380XXXXXXXXX.";
+            }
+        } else if (name === "first_name" || name === "last_name") {
+            const nameRegex = /^[A-Za-zА-Яа-яЇїІіЄєҐґ]{2,}$/;
+            if (!value.trim()) {
+                error = "Це поле обов'язкове.";
+            } else if (!nameRegex.test(value)) {
+                error = "Ім'я або прізвище повинні містити лише літери та бути не коротшими за 2 символи.";
+            }
         }
+
         setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+        return error;
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         validateField(name, value);
+        setServerMessage("");
     };
+
+    const startCooldown = () => {
+        setTimer(30);
+        setIsButtonDisabled(true);
+    };
+
+    useEffect(() => {
+        if (isButtonDisabled) {
+            const interval = setInterval(() => {
+                setTimer((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(interval);
+                        setIsButtonDisabled(false);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [isButtonDisabled]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Validate all fields before submitting
-        Object.keys(formData).forEach((field) => validateField(field, formData[field]));
-        if (Object.values(errors).some((error) => error)) {
-            console.error('Please correct the errors before submitting.');
+        setServerMessage("");
+
+        const validationErrors = {};
+        Object.keys(formData).forEach((field) => {
+            const error = validateField(field, formData[field]);
+            if (error) validationErrors[field] = error;
+        });
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
             return;
         }
         try {
-            await axios.post('/user/registration', formData);
-            alert('Реєстрація успішна! Тепер ви можете увійти.');
-            history.push('/login');
+            startCooldown();
+            await axios.post(
+                `/user/try_registration`,
+                formData,
+            );
+            setServerMessage("Реєстрація успішна. Перевірте вашу пошту для підтвердження.");
         } catch (error) {
-            console.error('Error registration', error);
-            alert('Помилка при реєстрації. Будь ласка, перевірте введені дані.');
+            if (error.response && error.response.status === 409) {
+                setServerMessage("Ця електронна адреса вже зареєстрована.");
+            } else {
+                setServerMessage("Сталася помилка. Будь ласка, спробуйте ще раз.");
+            }
         }
     };
 
+
     return (
-        <div className="auth-container margin-top margin-bottom">
-            <h2>Реєстрація</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Логін:
+        <div className="auth-container margin-top">
+            <form className="auth-form" onSubmit={handleSubmit}>
+                <h2>Реєстрація</h2>
+                <div className="form-group">
+                    <label htmlFor="username">Логін</label>
                     <input
                         type="text"
+                        id="username"
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
-                        required
                     />
                     {errors.username && <small className="error-text">{errors.username}</small>}
-                </label>
-                <label>
-                    Email:
+                </div>
+                <div className="form-group">
+                    <label htmlFor="email">Електронна адреса</label>
                     <input
                         type="email"
+                        id="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        required
                     />
                     {errors.email && <small className="error-text">{errors.email}</small>}
-                </label>
-                <label>
-                    Пароль:
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password">Пароль</label>
                     <input
                         type="password"
+                        id="password"
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        required
                     />
                     {errors.password && <small className="error-text">{errors.password}</small>}
-                </label>
-                <label>
-                    Ім'я:
+                </div>
+                <div className="form-group">
+                    <label htmlFor="first_name">Ім'я</label>
                     <input
                         type="text"
+                        id="first_name"
                         name="first_name"
                         value={formData.first_name}
                         onChange={handleChange}
                     />
-                </label>
-                <label>
-                    Прізвище:
+                    {errors.first_name && <small className="error-text">{errors.first_name}</small>}
+                </div>
+                <div className="form-group">
+                    <label htmlFor="last_name">Прізвище</label>
                     <input
                         type="text"
+                        id="last_name"
                         name="last_name"
                         value={formData.last_name}
                         onChange={handleChange}
                     />
-                </label>
-                <label>
-                    Номер телефону:
+                    {errors.last_name && <small className="error-text">{errors.last_name}</small>}
+                </div>
+                <div className="form-group">
+                    <label htmlFor="phone_number">Телефон</label>
                     <input
-                        type="tel"
+                        type="text"
+                        id="phone_number"
                         name="phone_number"
                         value={formData.phone_number}
                         onChange={handleChange}
                     />
                     {errors.phone_number && <small className="error-text">{errors.phone_number}</small>}
-                </label>
-                <button type="submit">Зареєструватися</button>
+                </div>
+                <button type="submit" disabled={isButtonDisabled}>
+                    {isButtonDisabled ? `Повторна спроба через ${timer} с` : "Зареєструватись"}
+                </button>
+                {serverMessage && <p className="server-message">{serverMessage}</p>}
             </form>
         </div>
     );
-}
+};
 
 export default RegisterPage;

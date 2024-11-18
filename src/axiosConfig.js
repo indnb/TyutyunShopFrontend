@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8181/api',
+    baseURL: "http://" + (process.env.SERVER_ADDRESS || '127.0.0.1') + ':' + (process.env.SERVER_PORT || '8181') + '/api',
 });
 
 instance.interceptors.request.use(
@@ -16,8 +16,6 @@ instance.interceptors.request.use(
     (error) => {
         return Promise.reject(error);
     }
-
 );
-
 
 export default instance;
