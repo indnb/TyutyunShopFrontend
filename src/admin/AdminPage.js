@@ -1,8 +1,21 @@
-// src/components/AdminPage.js
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 function AdminPage() {
+    const { isAdmin, checkAuth } = useContext(AuthContext);
+    const history = useHistory();
+
+    useEffect(() => {
+        const verifyAccess = async () => {
+            await checkAuth();
+            if (!isAdmin) {
+                history.push('/profile');
+            }
+        };
+        verifyAccess();
+    }, [isAdmin, checkAuth, history]);
+
     return (
         <div className="container mt-5">
             <h1 className="mb-4">Тютюн панель)</h1>

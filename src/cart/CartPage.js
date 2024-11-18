@@ -283,7 +283,7 @@ function CartPage() {
                     </div>
                 </>
             ) : (
-                <h2 className="text-center">Кошик порожній :(</h2>
+                <h2 className="text-center">порожній :(</h2>
             )}
         </div>
     );

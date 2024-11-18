@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Template from './template/Template';
 import Landing from './landing/Landing';
 import ProductList from './products/ProductList';
@@ -9,12 +9,12 @@ import LoginPage from './Auth/LoginPage';
 import RegisterPage from './Auth/RegisterPage';
 import UserProfile from './user/UserProfile';
 import AdminPage from './admin/AdminPage';
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from './PrivateRoute';
 import './App.css';
-import OrderManagement from "./admin/OrderManagement";
-import PhotoGallery from "./admin/PhotoGallery";
-import CategoryManagement from "./admin/CategoryManagement";
-import ProductManagement from "./admin/ProductManagement";
+import OrderManagement from './admin/OrderManagement';
+import PhotoGallery from './admin/PhotoGallery';
+import CategoryManagement from './admin/CategoryManagement';
+import ProductManagement from './admin/ProductManagement';
 
 function App() {
     return (
@@ -26,12 +26,14 @@ function App() {
                 <Route path="/cart" component={CartPage} />
                 <Route path="/login" component={LoginPage} />
                 <Route path="/register" component={RegisterPage} />
-                <PrivateRoute path="/admin" exact component={AdminPage} />
-                <PrivateRoute path="/admin/products" component={ProductManagement} />
-                <PrivateRoute path="/admin/categories" component={CategoryManagement} />
-                <PrivateRoute path="/admin/orders" component={OrderManagement} />
-                <PrivateRoute path="/admin/photos" component={PhotoGallery} />
+
                 <PrivateRoute path="/user/profile" component={UserProfile} />
+
+                <PrivateRoute path="/admin" exact component={AdminPage} adminOnly={true} />
+                <PrivateRoute path="/admin/products" component={ProductManagement} adminOnly={true} />
+                <PrivateRoute path="/admin/categories" component={CategoryManagement} adminOnly={true} />
+                <PrivateRoute path="/admin/orders" component={OrderManagement} adminOnly={true} />
+                <PrivateRoute path="/admin/photos" component={PhotoGallery} adminOnly={true} />
             </Switch>
         </Template>
     );

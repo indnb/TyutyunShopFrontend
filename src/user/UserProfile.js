@@ -6,6 +6,8 @@ import {AuthContext} from '../context/AuthContext';
 import OrdersTable from "./OrdersTable";
 import OrderDetailsModal from "./OrderDetailsModal";
 import {Form} from 'react-bootstrap';
+import ChangePasswordModal from "./ChangePasswordModal";
+import {validateField} from "../utils/validation";
 
 function UserProfile() {
     const { logout } = useContext(AuthContext);
@@ -28,7 +30,7 @@ function UserProfile() {
     const [orderDetails, setOrderDetails] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [statusFilter, setStatusFilter] = useState(null);
-
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
 
     const fetchUserOrders = async (status = null) => {
         try {
@@ -91,57 +93,38 @@ function UserProfile() {
             })
             .catch((error) => console.error('Error fetching order details:', error));
     };
-    const validateField = (fieldName, value) => {
-        let error = '';
-        switch (fieldName) {
-            case 'first_name':
-            case 'last_name':
-                if (!value) {
-                    error = 'Це поле є обов’язковим';
-                }
-                break;
-            case 'email':
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                    error = 'Некоректний формат email';
-                }
-                break;
-            case 'phone_number':
-                const phoneRegex = /^\+?\d{10,13}$/;
-                if (!phoneRegex.test(value)) {
-                    error = 'Некоректний номер телефону';
-                }
-                break;
-            default:
-                break;
-        }
-        setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: error }));
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        const error = validateField(name, value);
         setUserData({ ...userData, [name]: value });
-        validateField(name, value);
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
     };
 
     const handleSave = async (e) => {
         e.preventDefault();
-        Object.keys(userData).forEach((field) => validateField(field, userData[field]));
-        if (Object.values(errors).some((error) => error)) {
-            console.error('Please correct the errors before saving.');
+        const validationErrors = {};
+        Object.keys(userData).forEach((field) => {
+            const error = validateField(field, userData[field]);
+            if (error) validationErrors[field] = error;
+        });
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
             return;
         }
+
         try {
-            await axios.post('/user/update', userData, {
+            await axios.post("/user/update", userData, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-            console.log('Profile data saved successfully!');
         } catch (error) {
-            console.error('Error updating profile', error);
+            console.error("Error updating profile:", error);
         }
     };
+
 
     const handleLogout = () => {
         logout();
@@ -156,6 +139,13 @@ function UserProfile() {
                         <img src={Logo} alt="User"/>
                     </div>
                     <div className="form-buttons">
+                        <button
+                            type="button"
+                            className="btn btn-secondary save-button"
+                            onClick={() => setShowPasswordModal(true)}
+                        >
+                            Змінити пароль
+                        </button>
                         <button type="submit" className="btn btn-secondary save-button" onClick={handleSave}>
                             Зберегти
                         </button>
@@ -166,7 +156,7 @@ function UserProfile() {
                 </div>
                 <div className="profile-sections">
                     <form onSubmit={handleSave} className="profile-form">
-                        <div className="section-title">
+                    <div className="section-title">
                             <span>Особисті дані</span>
                         </div>
                         <div className="form-row">
@@ -247,6 +237,10 @@ function UserProfile() {
                     <option value="completed">Завершено</option>
                 </Form.Select>
             </Form.Group>
+            <ChangePasswordModal
+                showModal={showPasswordModal}
+                setShowModal={setShowPasswordModal}
+            />
             <OrdersTable orders={orders} fetchOrderDetails={fetchOrderDetails}/>
             <OrderDetailsModal
                 orderDetails={orderDetails}

@@ -1,6 +1,6 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import axios from '../axiosConfig';
-import {useHistory} from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -21,8 +21,12 @@ export function AuthProvider({ children }) {
             } catch (error) {
                 console.error("Error fetching user's role:", error);
             }
+        } else {
+            setIsAuthenticated(false);
+            setIsAdmin(false);
         }
     };
+
     useEffect(() => {
         checkAuth();
     }, []);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from '../axiosConfig';
 import "./Auth.css";
+import {validateField} from "../utils/validation";
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -16,39 +17,6 @@ const RegisterPage = () => {
     const [serverMessage, setServerMessage] = useState("");
     const [timer, setTimer] = useState(0);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
-    const validateField = (name, value) => {
-        let error = "";
-
-        if (name === "username") {
-            const usernameRegex = /^[A-Za-z]{3,}$/;
-            if (!usernameRegex.test(value)) {
-                error = "Логін повинен містити лише англійські літери та бути не коротшим за 3 символи.";
-            }
-        } else if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
-            error = "Некоректна електронна адреса.";
-        } else if (name === "password") {
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-            if (!passwordRegex.test(value)) {
-                error = "Пароль повинен містити мінімум 8 символів, одну велику літеру, одну цифру та один спеціальний символ.";
-            }
-        } else if (name === "phone_number") {
-            const phoneRegex = /^\+380\d{9}$/;
-            if (!phoneRegex.test(value)) {
-                error = "Телефон повинен бути у форматі +380XXXXXXXXX.";
-            }
-        } else if (name === "first_name" || name === "last_name") {
-            const nameRegex = /^[A-Za-zА-Яа-яЇїІіЄєҐґ]{2,}$/;
-            if (!value.trim()) {
-                error = "Це поле обов'язкове.";
-            } else if (!nameRegex.test(value)) {
-                error = "Ім'я або прізвище повинні містити лише літери та бути не коротшими за 2 символи.";
-            }
-        }
-
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
-        return error;
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
