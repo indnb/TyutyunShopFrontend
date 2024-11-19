@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from '../axiosConfig';
 import "./Auth.css";
-import {validateField} from "../utils/validation";
+import { validateField } from "../utils/validation";
+import Cookies from 'js-cookie';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -18,20 +19,30 @@ const RegisterPage = () => {
     const [timer, setTimer] = useState(0);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-        validateField(name, value);
-        setServerMessage("");
-    };
-
-    const startCooldown = () => {
-        setTimer(30);
-        setIsButtonDisabled(true);
-    };
-
+    // Load cooldown state from cookies on component mount
     useEffect(() => {
-        if (isButtonDisabled) {
+        const savedCooldown = parseInt(Cookies.get('registerCooldown') || '0', 10);
+        if (savedCooldown > 0) {
+            const remainingTime = Math.max(0, savedCooldown - Math.floor(Date.now() / 1000));
+            setTimer(remainingTime);
+            if (remainingTime > 0) {
+                setIsButtonDisabled(true);
+            }
+        }
+    }, []);
+
+    // Save cooldown to cookies when it changes
+    useEffect(() => {
+        if (timer > 0) {
+            Cookies.set('registerCooldown', Math.floor(Date.now() / 1000) + timer, { expires: 1 / 48 }); // Expires in 30 minutes
+        } else {
+            Cookies.remove('registerCooldown'); // Remove cookie when cooldown ends
+        }
+    }, [timer]);
+
+    // Cooldown timer
+    useEffect(() => {
+        if (isButtonDisabled && timer > 0) {
             const interval = setInterval(() => {
                 setTimer((prev) => {
                     if (prev <= 1) {
@@ -44,7 +55,19 @@ const RegisterPage = () => {
             }, 1000);
             return () => clearInterval(interval);
         }
-    }, [isButtonDisabled]);
+    }, [isButtonDisabled, timer]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        validateField(name, value);
+        setServerMessage("");
+    };
+
+    const startCooldown = () => {
+        setTimer(30); // Start 30-second cooldown
+        setIsButtonDisabled(true);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -60,13 +83,21 @@ const RegisterPage = () => {
             setErrors(validationErrors);
             return;
         }
+
         try {
             startCooldown();
-            await axios.post(
-                `/user/try_registration`,
-                formData,
-            );
+            await axios.post(`/user/try_registration`, formData);
             setServerMessage("Реєстрація успішна. Перевірте вашу пошту для підтвердження.");
+            setFormData({
+                username: "",
+                email: "",
+                password: "",
+                first_name: "",
+                last_name: "",
+                phone_number: "",
+                address: "",
+            });
+            setErrors({});
         } catch (error) {
             if (error.response && error.response.status === 409) {
                 setServerMessage("Ця електронна адреса вже зареєстрована.");
@@ -75,7 +106,6 @@ const RegisterPage = () => {
             }
         }
     };
-
 
     return (
         <div className="auth-container margin-top">

@@ -13,7 +13,10 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "react": "^17.0.2",
@@ -21,9 +24,10 @@
     "react-dom": "^17.0.2",
     "react-ratings-declarative": "^3.4.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "react-swipeable": "^7.0.2",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "webpack": "^5.96.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,8 +56,9 @@
     ]
   },
   "devDependencies": {
+    "@types/jwt-decode": "^3.1.0",
     "@types/react": "^17.0.8",
     "@types/react-dom": "^17.0.5",
-    "gh-pages": "^3.2.0"
+    "gh-pages": "^6.2.0"
   }
 }
