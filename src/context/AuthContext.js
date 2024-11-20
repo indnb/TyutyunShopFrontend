@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from '../axiosConfig';
 import { useHistory } from 'react-router-dom';
+import {clearCookies} from "../utils/cookie";
 
 export const AuthContext = createContext();
 
@@ -32,6 +33,7 @@ export function AuthProvider({ children }) {
     }, []);
 
     const logout = () => {
+        clearCookies();
         localStorage.removeItem('token');
         setIsAuthenticated(false);
         setIsAdmin(false);

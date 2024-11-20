@@ -96,8 +96,8 @@ function CartPage() {
             }));
 
             const online_payment = check_payment();
-            if (!online_payment) {
-                alert("Помилка: Поки тільки оплата картою. Змініть оплату.");
+            if (online_payment) {
+                alert("Помилка: Поки тільки при отриманні. Змініть оплату.");
                 setIsProcessing(false);
                 return;
             }
