@@ -62,7 +62,7 @@ const RegisterPage = () => {
     };
 
     const startCooldown = () => {
-        setTimer(1);
+        setTimer(30);
         setIsButtonDisabled(true);
     };
 

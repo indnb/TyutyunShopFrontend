@@ -96,7 +96,7 @@
 
 .purchase-block label {
     display: block;
-    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 .purchase-block input {
@@ -106,7 +106,7 @@
     background-color: var(--input-bg-color);
     color: var(--text-color);
     border-radius: 5px;
-    margin-bottom: 15px;
+    margin-top: 5px;
     font-size: var(--font-size);
 }
 
@@ -171,4 +171,7 @@
 .quantity {
     margin: 0 10px;
     color: var(--text-color);
+}
+.error-text {
+    color: #fd7e14;
 }

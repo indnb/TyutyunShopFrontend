@@ -141,15 +141,15 @@ function UserProfile() {
                     <div className="form-buttons">
                         <button
                             type="button"
-                            className="btn btn-secondary save-button"
+                            className="btn save-button"
                             onClick={() => setShowPasswordModal(true)}
                         >
                             Змінити пароль
                         </button>
-                        <button type="submit" className="btn btn-secondary save-button" onClick={handleSave}>
+                        <button type="submit" className="btn save-button" onClick={handleSave}>
                             Зберегти
                         </button>
-                        <button type="button" className="btn btn-dark logout-button" onClick={handleLogout}>
+                        <button type="button" className="btn logout-button" onClick={handleLogout}>
                             Вийти з акаунту
                         </button>
                     </div>

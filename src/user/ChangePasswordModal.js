@@ -29,8 +29,8 @@ function ChangePasswordModal({ showModal, setShowModal }) {
         const error2 = validateField("password", passwordData.confirm_password, passwordData);
         if (error) validationErrors.confirm_password = error2;
 
-        if (!passwordData.new_password) {
-            validationErrors.new_password = "Новий пароль не може бути порожнім.";
+        if (!passwordData.old_password) {
+            validationErrors.old_password = "Потрібно вказати старий пароль.";
         }
         if (!passwordData.confirm_password) {
             validationErrors.confirm_password = "Повторіть новий пароль.";
@@ -43,6 +43,9 @@ function ChangePasswordModal({ showModal, setShowModal }) {
         }
         if (passwordData.confirm_password === passwordData.old_password) {
             validationErrors.confirm_password = "Новий пароль повинен відрізнятися від старого.";
+        }
+        if (!passwordData.new_password) {
+            validationErrors.new_password = "Новий пароль не може бути порожнім.";
         }
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);

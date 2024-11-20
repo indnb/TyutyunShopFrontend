@@ -9,7 +9,6 @@
 .text-orange {
     color: #FFA500 !important;
 }
-
 .btn-outline-orange {
     border-color: #FFA500;
     color: #FFA500;
@@ -38,6 +37,7 @@
 }
 
 .dropdown-menu {
+    padding: 10px 10px 10px 10px;
     background-color: #1a1a1a !important;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .nav-link:hover {
-    color: #ffffff !important;
+    outline-color: #e59400 !important;
 }
 .cart-button-in-drawer {
     display: flex;
@@ -69,4 +69,21 @@
 .navbar-collapse .btn {
     display: inline-flex;
     align-items: center;
+}
+
+.btn:hover,
+.dropdown-item:hover {
+    outline: none;
+    border: 2px solid #FFA500;
+    background-color: inherit;
+    color: inherit;
+}
+.btn:active,
+.dropdown-item:active {
+    background-color: #1a1a1a;
+    color: white;
+    border: 1px solid #FFA500;
+}
+.nav-link:hover {
+    color: #e59400 !important;
 }

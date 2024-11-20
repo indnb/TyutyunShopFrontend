@@ -1,24 +1,25 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {CartContext} from '../context/CartContext';
-import axios from '../axiosConfig';
-import './CartPage.css';
-import ToggleButtons from './ToggleButtons';
-import {AuthContext} from "../context/AuthContext";
+import React, { useContext, useEffect, useState } from "react";
+import { CartContext } from "../context/CartContext";
+import axios from "../axiosConfig";
+import "./CartPage.css";
+import ToggleButtons from "./ToggleButtons";
+import { AuthContext } from "../context/AuthContext";
+import { validateField } from "../utils/validation";
 
 function CartPage() {
     const { isAuthenticated } = useContext(AuthContext);
     const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
     const [shippingData, setShippingData] = useState({
         order_id: 0,
-        address: '',
-        first_name: '',
-        last_name: '',
-        phone_number: '',
-        email: '',
+        address: "",
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+        email: "",
     });
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
-    const [paymentType, setPaymentType] = useState('Оплата картою');
+    const [paymentType, setPaymentType] = useState("Оплата картою");
 
     const totalCost = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -26,79 +27,66 @@ function CartPage() {
         const fetchUserData = async () => {
             try {
                 if (isAuthenticated) {
-                    const response = await axios.get('/user/profile', {
+                    const response = await axios.get("/user/profile", {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('token')}`,
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
                         },
                     });
 
                     setShippingData({
                         id: response.data.id || null,
-                        first_name: response.data.first_name || '',
-                        last_name: response.data.last_name || '',
-                        email: response.data.email || '',
-                        phone_number: response.data.phone_number || '',
-                        address: response.data.address || '',
+                        first_name: response.data.first_name || "",
+                        last_name: response.data.last_name || "",
+                        email: response.data.email || "",
+                        phone_number: response.data.phone_number || "",
+                        address: response.data.address || "",
                     });
                 }
             } catch (error) {
-                console.error('Error fetching user profile data:', error);
+                console.error("Error fetching user profile data:", error);
             }
         };
 
         fetchUserData();
     }, [isAuthenticated]);
 
-    const validateField = (name, value) => {
-        let error = '';
-        switch (name) {
-            case 'first_name':
-            case 'last_name':
-                if (!value) error = 'Це поле є обов’язковим';
-                break;
-            case 'email':
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) error = 'Некоректний формат email';
-                break;
-            case 'phone_number':
-                const phoneRegex = /^\+?\d{10,13}$/;
-                if (!phoneRegex.test(value)) error = 'Некоректний номер телефону';
-                break;
-            case 'address':
-                if (!value) error = 'Це поле є обов’язковим';
-                break;
-            default:
-                break;
-        }
+    const validateFieldWrapper = (name, value) => {
+        const error = validateField(name, value, shippingData);
         setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setShippingData({ ...shippingData, [name]: value });
-        validateField(name, value);
+        validateFieldWrapper(name, value);
     };
 
     function check_payment() {
-        return paymentType === "Наложний платіж";
+        return paymentType === "Оплата картою";
     }
 
-    const handlePaymentToggle = (isChecked) => {
-        setPaymentType(isChecked);
+    const handlePaymentToggle = (selectedPaymentType) => {
+        setPaymentType(selectedPaymentType);
     };
 
     const handlePurchase = async (e) => {
         e.preventDefault();
 
-        Object.keys(shippingData).forEach((field) => validateField(field, shippingData[field]));
-        if (Object.values(errors).some((error) => error)) {
-            console.error('Please correct the errors before submitting.');
+        const validationErrors = {};
+        Object.keys(shippingData).forEach((field) => {
+            const error = validateField(field, shippingData[field]);
+            if (error) validationErrors[field] = error;
+        });
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            console.error("Please correct the errors before submitting.");
             return;
         }
 
         setIsProcessing(true);
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem("token");
             const orderItems = cartItems.map((item) => ({
                 product_id: item.id,
                 quantity: item.quantity,
@@ -107,9 +95,9 @@ function CartPage() {
                 size: item.size,
             }));
 
-            const online_payment = check_payment(paymentType);
+            const online_payment = check_payment();
             if (!online_payment) {
-                alert('Помилка: Поки тільки наложний платіж. Змініть оплату.');
+                alert("Помилка: Поки тільки оплата картою. Змініть оплату.");
                 setIsProcessing(false);
                 return;
             }
@@ -118,13 +106,13 @@ function CartPage() {
                 order: {
                     user_id: Number(shippingData.id),
                     total_price: totalCost,
-                    status: 'pending',
+                    status: "pending",
                     online_payment: online_payment,
                 },
                 order_items: orderItems,
             };
 
-            const response = await axios.post('/order', orderData, {
+            const response = await axios.post("/order", orderData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -134,18 +122,18 @@ function CartPage() {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            alert('Замовлення оформлено успішно!');
+            alert("Замовлення оформлено успішно!");
             clearCart();
         } catch (error) {
-            console.error('Error placing new order:', error);
-            alert('Помилка при оформленні замовлення. Спробуйте ще раз.');
+            console.error("Error placing new order:", error);
+            alert("Помилка при оформленні замовлення. Спробуйте ще раз.");
         } finally {
             setIsProcessing(false);
         }
     };
 
     return (
-        <div className="cart-page" style={{ marginTop: '56px' }}>
+        <div className="cart-page" style={{ marginTop: "56px" }}>
             <h1>Кошик</h1>
             {cartItems.length > 0 && (
                 <button className="clear-cart-button" onClick={clearCart}>
@@ -171,27 +159,18 @@ function CartPage() {
                                 <td>{item.size}</td>
                                 <td>
                                     <div className="quantity-controls">
-                                        <button
-                                            className="quantity-button"
-                                            onClick={() => removeOneItem(item)}
-                                        >
+                                        <button className="quantity-button" onClick={() => removeOneItem(item)}>
                                             -
                                         </button>
                                         <span className="quantity">{item.quantity}</span>
-                                        <button
-                                            className="quantity-button"
-                                            onClick={() => addOneItem(item)}
-                                        >
+                                        <button className="quantity-button" onClick={() => addOneItem(item)}>
                                             +
                                         </button>
                                     </div>
                                 </td>
                                 <td>{item.price} грн</td>
                                 <td>
-                                    <button
-                                        className="quantity-button-del"
-                                        onClick={() => removeItem(item)}
-                                    >
+                                    <button className="quantity-button-del" onClick={() => removeItem(item)}>
                                         Видалити
                                     </button>
                                 </td>
@@ -203,7 +182,7 @@ function CartPage() {
 
                     <div className="purchase-block">
                         <h2>Дані для відправки</h2>
-                        <form>
+                        <form onSubmit={handlePurchase}>
                             <div>
                                 <label>Ім'я</label>
                                 <input
@@ -276,8 +255,8 @@ function CartPage() {
                                 </div>
                             </div>
 
-                            <button className="w-100 mt-4" type="submit" disabled={isProcessing} onClick={handlePurchase} n>
-                                {isProcessing ? 'Обробка...' : 'Підтвердити купівлю'}
+                            <button className="w-100 mt-4" type="submit" disabled={isProcessing}>
+                                {isProcessing ? "Обробка..." : "Підтвердити купівлю"}
                             </button>
                         </form>
                     </div>

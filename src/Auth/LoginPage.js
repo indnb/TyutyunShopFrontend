@@ -9,12 +9,11 @@ function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [cooldown, setCooldown] = useState(0); // Cooldown time in seconds
-    const [failedAttempts, setFailedAttempts] = useState(0); // Track failed login attempts
+    const [cooldown, setCooldown] = useState(0);
+    const [failedAttempts, setFailedAttempts] = useState(0);
     const history = useHistory();
     const { checkAuth } = useContext(AuthContext);
 
-    // Load cooldown and failed attempts state from cookies on component mount
     useEffect(() => {
         const savedCooldown = parseInt(Cookies.get('loginCooldown') || '0', 10);
         const savedAttempts = parseInt(Cookies.get('failedAttempts') || '0', 10);
@@ -27,18 +26,16 @@ function LoginPage() {
         setFailedAttempts(savedAttempts);
     }, []);
 
-    // Save cooldown and failed attempts to cookies when they change
     useEffect(() => {
         if (cooldown > 0) {
-            Cookies.set('loginCooldown', Math.floor(Date.now() / 1000) + cooldown, { expires: 1 / 48 }); // Expires in 30 minutes
+            Cookies.set('loginCooldown', Math.floor(Date.now() / 1000) + cooldown, { expires: 1 / 48 });
         } else {
-            Cookies.remove('loginCooldown'); // Remove cookie when cooldown ends
+            Cookies.remove('loginCooldown');
         }
 
-        Cookies.set('failedAttempts', failedAttempts, { expires: 1 / 48 }); // Save failed attempts
+        Cookies.set('failedAttempts', failedAttempts, { expires: 1 / 48 });
     }, [cooldown, failedAttempts]);
 
-    // Cooldown timer
     useEffect(() => {
         if (cooldown > 0) {
             const timer = setInterval(() => {
@@ -63,14 +60,14 @@ function LoginPage() {
             console.log(role);
             localStorage.setItem('token', token);
             await checkAuth();
-            setFailedAttempts(0); // Reset failed attempts on success
+            setFailedAttempts(0);
             history.push('/user/profile');
         } catch (error) {
             if (error.response && (error.response.status === 401 || error.response.status === 404)) {
                 setError('Невірні дані.');
-                setFailedAttempts((prev) => prev + 1); // Increment failed attempts
+                setFailedAttempts((prev) => prev + 1);
                 if (failedAttempts + 1 >= 3) {
-                    setCooldown(30); // Start 30-second cooldown after 3 failed attempts
+                    setCooldown(30);
                 }
             } else {
                 setError('Сталася помилка. Спробуйте ще раз.');
