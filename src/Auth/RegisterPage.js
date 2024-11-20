@@ -19,7 +19,6 @@ const RegisterPage = () => {
     const [timer, setTimer] = useState(0);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-    // Load cooldown state from cookies on component mount
     useEffect(() => {
         const savedCooldown = parseInt(Cookies.get('registerCooldown') || '0', 10);
         if (savedCooldown > 0) {
@@ -31,16 +30,14 @@ const RegisterPage = () => {
         }
     }, []);
 
-    // Save cooldown to cookies when it changes
     useEffect(() => {
         if (timer > 0) {
-            Cookies.set('registerCooldown', Math.floor(Date.now() / 1000) + timer, { expires: 1 / 48 }); // Expires in 30 minutes
+            Cookies.set('registerCooldown', Math.floor(Date.now() / 1000) + timer, { expires: 1 / 48 });
         } else {
-            Cookies.remove('registerCooldown'); // Remove cookie when cooldown ends
+            Cookies.remove('registerCooldown');
         }
     }, [timer]);
 
-    // Cooldown timer
     useEffect(() => {
         if (isButtonDisabled && timer > 0) {
             const interval = setInterval(() => {
@@ -65,7 +62,7 @@ const RegisterPage = () => {
     };
 
     const startCooldown = () => {
-        setTimer(30); // Start 30-second cooldown
+        setTimer(1);
         setIsButtonDisabled(true);
     };
 
@@ -99,8 +96,9 @@ const RegisterPage = () => {
             });
             setErrors({});
         } catch (error) {
-            if (error.response && error.response.status === 409) {
-                setServerMessage("Ця електронна адреса вже зареєстрована.");
+            if (error.response) {
+                const { message } = error.response.data;
+                setServerMessage(message || "Сталася помилка. Будь ласка, спробуйте ще раз.");
             } else {
                 setServerMessage("Сталася помилка. Будь ласка, спробуйте ще раз.");
             }
@@ -120,7 +118,7 @@ const RegisterPage = () => {
                         value={formData.username}
                         onChange={handleChange}
                     />
-                    {errors.username && <small className="error-text">{errors.username}</small>}
+                    {errors.username && <small className="server-message error">{errors.username}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="email">Електронна адреса</label>
@@ -131,7 +129,7 @@ const RegisterPage = () => {
                         value={formData.email}
                         onChange={handleChange}
                     />
-                    {errors.email && <small className="error-text">{errors.email}</small>}
+                    {errors.email && <small className="server-message error">{errors.email}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Пароль</label>
@@ -142,7 +140,7 @@ const RegisterPage = () => {
                         value={formData.password}
                         onChange={handleChange}
                     />
-                    {errors.password && <small className="error-text">{errors.password}</small>}
+                    {errors.password && <small className="server-message error">{errors.password}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="first_name">Ім'я</label>
@@ -153,7 +151,7 @@ const RegisterPage = () => {
                         value={formData.first_name}
                         onChange={handleChange}
                     />
-                    {errors.first_name && <small className="error-text">{errors.first_name}</small>}
+                    {errors.first_name && <small className="server-message error">{errors.first_name}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="last_name">Прізвище</label>
@@ -164,7 +162,7 @@ const RegisterPage = () => {
                         value={formData.last_name}
                         onChange={handleChange}
                     />
-                    {errors.last_name && <small className="error-text">{errors.last_name}</small>}
+                    {errors.last_name && <small className="server-message error">{errors.last_name}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="phone_number">Телефон</label>
@@ -175,12 +173,12 @@ const RegisterPage = () => {
                         value={formData.phone_number}
                         onChange={handleChange}
                     />
-                    {errors.phone_number && <small className="error-text">{errors.phone_number}</small>}
+                    {errors.phone_number && <small className="server-message error">{errors.phone_number}</small>}
                 </div>
                 <button type="submit" disabled={isButtonDisabled}>
                     {isButtonDisabled ? `Повторна спроба через ${timer} с` : "Зареєструватись"}
                 </button>
-                {serverMessage && <p className="server-message">{serverMessage}</p>}
+                {serverMessage && <p className={`server-message ${(errors.username || errors.email || errors.phone_number) ? 'error' : 'success'}`}>{serverMessage}</p>}
             </form>
         </div>
     );

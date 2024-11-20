@@ -51,3 +51,15 @@
 .auth-container button:hover {
     background-color: #e59400;
 }
+.server-message {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.server-message.error {
+    color: #fd7e14;
+}
+
+.server-message.success {
+    color: #ff9800;
+}
