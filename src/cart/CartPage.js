@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { CartContext } from "../context/CartContext";
+import React, {useContext, useEffect, useState} from "react";
+import {CartContext} from "../context/CartContext";
 import axios from "../axiosConfig";
 import "./CartPage.css";
 import ToggleButtons from "./ToggleButtons";
-import { AuthContext } from "../context/AuthContext";
-import { validateField } from "../utils/validation";
+import {AuthContext} from "../context/AuthContext";
+import {validateField} from "../utils/validation";
 
 function CartPage() {
-    const { isAuthenticated } = useContext(AuthContext);
-    const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
+    const {isAuthenticated} = useContext(AuthContext);
+    const {cartItems, addOneItem, removeOneItem, removeItem, clearCart} = useContext(CartContext);
     const [shippingData, setShippingData] = useState({
         order_id: 0,
         address: "",
@@ -52,12 +52,12 @@ function CartPage() {
 
     const validateFieldWrapper = (name, value) => {
         const error = validateField(name, value, shippingData);
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+        setErrors((prevErrors) => ({...prevErrors, [name]: error}));
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setShippingData({ ...shippingData, [name]: value });
+        const {name, value} = e.target;
+        setShippingData({...shippingData, [name]: value});
         validateFieldWrapper(name, value);
     };
 
@@ -97,7 +97,7 @@ function CartPage() {
 
             const online_payment = check_payment();
             if (online_payment) {
-                alert("Помилка: Поки тільки при отриманні. Змініть оплату.");
+                alert("Оплата наразі тільки при отриманні :(");
                 setIsProcessing(false);
                 return;
             }
@@ -111,7 +111,6 @@ function CartPage() {
                 },
                 order_items: orderItems,
             };
-
             const response = await axios.post("/order", orderData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -121,6 +120,19 @@ function CartPage() {
             await axios.post(`/shipping`, shippingData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
+
+            await axios.post(
+                `/mail/new_order`,
+                null,
+                {
+                    params: {
+                        id: response.data,
+                    },
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            console.log("Order placed and mail sent successfully.")
 
             alert("Замовлення оформлено успішно!");
             clearCart();
@@ -133,7 +145,7 @@ function CartPage() {
     };
 
     return (
-        <div className="cart-page" style={{ marginTop: "56px" }}>
+        <div className="cart-page" style={{marginTop: "56px"}}>
             <h1>Кошик</h1>
             {cartItems.length > 0 && (
                 <button className="clear-cart-button" onClick={clearCart}>
