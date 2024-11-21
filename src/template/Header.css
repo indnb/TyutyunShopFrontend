@@ -87,3 +87,79 @@
 .nav-link:hover {
     color: #e59400 !important;
 }
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .nav-link {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    .dropdown-menu {
+        padding: 8px;
+    }
+
+    .cart-button-in-drawer {
+        flex-direction: column;
+        margin-top: 10px;
+    }
+
+    .cart-button-in-drawer .btn {
+        max-width: 100%;
+    }
+
+    .navbar-collapse {
+        background-color: #1a1a1a;
+        padding: 15px;
+    }
+
+    .navbar-collapse .d-flex {
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+    .navbar-collapse .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-outline-orange {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .nav-link {
+        font-size: 12px;
+    }
+
+    .btn-outline-orange {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .dropdown-menu {
+        padding: 6px;
+    }
+
+    .cart-button-in-drawer {
+        margin-top: 5px;
+    }
+
+    .cart-button-in-drawer .btn {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
