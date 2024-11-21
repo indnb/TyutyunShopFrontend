@@ -24,8 +24,16 @@ function ProductDetail() {
                 setProduct(productData);
 
                 const imagesResponse = await axios.get(`/product_image_all`, { params: { product_id: id } });
-                setImages(imagesResponse.data.map((img) => img.image_url));
-                setSelectedImage(imagesResponse.data[0]?.image_url || null);
+                let imageData = imagesResponse.data;
+
+                imageData.sort((a, b) => {
+                    if (a.position == null) return 1;
+                    if (b.position == null) return -1;
+                    return a.position - b.position;
+                });
+
+                setImages(imageData.map((img) => img.image_url));
+                setSelectedImage(imageData[0]?.image_url || null);
 
                 const sizeResponse = await axios.get(`/size/${id}`);
                 const sizeData = sizeResponse.data;

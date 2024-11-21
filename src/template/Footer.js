@@ -24,7 +24,7 @@ function Footer() {
                 <div className="footer-section mt-3">
                     <div className="footer-email">
                         <span className="footer-email-prefix">E-mail:</span>
-                        <span className="footer-email-content"> support@tyutyunshop.com</span>
+                        <span className="footer-email-content"> tyutyun-shop@yacode.dev</span>
                     </div>
                 </div>
 

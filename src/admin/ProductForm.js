@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from '../axiosConfig';
-import {Button, Form} from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 function ProductForm({ product, onClose }) {
     const [formData, setFormData] = useState({
         name: '',
         price: 0,
         description: '',
-        category_id: 0,
-        primary_image_id: 0,
+        category_id: null,
+        primary_image_id: null,
     });
     const [sizes, setSizes] = useState({
         single_size: 0,
@@ -20,33 +20,58 @@ function ProductForm({ product, onClose }) {
     });
     const [categories, setCategories] = useState([]);
     const [photos, setPhotos] = useState([]);
+    const [newPhoto, setNewPhoto] = useState(null);
+    const [allPhotos, setAllPhotos] = useState([]);
 
     useEffect(() => {
         fetchCategories();
-        fetchPhotos();
+        fetchAllPhotos();
         if (product) {
+            fetchPhotosByProductId();
             setFormData(product);
-            setSizes({
-                single_size: 0,
-                s: 0,
-                m: 0,
-                l: 0,
-                xl: 0,
-                xxl: 0,
-            });
+            fetchSizesByProductId();
         }
     }, [product]);
 
-    const fetchCategories = () => {
-        axios.get('/categories')
-            .then((response) => setCategories(response.data))
-            .catch((error) => console.error('Error getting categories:', error));
+    const fetchCategories = async () => {
+        try {
+            const response = await axios.get('/categories');
+            setCategories(response.data);
+        } catch (error) {
+            console.error('Error getting categories:', error);
+        }
     };
 
-    const fetchPhotos = () => {
-        axios.get('/product_image_all')
-            .then((response) => setPhotos(response.data))
-            .catch((error) => console.error('Error getting photos:', error));
+    const fetchSizesByProductId = async () => {
+        try {
+            const response = await axios.get(`/size/${product.id}`);
+            setSizes(response.data);
+        } catch (error) {
+            console.error('Error fetching sizes:', error);
+        }
+    };
+
+    const fetchPhotosByProductId = async () => {
+        try {
+            const response = await axios.get('/product_image_all', { params: { product_id: product.id } });
+            const photosWithSelection = response.data.map((photo) => ({
+                ...photo,
+                selected: true,
+                isNew: false,
+            }));
+            setPhotos(photosWithSelection);
+        } catch (error) {
+            console.error('Error fetching photos:', error);
+        }
+    };
+
+    const fetchAllPhotos = async () => {
+        try {
+            const response = await axios.get('/product_image_all');
+            setAllPhotos(response.data);
+        } catch (error) {
+            console.error('Error fetching all photos:', error);
+        }
     };
 
     const handleSizeChange = (size, value) => {
@@ -56,34 +81,106 @@ function ProductForm({ product, onClose }) {
         }));
     };
 
+    const handlePhotoPositionChange = (photoId, position) => {
+        setPhotos((prevPhotos) =>
+            prevPhotos.map((photo) =>
+                photo.id === photoId ? { ...photo, position: Number(position) } : photo
+            )
+        );
+    };
+
+    const handlePhotoAdd = (photo) => {
+        setPhotos((prevPhotos) => {
+            const photoExists = prevPhotos.find((p) => p.id === photo.id);
+            if (photoExists) {
+                return prevPhotos.map((p) => (p.id === photo.id ? { ...p, selected: true } : p));
+            } else {
+                return [...prevPhotos, { ...photo, selected: true, isNew: false }];
+            }
+        });
+    };
+
+    const handlePhotoRemove = (photoId) => {
+        setPhotos((prevPhotos) =>
+            prevPhotos.map((photo) =>
+                photo.id === photoId ? { ...photo, selected: false } : photo
+            )
+        );
+    };
+
+    const handlePhotoUpload = () => {
+        if (!newPhoto) {
+            alert('Please select a photo to upload.');
+            return;
+        }
+
+        const newUploadedPhoto = {
+            id: Date.now(), // Temporary ID
+            file: newPhoto,
+            image_url: URL.createObjectURL(newPhoto), // For preview
+            position: null,
+            isNew: true,
+            selected: true,
+        };
+
+        setPhotos((prevPhotos) => [...prevPhotos, newUploadedPhoto]);
+        setNewPhoto(null);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Sizes:", sizes);
         try {
             let createdProductId;
 
+            // Create or update product
             if (product) {
-                await axios.put(`/product/${product.id}`, formData);
+                await axios.put(`/product/update`, { ...formData, id: product.id });
                 createdProductId = product.id;
             } else {
                 const response = await axios.post('/product', formData);
                 createdProductId = response.data;
             }
 
-            if (createdProductId) {
-                await axios.post('/size', { ...sizes, product_id: createdProductId });
-                alert('Продукт та розміри успішно збережено!');
+            if (product) {
+                await axios.put('/size/update', { ...sizes });
             } else {
-                throw new Error('Failed to retrieve created product ID.');
+                await axios.post('/size', { product_id: createdProductId, ...sizes  });
             }
 
+            for (const photo of photos) {
+                if (photo.selected) {
+                    if (photo.isNew) {
+                        const photoFormData = new FormData();
+                        photoFormData.append('image', photo.file);
+                        photoFormData.append('product_id', createdProductId);
+                        if (photo.position) photoFormData.append('position', photo.position);
+
+                        await axios.post('/product_image', photoFormData, {
+                            headers: { 'Content-Type': 'multipart/form-data' },
+                        });
+                    } else {
+                        await axios.put(`/product_image/update`, {
+                            ...photo,
+                            product_id: createdProductId,
+                        });
+                    }
+                } else {
+                    if (!photo.isNew && photo.product_id === createdProductId) {
+                        await axios.put(`/product_image/update`, {
+                            ...photo,
+                            product_id: null,
+                        });
+                    }
+                }
+            }
+
+            alert('Продукт, розміри, та фотографії успішно збережені!');
             onClose();
         } catch (error) {
-            console.error('Error saving product or sizes:', error);
-            alert('Помилка при збереженні продукту чи розмірів. Перевірте дані та спробуйте ще раз.');
+            console.error('Error saving product data:', error);
+            alert('Помилка при збереженні даних. Перевірте введену інформацію.');
         }
     };
-
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -133,43 +230,85 @@ function ProductForm({ product, onClose }) {
                 </Form.Select>
             </Form.Group>
 
-            <Form.Group controlId="productImage" className="mt-3">
-                <Form.Label>Основне фото</Form.Label>
-                <div className="image-selection d-flex flex-wrap">
-                    {photos.map((photo) => (
-                        <div key={photo.id} className="image-option me-3 mb-3">
-                            <Form.Check
-                                type="radio"
-                                name="primary_image_id"
-                                id={`photo-${photo.id}`}
-                                value={photo.id}
-                                checked={String(formData.primary_image_id) === String(photo.id)}
-                                onChange={(e) => setFormData({ ...formData, primary_image_id: Number(e.target.value) })}
-                                label={
-                                    <div>
-                                        <img
-                                            src={photo.image_url}
-                                            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                                        />
-                                    </div>
-                                }
+            <Form.Group controlId="productSizes" className="mt-3">
+                <Form.Label>Розміри</Form.Label>
+                <div className="d-flex flex-wrap">
+                    {Object.keys(sizes).map((sizeKey) => (
+                        <Form.Group key={sizeKey} className="me-3 mb-3">
+                            <Form.Label>{sizeKey.toUpperCase()}</Form.Label>
+                            <Form.Control
+                                type="number"
+                                value={sizes[sizeKey]}
+                                onChange={(e) => handleSizeChange(sizeKey, e.target.value)}
                             />
-                        </div>
+                        </Form.Group>
                     ))}
                 </div>
             </Form.Group>
 
-            <Form.Group controlId="productSizes" className="mt-3">
-                <Form.Label>Розміри</Form.Label>
-                {["single_size", "s", "m", "l", "xl", "xxl"].map((size) => (
-                    <Form.Control
-                        key={size}
-                        type="number"
-                        placeholder={`Кількість розміру ${size}`}
-                        onChange={(e) => handleSizeChange(size, e.target.value)}
-                        className="mt-2"
-                    />
-                ))}
+            <Form.Group controlId="productImages" className="mt-3">
+                <Form.Label>Фотографії</Form.Label>
+                <div className="image-selection d-flex flex-wrap">
+                    {photos
+                        .filter((photo) => photo.selected)
+                        .map((photo) => (
+                            <div key={photo.id} className="image-option me-3 mb-3">
+                                <img
+                                    src={photo.image_url}
+                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                    alt={`Photo ${photo.id}`}
+                                />
+                                <Button
+                                    variant="danger"
+                                    size="sm"
+                                    onClick={() => handlePhotoRemove(photo.id)}
+                                >
+                                    Видалити
+                                </Button>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="Позиція"
+                                    value={photo.position || ''}
+                                    onChange={(e) => handlePhotoPositionChange(photo.id, e.target.value)}
+                                    className="mt-2"
+                                />
+                            </div>
+                        ))}
+                </div>
+                <Form.Group className="mt-3">
+                    <Form.Label>Додати існуюче фото</Form.Label>
+                    <div className="d-flex flex-wrap mt-2">
+                        {allPhotos.map((photo) => (
+                            <div
+                                key={photo.id}
+                                style={{
+                                    margin: '5px',
+                                    cursor: 'pointer',
+                                    border: '1px solid #ddd',
+                                    padding: '3px',
+                                    opacity: photos.find((p) => p.id === photo.id && p.selected)
+                                        ? 0.5
+                                        : 1,
+                                }}
+                                onClick={() => handlePhotoAdd(photo)}
+                            >
+                                <img
+                                    src={photo.image_url}
+                                    alt={`Photo ${photo.id}`}
+                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </Form.Group>
+                <Form.Control
+                    type="file"
+                    onChange={(e) => setNewPhoto(e.target.files[0])}
+                    className="mt-2"
+                />
+                <Button variant="success" className="mt-2" onClick={handlePhotoUpload}>
+                    Завантажити нове фото
+                </Button>
             </Form.Group>
 
             <Button variant="primary" type="submit" className="mt-4">
