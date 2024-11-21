@@ -87,7 +87,6 @@
 .nav-link:hover {
     color: #e59400 !important;
 }
-
 @media (max-width: 768px) {
     .navbar {
         padding: 10px;
@@ -117,7 +116,7 @@
 
     .navbar-collapse {
         background-color: #1a1a1a;
-        padding: 15px;
+        padding: 15px 25px 10px 10px;
     }
 
     .navbar-collapse .d-flex {
