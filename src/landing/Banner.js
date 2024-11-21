@@ -2,15 +2,19 @@ import React, {useState} from 'react';
 import {Carousel} from 'react-bootstrap';
 import Banner1 from './bc1.jpg';
 import Banner2 from './bc2.jpg';
-import Banner4 from './bc4.jpg';
 import Banner3 from './bc_3.jpg';
+import Banner5 from './bc5.JPG';
+import Banner6 from './bc6.JPG';
+import Banner7 from './bc7.JPG';
 import './Banner.css';
 
 const banners = [
     { image: Banner1, backgroundColor: '#1a1a1a' },
     { image: Banner2, backgroundColor: '#333333' },
     { image: Banner3, backgroundColor: '#4a4a4a' },
-    { image: Banner4, backgroundColor: '#4a4a4a' },
+    { image: Banner5, backgroundColor: '#4a4a4a' },
+    { image: Banner6, backgroundColor: '#4a4a4a' },
+    { image: Banner7, backgroundColor: '#4a4a4a' },
 ];
 
 function Banner() {
