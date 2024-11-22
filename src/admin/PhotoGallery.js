@@ -65,7 +65,7 @@ function PhotoGallery() {
                     <Form.Label>Завантажити нове фото</Form.Label>
                     <Form.Control type="file" onChange={e => setNewPhotoFile(e.target.files[0])} required />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button variant="warning" type="submit">
                     Завантажити
                 </Button>
             </Form>
@@ -74,10 +74,10 @@ function PhotoGallery() {
                 <Row className="g-4">
                     {photos.map(photo => (
                         <Col key={photo.id}>
-                            <Card>
-                                <Card.Img variant="top" src={photo.image_url} alt="Фото товару"/>
+                            <Card   >
+                                <Card.Img variant="top" src={photo.image_url} alt="Фото товару" />
                                 <Card.Body style={{margin: 'auto'}}>
-                                    <Button variant="danger" onClick={() => handleDelete(photo.id)}>
+                                    <Button variant="warning" onClick={() => handleDelete(photo.id)}>
                                         Видалити
                                     </Button>
                                 </Card.Body>

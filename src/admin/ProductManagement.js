@@ -54,14 +54,14 @@ function ProductManagement() {
     }, {});
 
     return (
-        <div className="container mt-5">
+        <div className="orders-section container mt-5">
             <h2 className="mb-4 margin-top">Управління товарами</h2>
 
-            <Button variant="primary" onClick={() => setShowForm(true)} className="mb-3">
+            <Button variant="warning" onClick={() => setShowForm(true)} className="mb-3">
                 Додати новий товар
             </Button>
 
-            <Table striped bordered hover>
+            <Table table table-striped table-bordered table-hover>
                 <thead>
                 <tr>
                     <th>Назва</th>
@@ -79,7 +79,7 @@ function ProductManagement() {
                             <td>{categoryMap[product.category_id] || 'Категорія не знайдена'}</td>
                             <td>
                                 <Button
-                                    variant="warning"
+                                    variant="info"
                                     size="sm"
                                     onClick={() => handleEdit(product)}
                                     className="me-2"
@@ -87,7 +87,7 @@ function ProductManagement() {
                                     Редагувати
                                 </Button>
                                 <Button
-                                    variant="danger"
+                                    variant="info"
                                     size="sm"
                                     onClick={() => handleDelete(product.id)}
                                 >

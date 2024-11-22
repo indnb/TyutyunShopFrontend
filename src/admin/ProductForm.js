@@ -306,15 +306,15 @@ function ProductForm({ product, onClose }) {
                     onChange={(e) => setNewPhoto(e.target.files[0])}
                     className="mt-2"
                 />
-                <Button variant="success" className="mt-2" onClick={handlePhotoUpload}>
+                <Button variant="warning" className="mt-2" onClick={handlePhotoUpload}>
                     Завантажити нове фото
                 </Button>
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="mt-4">
+            <Button variant="warning" type="submit" className="mt-4 btn">
                 {product ? 'Оновити' : 'Додати'}
             </Button>
-            <Button variant="secondary" onClick={onClose} className="mt-4 ms-2">
+            <Button variant="secondary" onClick={onClose} className="mt-4 ms-2 btn">
                 Відмінити
             </Button>
         </Form>

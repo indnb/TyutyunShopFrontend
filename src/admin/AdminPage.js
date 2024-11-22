@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-
+import './AdminPage.css'
 function AdminPage() {
     const { isAdmin, checkAuth } = useContext(AuthContext);
     const history = useHistory();
@@ -18,7 +18,7 @@ function AdminPage() {
 
     return (
         <div className="container mt-5">
-            <h1 className="mb-4">Тютюн панель)</h1>
+            <h1 className="mb-4">Тютюн Панель</h1>
             <div className="list-group">
                 <Link to="/admin/products" className="list-group-item list-group-item-action">
                     Управління товарами

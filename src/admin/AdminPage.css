@@ -20,3 +20,46 @@
 .admin-nav a:hover {
     text-decoration: underline;
 }
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.container h1 {
+    color: orange;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.list-group {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.list-group-item {
+    background-color: #111;
+    color: orange;
+    font-weight: 500;
+    padding: 10px 10px 10px 30px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: orange;
+    color: #111;
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.list-group-item:active {
+    background-color: #ff6600;
+    color: #fff;
+}

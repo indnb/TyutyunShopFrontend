@@ -2915,7 +2915,6 @@ textarea.form-control-lg {
 
 .btn-secondary {
   color: #fff;
-  background-color: #e59400;
   border-color: #ff9800;
 }
 .btn-secondary:hover {
@@ -3194,27 +3193,24 @@ textarea.form-control-lg {
 }
 
 .btn-outline-info {
-  color: #0dcaf0;
-  border-color: #0dcaf0;
+  color: #ffc107;
+  border-color: #ffc107;
 }
 .btn-outline-info:hover {
-  color: #000;
-  background-color: #0dcaf0;
-  border-color: #0dcaf0;
+  color: #ffc107;
+  border-color: #ffc107;
 }
 .btn-check:focus + .btn-outline-info, .btn-outline-info:focus {
-  box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.5);
 }
 .btn-check:checked + .btn-outline-info, .btn-check:active + .btn-outline-info, .btn-outline-info:active, .btn-outline-info.active, .btn-outline-info.dropdown-toggle.show {
-  color: #000;
-  background-color: #0dcaf0;
-  border-color: #0dcaf0;
+  color: #ffc107;
+  border-color: #ffc107;
 }
 .btn-check:checked + .btn-outline-info:focus, .btn-check:active + .btn-outline-info:focus, .btn-outline-info:active:focus, .btn-outline-info.active:focus, .btn-outline-info.dropdown-toggle.show:focus {
-  box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.5);
 }
 .btn-outline-info:disabled, .btn-outline-info.disabled {
-  color: #0dcaf0;
+  color: #ffc107;
+  border-color: #ffc107;
   background-color: transparent;
 }
 
@@ -4613,12 +4609,12 @@ textarea.form-control-lg {
 }
 
 .alert-primary {
-  color: #141619;
+  color: #ff9800;
   background-color: #d3d3d4;
   border-color: #bcbebf;
 }
 .alert-primary .alert-link {
-  color: #101214;
+  color: #ff9800;
 }
 
 .alert-secondary {
@@ -5067,14 +5063,14 @@ textarea.form-control-lg {
   width: 1em;
   height: 1em;
   padding: 0.25em 0.25em;
-  color: #000;
+  color: #ff9800;
   background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
   border: 0;
   border-radius: 0.25rem;
   opacity: 0.5;
 }
 .btn-close:hover {
-  color: #000;
+  color: #e59400;
   text-decoration: none;
   opacity: 0.75;
 }

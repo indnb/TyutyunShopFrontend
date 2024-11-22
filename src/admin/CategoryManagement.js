@@ -26,7 +26,7 @@ function CategoryManagement() {
     };
 
     const handleDelete = (categoryId) => {
-        if (window.confirm('Ви впевнені зо хочете видалити цю категорію?')) {
+        if (window.confirm('Ви впевнені що хочете видалити цю категорію?')) {
             axios.delete(`/category/${categoryId}`)
                 .then(() => fetchCategories())
                 .catch(error => console.error('Error delete category:', error));
@@ -62,13 +62,13 @@ function CategoryManagement() {
     };
 
     return (
-        <div className="container mt-5">
+        <div className="orders-section container mt-8">
             <h2 className="mb-4">Управління категоріями</h2>
-            <Button variant="primary" onClick={() => setShowForm(true)} className="mb-3">
+            <Button variant="warning" onClick={() => setShowForm(true)} className="mb-3">
                 Додати категорію
             </Button>
 
-            <Table striped bordered hover>
+            <Table table table-striped table-bordered table-hover>
                 <thead>
                 <tr>
                     <th>Назва</th>
@@ -80,10 +80,10 @@ function CategoryManagement() {
                     <tr key={cat.id}>
                         <td>{cat.name}</td>
                         <td>
-                            <Button variant="warning" size="sm" onClick={() => handleEdit(cat)} className="me-2">
+                            <Button variant="info" size="sm" onClick={() => handleEdit(cat)} className="me-2">
                                 Редагувати
                             </Button>
-                            <Button variant="danger" size="sm" onClick={() => handleDelete(cat.id)}>
+                            <Button variant="info" size="sm" onClick={() => handleDelete(cat.id)}>
                                 Видалити
                             </Button>
                         </td>
@@ -93,7 +93,7 @@ function CategoryManagement() {
             </Table>
 
             <Modal show={showForm} onHide={handleFormClose}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <Modal.Title>{editingCategory ? 'Редагування категорії' : 'Додати котегорії'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -107,7 +107,7 @@ function CategoryManagement() {
                                 required
                             />
                         </Form.Group>
-                        <Button variant="primary" type="submit" className="mt-3">
+                        <Button variant="warning" type="submit" className="mt-3">
                             {editingCategory ? 'Оновити' : 'Додати'}
                         </Button>
                         <Button variant="secondary" onClick={handleFormClose} className="mt-3 ms-2">

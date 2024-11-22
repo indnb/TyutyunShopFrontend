@@ -45,7 +45,7 @@ function OrderManagement() {
     };
 
     return (
-        <div className="container mt-5">
+        <div className="orders-section container mt-5">
             <h2 className="mb-4 margin-top">Управління замовленнями</h2>
             <Form.Group controlId="statusFilter" className="mb-3">
                 <Form.Label>Фільтр по статусу:</Form.Label>
@@ -57,7 +57,7 @@ function OrderManagement() {
                 </Form.Select>
             </Form.Group>
 
-            <Table striped bordered hover>
+            <Table table table-striped table-bordered table-hover>
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -86,18 +86,18 @@ function OrderManagement() {
                                 В обробку
                             </Button>
                             <Button
-                                variant="success"
+                                variant="info"
                                 size="sm"
                                 onClick={() => handleStatusChange(order.id, 'completed')}
                                 className="me-2"
                             >
                                 Завершити
                             </Button>
-                            <Button variant="danger" size="sm" onClick={() => handleDelete(order.id)}>
+                            <Button variant="info" size="sm" className="me-2" onClick={() => handleDelete(order.id)}>
                                 Видалити
                             </Button>
                             <Button
-                                variant="warning"
+                                variant="info"
                                 size="sm"
                                 onClick={() => fetchOrderDetails(order.id)}
                                 className="me-2"

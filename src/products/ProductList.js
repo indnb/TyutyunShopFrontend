@@ -72,7 +72,7 @@ function ProductList() {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center mt-4">Товари не завантажено (</p>
+                    <p className="text-center mt-4">Товари не завантажено :(</p>
                 )}
             </div>
         </div>
