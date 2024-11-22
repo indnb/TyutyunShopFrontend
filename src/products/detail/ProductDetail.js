@@ -167,7 +167,7 @@ function ProductDetail() {
                         </div>
                     </div>
                     <div className="col-lg-6">
-                        <h1 className="product-name text-center text-orange">{product.name}</h1>
+                        <h3 className="product-name text-center text-orange">{product.name}</h3>
                         <p className="product-price text-center text-orange">{product.price} грн</p>
                         <div className="product-options">
                             {availableSizes.length > 0 && availableSizes[0] !== "single_size" && (

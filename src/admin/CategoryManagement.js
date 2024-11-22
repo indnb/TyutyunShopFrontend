@@ -63,7 +63,7 @@ function CategoryManagement() {
 
     return (
         <div className="orders-section container mt-8">
-            <h2 className="mb-4">Управління категоріями</h2>
+            <h2 className="margin-top mb-4">Управління категоріями</h2>
             <Button variant="warning" onClick={() => setShowForm(true)} className="mb-3">
                 Додати категорію
             </Button>
