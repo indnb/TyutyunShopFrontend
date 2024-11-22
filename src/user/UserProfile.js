@@ -8,9 +8,12 @@ import OrderDetailsModal from "./OrderDetailsModal";
 import {Form} from 'react-bootstrap';
 import ChangePasswordModal from "./ChangePasswordModal";
 import {validateField} from "../utils/validation";
+import {AlertContext} from "../template/Template";
 
 function UserProfile() {
     const { logout } = useContext(AuthContext);
+    const { showAlert } = useContext(AlertContext);
+
     const [userData, setUserData] = useState({
         id: 0,
         username: '',
@@ -19,6 +22,7 @@ function UserProfile() {
         email: '',
         phone_number: '',
         address: '',
+
     });
     const [errors, setErrors] = useState({
         first_name: '',
@@ -120,6 +124,7 @@ function UserProfile() {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
+            showAlert("Дані збережено!");
         } catch (error) {
             console.error("Error updating profile:", error);
         }
@@ -156,7 +161,7 @@ function UserProfile() {
                 </div>
                 <div className="profile-sections">
                     <form onSubmit={handleSave} className="profile-form">
-                    <div className="section-title">
+                        <div className="section-title">
                             <span>Особисті дані</span>
                         </div>
                         <div className="form-row">
@@ -187,16 +192,16 @@ function UserProfile() {
                         </div>
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Пошта</label>
+                                <label>Логін</label>
                                 <input
-                                    type="email"
-                                    name="email"
+                                    type="tel"
+                                    name="username"
                                     className="form-control"
-                                    value={userData.email}
+                                    value={userData.username}
                                     onChange={handleChange}
                                     required
                                 />
-                                {errors.email && <small className="error-text">{errors.email}</small>}
+                                {errors.username && <small className="error-text">{errors.username}</small>}
                             </div>
                             <div className="form-group">
                                 <label>Телефон</label>
@@ -209,6 +214,20 @@ function UserProfile() {
                                     required
                                 />
                                 {errors.phone_number && <small className="error-text">{errors.phone_number}</small>}
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label>Пошта</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    className="form-control"
+                                    value={userData.email}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                {errors.email && <small className="error-text">{errors.email}</small>}
                             </div>
                         </div>
                         <div className="section-title">

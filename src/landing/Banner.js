@@ -86,18 +86,11 @@ function CarouselIndicators({ banners, activeIndex, onSelect }) {
                     onClick={() => onSelect(index)}
                     className={`carousel-indicator ${index === activeIndex ? 'active' : ''}`}
                     aria-current={index === activeIndex}
-                    style={{
-                        backgroundColor: index === activeIndex ? '#FFA500' : '#1a1a1a',
-                        border: '1px solid #FFA500',
-                        width: '10px',
-                        height: '10px',
-                        borderRadius: '50%',
-                        cursor: 'pointer',
-                    }}
                 />
             ))}
         </div>
     );
 }
+
 
 export default Banner;

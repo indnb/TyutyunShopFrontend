@@ -13,7 +13,13 @@
     }
 }
 .carousel-indicator {
+    all: unset; /* Reset all browser styles */
     cursor: pointer;
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50%;
+    background-color: #1a1a1a;
+    border: 1px solid #FFA500;
     transition: background-color 0.3s ease;
 }
 

@@ -55,7 +55,7 @@ function Footer() {
                 </div>
 
                 <div className="footer-section mt-3">
-                    <div className="footer-copyright">© 2024, tyutyunshop.com</div>
+                    <div className="footer-copyright">© 2024, tyutyunshop.yacode.dev</div>
                 </div>
             </div>
         </footer>
