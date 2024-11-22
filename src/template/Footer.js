@@ -6,7 +6,7 @@ function Footer() {
     return (
         <footer className="footer mt-auto py-5 bg-dark">
             <div className="d-flex flex-column bg-dark text-light py-4">
-                <h5 className="text-center text-orange mb-3">Follow us on</h5>
+                <h5 className="text-center text-orange mb-3">Підпишись на нас :)</h5>
                 <div className="d-flex justify-content-center">
                     <a href="https://www.instagram.com/tyutyun.shop.ua/" target="_blank" rel="noopener noreferrer"
                        className="text-orange">
@@ -23,7 +23,7 @@ function Footer() {
 
                 <div className="footer-section mt-3">
                     <div className="footer-email">
-                        <span className="footer-email-prefix">E-mail:</span>
+                        <span className="footer-email-prefix">Електронна пошта:</span>
                         <span className="footer-email-content"> tyutyun-shop@yacode.dev</span>
                     </div>
                 </div>
@@ -31,7 +31,7 @@ function Footer() {
                 <div className="footer-section mt-3">
                     <div className="footer-workinghours">
                         <span className="footer-workinghours-prefix">Час роботи служби підтримки:</span>
-                        <span className="footer-workinghours-content"> ПН-ПТ: 9:00 - 21:00</span>
+                        <span className="footer-workinghours-content"> ПН-ПТ: 11:00 – 19:00</span>
                     </div>
                 </div>
 
