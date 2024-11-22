@@ -43,7 +43,7 @@ function Banner() {
                 {banners.map((banner, index) => (
                     <Carousel.Item key={index}>
                         <div
-                            className="banner-ratio"
+                            className="banner-fullscreen"
                         >
                             <img
                                 className="d-block w-100 h-100 cover"

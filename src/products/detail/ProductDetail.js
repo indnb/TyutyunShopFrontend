@@ -231,6 +231,7 @@ function ProductDetail() {
                         </div>
                     </div>
                 )}
+                <div style={{marginBottom: "170px"}}></div>
             </div>
         </div>
     );

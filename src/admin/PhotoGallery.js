@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
 import {Button, Card, Col, Form, Row} from 'react-bootstrap';
+import {useHistory} from "react-router-dom";
 
 function PhotoGallery() {
     const [photos, setPhotos] = useState([]);
@@ -55,15 +56,24 @@ function PhotoGallery() {
             console.error('Error uploading photo:', error);
         }
     };
-
+    const navigate = useHistory();
     return (
         <div className="container mt-5">
-            <h2 className="mb-4 margin-top">Управління фото</h2>
-
+            <div>
+                <h2 className="mb-4 margin-top">Управління фото</h2>
+                <Button
+                    variant="warning"
+                    className="btn mb-4"
+                    onClick={() => navigate.goBack()}
+                    style={{margin: "auto", padding: "10px"}}
+                >
+                    Назад
+                </Button>
+            </div>
             <Form onSubmit={handleUpload} className="mb-4">
                 <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Label>Завантажити нове фото</Form.Label>
-                    <Form.Control type="file" onChange={e => setNewPhotoFile(e.target.files[0])} required />
+                    <Form.Label column={"sm"}>Завантажити нове фото</Form.Label>
+                    <Form.Control type="file" onChange={e => setNewPhotoFile(e.target.files[0])} required/>
                 </Form.Group>
                 <Button variant="warning" type="submit">
                     Завантажити
@@ -74,8 +84,8 @@ function PhotoGallery() {
                 <Row className="g-4">
                     {photos.map(photo => (
                         <Col key={photo.id}>
-                            <Card   >
-                                <Card.Img variant="top" src={photo.image_url} alt="Фото товару" />
+                            <Card>
+                                <Card.Img variant="top" src={photo.image_url} alt="Фото товару"/>
                                 <Card.Body style={{margin: 'auto'}}>
                                     <Button variant="warning" onClick={() => handleDelete(photo.id)}>
                                         Видалити

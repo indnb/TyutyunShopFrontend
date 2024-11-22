@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
 import {Button, Form, Modal, Table} from 'react-bootstrap';
+import {useHistory} from "react-router-dom";
 
 function CategoryManagement() {
     const [categories, setCategories] = useState([]);
@@ -60,10 +61,20 @@ function CategoryManagement() {
         setCategoryName('');
         setShowForm(false);
     };
-
+    const navigate = useHistory();
     return (
-        <div className="orders-section container mt-8">
-            <h2 className="margin-top mb-4">Управління категоріями</h2>
+        <div className="orders-section container mb-4">
+            <div className="margin-top">
+                <h2 className=" mb-4">Управління категоріями</h2>
+                <Button
+                    variant="warning"
+                    className="btn mb-4"
+                    onClick={() => navigate.goBack()}
+                    style={{margin: "auto", padding: "10px"}}
+                >
+                    Назад
+                </Button>
+            </div>
             <Button variant="warning" onClick={() => setShowForm(true)} className="mb-3">
                 Додати категорію
             </Button>

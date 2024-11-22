@@ -1,19 +1,23 @@
-.banner-ratio {
-    aspect-ratio: 2;
+.banner-fullscreen {
+    position: relative;
+    width: 100vw;
+    height: 95vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1c1c1c;
 }
 
-@media (max-width: 1000px) {
-    .banner-ratio {
-        aspect-ratio: 1;
-    }
+.banner-fullscreen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-@media (max-width: 600px) {
-    .banner-ratio {
-        aspect-ratio: 0.51;
-    }
-}
+
+
 .carousel-indicator {
-    all: unset; /* Reset all browser styles */
+    all: unset;
     cursor: pointer;
     width: 10px !important;
     height: 10px !important;

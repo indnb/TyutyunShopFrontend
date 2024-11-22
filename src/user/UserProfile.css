@@ -51,6 +51,7 @@
     flex-direction: column;
     gap: 20px;
 }
+
 .section-title {
     font-size: 1.2em;
     font-weight: bold;
@@ -58,9 +59,11 @@
     margin-bottom: 10px;
     color: #FFA500;
 }
+
 .label-profile {
     text-align: center;
 }
+
 .form-control {
     padding: 12px;
     border: 1px solid #FFA500;
@@ -87,6 +90,7 @@
     display: flex;
     flex-direction: column;
 }
+
 .orders-section {
     color: #FFA500;
     background-color: #1c1c1c;
@@ -150,6 +154,7 @@
 .orders-section .table-hover tbody tr:hover {
     background-color: #333333;
 }
+
 .modal-content {
     background-color: #1c1c1c;
     color: #FFA500;
@@ -250,6 +255,7 @@
     color: #1a1a1a;
     transform: scale(1.05);
 }
+
 .form-group {
     margin-bottom: 20px;
     color: #FFA500;
@@ -287,3 +293,109 @@
     background-color: #1c1c1c;
     color: #e59400;
 }
+
+/* Existing styles... */
+
+@media (max-width: 600px) {
+    .user-profile {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user-image img {
+        width: auto;
+        height: auto;
+        max-width: 50%;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .section-title {
+        text-align: center;
+    }
+
+    .orders-section .table th,
+    .orders-section .table td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .orders-section .table thead th {
+        font-size: 14px;
+    }
+
+    .orders-section .table tbody td .btn-info {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .modal-content {
+        width: 90%;
+        margin: auto;
+    }
+
+    .profile-sections,
+    .profile-form {
+        width: 100%;
+    }
+
+    .profile-sections {
+        padding: 10px;
+    }
+
+    .form-buttons .btn {
+        max-width: none;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .profile-header,
+    .profile-sections,
+    .form-buttons {
+        padding: 0px 10px 0px 10px;
+        width: 100%;
+    }
+}
+@media (max-width: 375px) {
+    .modal-content {
+        padding: 10px; /* Reduce padding for better fit */
+    }
+
+    .modal-header, .modal-footer {
+        padding: 8px; /* Smaller padding */
+    }
+
+    .modal-title {
+        font-size: 1.2rem; /* Slightly smaller title */
+    }
+
+    .table th, .table td {
+        font-size: 12px; /* Smaller text in the table */
+        padding: 6px; /* Compact the cells */
+    }
+
+    .btn {
+        font-size: 14px; /* Adjust button font size */
+        padding: 8px 12px; /* Adjust button padding */
+    }
+
+    .table-responsive {
+        overflow-x: auto; /* Ensure horizontal scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+    }
+}
+
+

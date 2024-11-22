@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
 import {Button, Form, Modal, Table} from 'react-bootstrap';
+import {useHistory} from "react-router-dom";
 
 function OrderManagement() {
     const [orders, setOrders] = useState([]);
@@ -43,10 +44,20 @@ function OrderManagement() {
                 .catch((error) => console.error('Error deleting order:', error));
         }
     };
-
+    const navigate = useHistory();
     return (
         <div className="orders-section container mt-5">
-            <h2 className="mb-4">Управління замовленнями</h2>
+            <div>
+                <h2 className="mb-4">Управління замовленнями</h2>
+                <Button
+                    variant="warning"
+                    className="btn mb-4"
+                    onClick={() => navigate.goBack()}
+                    style={{margin: "auto", padding: "10px"}}
+                >
+                    Назад
+                </Button>
+            </div>
             <Form.Group controlId="statusFilter" className="mb-3">
                 <Form.Label>Фільтр по статусу:</Form.Label>
                 <Form.Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value || null)}>
@@ -76,7 +87,7 @@ function OrderManagement() {
                         <td>{order.status}</td>
                         <td>{order.total_price} грн</td>
                         <td>{new Date(order.date).toLocaleDateString()}</td>
-                        <td>
+                        <td className="d-flex">
                             <Button
                                 variant="info"
                                 size="sm"
@@ -119,10 +130,12 @@ function OrderManagement() {
                         <>
                             <h5>Інформація про доставку</h5>
                             <p><strong>Адреса:</strong> {orderDetails.shipping.address}</p>
-                            <p><strong>Ім'я:</strong> {orderDetails.shipping.first_name} {orderDetails.shipping.last_name}</p>
+                            <p>
+                                <strong>Ім'я:</strong> {orderDetails.shipping.first_name} {orderDetails.shipping.last_name}
+                            </p>
                             <p><strong>Телефон:</strong> {orderDetails.shipping.phone_number}</p>
                             <p><strong>Пошта:</strong> {orderDetails.shipping.email}</p>
-                            <hr />
+                            <hr/>
                             <h5>Товари</h5>
                             <Table striped bordered hover>
                                 <thead>

@@ -63,7 +63,7 @@ function Header() {
                     </Link>
                 ))}
               </div>
-              <Link to="/cart" className="btn btn-outline-orange me-3" >
+              <Link to="/cart" className="btn btn-outline-orange me-3" type="button" onClick={changeNav}>
                 <FontAwesomeIcon icon={['fas', 'shopping-cart']} />
                 <span className="ms-3 badge rounded-pill bg-orange">{totalItems}</span>
               </Link>

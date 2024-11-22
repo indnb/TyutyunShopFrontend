@@ -197,7 +197,6 @@ function ProductForm({ product, onClose }) {
             <Form.Group controlId="productPrice" className="mt-3">
                 <Form.Label>Ціна</Form.Label>
                 <Form.Control
-                    type="number"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
                     required
@@ -254,7 +253,6 @@ function ProductForm({ product, onClose }) {
                             <div key={photo.id} className="image-option me-3 mb-3">
                                 <img
                                     src={photo.image_url}
-                                    style={{ width: '300px', height: '300px' }}
                                     alt={`Photo ${photo.id}`}
                                 />
                                 <Form.Control

@@ -141,7 +141,7 @@ function CartPage() {
 
     return (
         <div className="cart-page" style={{ marginTop: "56px" }}>
-            <h1>Кошик</h1>
+            <h1 className="text-center">Кошик</h1>
             {cartItems.length > 0 && (
                 <button className="clear-cart-button" onClick={clearCart}>
                     Очистити кошик
@@ -269,7 +269,7 @@ function CartPage() {
                     </div>
                 </>
             ) : (
-                <h2 className="text-center">порожній :(</h2>
+                <h1 className="text-center">порожній :(</h1>
             )}
         </div>
     );

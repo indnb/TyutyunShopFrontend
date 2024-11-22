@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
 import ProductForm from './ProductForm';
 import {Button, Modal, Table} from 'react-bootstrap';
+import {useHistory} from "react-router-dom";
 
 function ProductManagement() {
     const [products, setProducts] = useState([]);
@@ -52,10 +53,20 @@ function ProductManagement() {
         acc[category.id] = category.name;
         return acc;
     }, {});
-
+    const navigate = useHistory();
     return (
         <div className="orders-section container mt-5">
-            <h2 className="mb-4 margin-top">Управління товарами</h2>
+            <div>
+                <h2 className="mb-4 margin-top">Управління товарами</h2>
+                <Button
+                    variant="warning"
+                    className="btn mb-4"
+                    onClick={() => navigate.goBack()}
+                    style={{margin: "auto", padding: "10px"}}
+                >
+                    Назад
+                </Button>
+            </div>
 
             <Button variant="warning" onClick={() => setShowForm(true)} className="mb-3">
                 Додати новий товар
@@ -77,7 +88,7 @@ function ProductManagement() {
                             <td>{product.name}</td>
                             <td>{product.price} грн</td>
                             <td>{categoryMap[product.category_id] || 'Категорія не знайдена'}</td>
-                            <td>
+                            <td className="d-flex">
                                 <Button
                                     variant="info"
                                     size="sm"
@@ -113,7 +124,7 @@ function ProductManagement() {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <ProductForm product={editingProduct} onClose={handleFormClose} />
+                    <ProductForm product={editingProduct} onClose={handleFormClose}/>
                 </Modal.Body>
             </Modal>
         </div>

@@ -57,8 +57,8 @@ form textarea:focus {
 }
 
 .image-selection .image-option img {
-    width: auto;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
     border: 2px solid orange;
     cursor: pointer;
@@ -98,6 +98,7 @@ form textarea:focus {
 }
 
 @media (max-width: 768px) {
+
     form {
         padding: 15px;
         font-size: 14px;

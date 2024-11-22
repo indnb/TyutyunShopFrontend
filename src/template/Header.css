@@ -96,7 +96,6 @@ button:hover,
 
 .dropdown-item:active {
     background-color: #1a1a1a;
-    color: white;
     border: 1px solid #FFA500;
 }
 .nav-link:hover {
@@ -179,4 +178,7 @@ button:hover,
 .btn-secondary:active {
     background-color: #e59400 !important;
     color: #1a1a1a !important;
+}
+.dropdown-item:hover{
+    background-color: rgba(250, 250, 250, 0) !important;
 }
