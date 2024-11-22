@@ -1,14 +1,15 @@
-import React, {useContext, useEffect, useState} from "react";
-import {CartContext} from "../context/CartContext";
+import React, { useContext, useEffect, useState } from "react";
+import { CartContext } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContext";
 import axios from "../axiosConfig";
-import "./CartPage.css";
 import ToggleButtons from "./ToggleButtons";
-import {AuthContext} from "../context/AuthContext";
-import {validateField} from "../utils/validation";
+import "./CartPage.css";
+import { validateField } from "../utils/validation";
+import { AlertContext } from "../template/Template";
 
 function CartPage() {
-    const {isAuthenticated} = useContext(AuthContext);
-    const {cartItems, addOneItem, removeOneItem, removeItem, clearCart} = useContext(CartContext);
+    const { isAuthenticated } = useContext(AuthContext);
+    const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
     const [shippingData, setShippingData] = useState({
         order_id: 0,
         address: "",
@@ -19,10 +20,10 @@ function CartPage() {
     });
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
-    const [paymentType, setPaymentType] = useState("Оплата картою");
+    const [paymentType, setPaymentType] = useState("Наложний платіж");
+    const { showAlert } = useContext(AlertContext);
 
     const totalCost = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -46,10 +47,8 @@ function CartPage() {
                 console.error("Error fetching user profile data:", error);
             }
         };
-
         fetchUserData();
     }, [isAuthenticated]);
-
     const validateFieldWrapper = (name, value) => {
         const error = validateField(name, value, shippingData);
         setErrors((prevErrors) => ({...prevErrors, [name]: error}));
@@ -61,14 +60,11 @@ function CartPage() {
         validateFieldWrapper(name, value);
     };
 
-    function check_payment() {
-        return paymentType === "Оплата картою";
-    }
+    const check_payment = () => paymentType === "Оплата картою";
 
     const handlePaymentToggle = (selectedPaymentType) => {
         setPaymentType(selectedPaymentType);
     };
-
     const handlePurchase = async (e) => {
         e.preventDefault();
 
@@ -80,7 +76,7 @@ function CartPage() {
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
-            console.error("Please correct the errors before submitting.");
+            showAlert("Please correct the errors before submitting.");
             return;
         }
 
@@ -95,9 +91,9 @@ function CartPage() {
                 size: item.size,
             }));
 
-            const online_payment = check_payment();
+            const online_payment = paymentType === "Оплата картою";
             if (online_payment) {
-                alert("Оплата наразі тільки при отриманні :(");
+                showAlert("Оплата наразі тільки при отриманні :(");
                 setIsProcessing(false);
                 return;
             }
@@ -107,10 +103,11 @@ function CartPage() {
                     user_id: Number(shippingData.id),
                     total_price: totalCost,
                     status: "pending",
-                    online_payment: online_payment,
+                    online_payment,
                 },
                 order_items: orderItems,
             };
+
             const response = await axios.post("/order", orderData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -132,20 +129,18 @@ function CartPage() {
                 }
             );
 
-            console.log("Order placed and mail sent successfully.")
-
-            alert("Замовлення оформлено успішно!");
+            showAlert("Замовлення оформлено успішно!");
             clearCart();
         } catch (error) {
             console.error("Error placing new order:", error);
-            alert("Помилка при оформленні замовлення. Спробуйте ще раз.");
+            showAlert("Помилка при оформленні замовлення. Спробуйте ще раз.");
         } finally {
             setIsProcessing(false);
         }
     };
 
     return (
-        <div className="cart-page" style={{marginTop: "56px"}}>
+        <div className="cart-page" style={{ marginTop: "56px" }}>
             <h1>Кошик</h1>
             {cartItems.length > 0 && (
                 <button className="clear-cart-button" onClick={clearCart}>

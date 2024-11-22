@@ -42,13 +42,13 @@
 }
 
 .list-group-item {
-    background-color: #111;
+    background-color: #1a1a1a;
     color: orange;
     font-weight: 500;
     padding: 10px 10px 10px 30px;
     font-size: 1.2rem;
     text-decoration: none;
-    border: none;
+    border: #ff9800 solid 1px;
     transition: all 0.3s ease;
 }
 

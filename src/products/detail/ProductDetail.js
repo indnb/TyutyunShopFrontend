@@ -3,6 +3,7 @@ import {Link, useParams} from 'react-router-dom';
 import axios from '../../axiosConfig';
 import {CartContext} from '../../context/CartContext';
 import './ProductDetail.css';
+import {AlertContext} from "../../template/Template";
 
 function ProductDetail() {
     const { id } = useParams();
@@ -27,8 +28,8 @@ function ProductDetail() {
                 let imageData = imagesResponse.data;
 
                 imageData.sort((a, b) => {
-                    if (a.position == null) return 1;
-                    if (b.position == null) return -1;
+                    if (a.position == null) return -1;
+                    if (b.position == null) return 1;
                     return a.position - b.position;
                 });
 
@@ -84,20 +85,20 @@ function ProductDetail() {
         fetchRecommendedProducts();
     }, [product, id]);
 
+    const { showAlert } = useContext(AlertContext);
+
     const handleAddToCart = () => {
         if (!selectedSize) {
-            alert("Будь ласка, оберіть розмір.");
+            showAlert("Будь ласка, оберіть розмір.");
             return;
         }
-
-        const itemToAdd = {
+        addItem({
             id: product.id,
             name: product.name,
             price: product.price,
             quantity: Number(quantity),
             size: selectedSize,
-        };
-        addItem(itemToAdd);
+        });
     };
 
     const handleSizeChange = (e) => {

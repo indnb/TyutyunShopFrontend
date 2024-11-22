@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './ToggleSwitch.css';
 
 function ToggleButtons({ label1, label2, onChange }) {
-    const [selected, setSelected] = useState(label1);
+    const [selected, setSelected] = useState(label2);
 
     const handleClick = (label) => {
         setSelected(label);

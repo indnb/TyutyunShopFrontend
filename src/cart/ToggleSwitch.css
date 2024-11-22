@@ -17,7 +17,3 @@
     color: black;
     border-color: #FFA500;
 }
-
-.toggle-button:not(.active):hover {
-    color: white   ;
-}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../axiosConfig';
 import { Button, Form } from 'react-bootstrap';
+import './PproductForm.css';
 
 function ProductForm({ product, onClose }) {
     const [formData, setFormData] = useState({
@@ -115,9 +116,9 @@ function ProductForm({ product, onClose }) {
         }
 
         const newUploadedPhoto = {
-            id: Date.now(), // Temporary ID
+            id: Date.now(),
             file: newPhoto,
-            image_url: URL.createObjectURL(newPhoto), // For preview
+            image_url: URL.createObjectURL(newPhoto),
             position: null,
             isNew: true,
             selected: true,
@@ -132,7 +133,6 @@ function ProductForm({ product, onClose }) {
         try {
             let createdProductId;
 
-            // Create or update product
             if (product) {
                 await axios.put(`/product/update`, { ...formData, id: product.id });
                 createdProductId = product.id;
@@ -237,7 +237,6 @@ function ProductForm({ product, onClose }) {
                         <Form.Group key={sizeKey} className="me-3 mb-3">
                             <Form.Label>{sizeKey.toUpperCase()}</Form.Label>
                             <Form.Control
-                                type="number"
                                 value={sizes[sizeKey]}
                                 onChange={(e) => handleSizeChange(sizeKey, e.target.value)}
                             />
@@ -246,7 +245,7 @@ function ProductForm({ product, onClose }) {
                 </div>
             </Form.Group>
 
-            <Form.Group controlId="productImages" className="mt-3">
+            <Form.Group controlId="productImages" className="mt-6">
                 <Form.Label>Фотографії</Form.Label>
                 <div className="image-selection d-flex flex-wrap">
                     {photos
@@ -255,8 +254,14 @@ function ProductForm({ product, onClose }) {
                             <div key={photo.id} className="image-option me-3 mb-3">
                                 <img
                                     src={photo.image_url}
-                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                    style={{ width: '300px', height: '300px' }}
                                     alt={`Photo ${photo.id}`}
+                                />
+                                <Form.Control
+                                    placeholder="Позиція"
+                                    value={photo.position || ''}
+                                    onChange={(e) => handlePhotoPositionChange(photo.id, e.target.value)}
+                                    className="mt-2"
                                 />
                                 <Button
                                     variant="danger"
@@ -265,13 +270,6 @@ function ProductForm({ product, onClose }) {
                                 >
                                     Видалити
                                 </Button>
-                                <Form.Control
-                                    type="number"
-                                    placeholder="Позиція"
-                                    value={photo.position || ''}
-                                    onChange={(e) => handlePhotoPositionChange(photo.id, e.target.value)}
-                                    className="mt-2"
-                                />
                             </div>
                         ))}
                 </div>
@@ -295,7 +293,7 @@ function ProductForm({ product, onClose }) {
                                 <img
                                     src={photo.image_url}
                                     alt={`Photo ${photo.id}`}
-                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                    style={{ width: '100px', height: '100px'}}
                                 />
                             </div>
                         ))}
