@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import axios from '../axiosConfig';
 
 export const CartContext = createContext();
@@ -36,15 +36,23 @@ export function CartProvider({ children }) {
             const existingItemIndex = prevItems.findIndex(
                 (cartItem) =>
                     cartItem.id === item.id &&
-                    cartItem.size === item.size &&
-                    cartItem.name === item.name &&
-                    cartItem.category === item.category
+                    cartItem.size === item.size
             );
+
+            const existingItem = prevItems[existingItemIndex];
+            const existingQuantity = existingItem ? existingItem.quantity : 0;
+            const desiredQuantity = existingQuantity + item.quantity;
+
+            if (desiredQuantity > item.stock) {
+                // Instead of using showAlert here, return an error flag
+                return prevItems;
+            }
+
             if (existingItemIndex >= 0) {
                 const updatedItems = [...prevItems];
                 updatedItems[existingItemIndex] = {
-                    ...updatedItems[existingItemIndex],
-                    quantity: updatedItems[existingItemIndex].quantity + (item.quantity || 1),
+                    ...existingItem,
+                    quantity: desiredQuantity,
                 };
                 return updatedItems;
             } else {
@@ -58,13 +66,11 @@ export function CartProvider({ children }) {
     };
 
     const removeOneItem = (item) => {
-            setCartItems((prevItems) => {
+        setCartItems((prevItems) => {
             const existingItemIndex = prevItems.findIndex(
                 (cartItem) =>
                     cartItem.id === item.id &&
-                    cartItem.size === item.size &&
-                    cartItem.name === item.name &&
-                    cartItem.category === item.category
+                    cartItem.size === item.size
             );
 
             if (existingItemIndex >= 0) {
@@ -72,7 +78,6 @@ export function CartProvider({ children }) {
                 const currentItem = updatedItems[existingItemIndex];
 
                 if (currentItem.quantity > 1) {
-                    console.log('Removing one item:', item);
                     updatedItems[existingItemIndex] = {
                         ...currentItem,
                         quantity: currentItem.quantity - 1,
@@ -86,15 +91,12 @@ export function CartProvider({ children }) {
         });
     };
 
-
     const removeItem = (item) => {
         setCartItems((prevItems) =>
             prevItems.filter(
                 (cartItem) =>
                     cartItem.id !== item.id ||
-                    cartItem.size !== item.size ||
-                    cartItem.name !== item.name ||
-                    cartItem.category !== item.category
+                    cartItem.size !== item.size
             )
         );
     };

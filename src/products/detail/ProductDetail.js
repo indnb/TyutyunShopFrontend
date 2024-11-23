@@ -1,15 +1,15 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import axios from '../../axiosConfig';
-import {CartContext} from '../../context/CartContext';
+import { CartContext } from '../../context/CartContext';
 import './ProductDetail.css';
-import {AlertContext} from "../../template/Template";
+import { AlertContext } from "../../template/Template";
 
 function ProductDetail() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [images, setImages] = useState([]);
-    const { addItem } = useContext(CartContext);
+    const { cartItems, addItem } = useContext(CartContext);
 
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
@@ -22,7 +22,6 @@ function ProductDetail() {
             try {
                 const response = await axios.get(`/product`, { params: { product_id: id } });
                 const productData = response.data[0];
-                setProduct(productData);
 
                 const imagesResponse = await axios.get(`/product_image_all`, { params: { product_id: id } });
                 let imageData = imagesResponse.data;
@@ -39,17 +38,46 @@ function ProductDetail() {
                 const sizeResponse = await axios.get(`/size/${id}`);
                 const sizeData = sizeResponse.data;
                 const sizes = [];
-                if (sizeData.single_size <= 0) {
-                    if (sizeData.s > 0) sizes.push('S');
-                    if (sizeData.m > 0) sizes.push('M');
-                    if (sizeData.l > 0) sizes.push('L');
-                    if (sizeData.xl > 0) sizes.push('XL');
-                    if (sizeData.xxl > 0) sizes.push('XXL');
+                const sizesWithStock = {};
+
+                if (sizeData.single_size > 0) {
+                    sizes.push("Базовий");
+                    sizesWithStock["Базовий"] = sizeData.single_size;
                 } else {
-                    sizes.push("single_size");
-                    setSelectedSize("Базовий розмір");
+                    if (sizeData.s > 0) {
+                        sizes.push('S');
+                        sizesWithStock['S'] = sizeData.s;
+                    }
+                    if (sizeData.m > 0) {
+                        sizes.push('M');
+                        sizesWithStock['M'] = sizeData.m;
+                    }
+                    if (sizeData.l > 0) {
+                        sizes.push('L');
+                        sizesWithStock['L'] = sizeData.l;
+                    }
+                    if (sizeData.xl > 0) {
+                        sizes.push('XL');
+                        sizesWithStock['XL'] = sizeData.xl;
+                    }
+                    if (sizeData.xxl > 0) {
+                        sizes.push('XXL');
+                        sizesWithStock['XXL'] = sizeData.xxl;
+                    }
                 }
                 setAvailableSizes(sizes);
+                setProduct({
+                    ...productData,
+                    sizesWithStock,
+                });
+
+                if (sizes.length === 1 && sizes[0] === "Базовий") {
+                    if (sizes[0] in sizesWithStock) {
+                        setSelectedSize("Базовий");
+                    } else {
+                        setSelectedSize('');
+                    }
+                }
             } catch (error) {
                 console.error('Error fetching product data or images:', error);
             }
@@ -88,21 +116,59 @@ function ProductDetail() {
     const { showAlert } = useContext(AlertContext);
 
     const handleAddToCart = () => {
-        if (!selectedSize) {
-            showAlert("Будь ласка, оберіть розмір.");
+        if (!selectedSize || !(selectedSize in product.sizesWithStock)) {
+            showAlert("Будь ласка, оберіть коректний розмір.");
             return;
         }
+
+        const availableStock = Number(product.sizesWithStock[selectedSize]) || 0;
+
+        if (isNaN(availableStock) || availableStock <= 0) {
+            showAlert(`Розмір ${selectedSize} недоступний.`);
+            return;
+        }
+
+        const cartItem = cartItems.find(
+            (item) => item.id === product.id && item.size === selectedSize
+        );
+        const quantityInCart = cartItem ? cartItem.quantity : 0;
+        const desiredQuantity = Number(quantity);
+
+        if (isNaN(desiredQuantity) || desiredQuantity <= 0) {
+            showAlert("Будь ласка, введіть коректну кількість.");
+            return;
+        }
+
+        if (desiredQuantity + quantityInCart > availableStock) {
+            showAlert(
+                `Максимальна доступна кількість для розміру "${selectedSize}": ${
+                    availableStock - quantityInCart
+                }`
+            );
+            return;
+        }
+
         addItem({
             id: product.id,
             name: product.name,
             price: product.price,
-            quantity: Number(quantity),
+            quantity: desiredQuantity,
             size: selectedSize,
+            stock: availableStock,
         });
+
+        showAlert("Товар додано до кошика!");
     };
 
     const handleSizeChange = (e) => {
-        setSelectedSize(e.target.value);
+        const newSize = e.target.value;
+        if (newSize in product.sizesWithStock) {
+            setSelectedSize(newSize);
+            setQuantity(1);
+        } else {
+            showAlert("Будь ласка, оберіть коректний розмір.");
+            setSelectedSize('');
+        }
     };
 
     const handleImageClick = (e) => {
@@ -134,6 +200,7 @@ function ProductDetail() {
 
     if (!product) return <div>Завантаження...</div>;
 
+
     return (
         <div className="product-detail-page">
             <div className="container mt-5 py-4 px-xl-5">
@@ -154,7 +221,7 @@ function ProductDetail() {
                                     <p>Зображення не знайдено</p>
                                 )}
                             </div>
-                            <div className="image-thumbnails d-flex justify-content-center mt-3" style={{marginBottom: 30}}>
+                            <div className="image-thumbnails d-flex justify-content-center mt-3" style={{ marginBottom: 30 }}>
                                 {images.map((image, index) => (
                                     <img
                                         key={index}
@@ -171,7 +238,7 @@ function ProductDetail() {
                         <h3 className="product-name text-center text-orange">{product.name}</h3>
                         <p className="product-price text-center text-orange">{product.price} грн</p>
                         <div className="product-options">
-                            {availableSizes.length > 0 && availableSizes[0] !== "single_size" && (
+                            {availableSizes.length > 1 && (
                                 <div className="size-selection mb-3">
                                     <label htmlFor="size" className="form-label text-orange">Розмір:</label>
                                     <select
@@ -190,16 +257,44 @@ function ProductDetail() {
                                     </select>
                                 </div>
                             )}
-                            <div className="quantity-selection mb-3">
-                                <label htmlFor="quantity" className="form-label text-orange">Кількість:</label>
-                                <input
-                                    id="quantity"
-                                    value={quantity}
-                                    min="1"
-                                    onChange={(e) => setQuantity(parseInt(e.target.value))}
-                                    className="form-control"
-                                />
-                            </div>
+                            {selectedSize && (
+                                <div className="quantity-selection mb-3">
+                                    <label htmlFor="quantity" className="form-label text-orange">
+                                        Кількість
+                                        (макс:{" "}
+                                        {selectedSize && product.sizesWithStock[selectedSize]
+                                            ? product.sizesWithStock[selectedSize] -
+                                            (cartItems.find(
+                                                (item) => item.id === product.id && item.size === selectedSize
+                                            )?.quantity || 0)
+                                            : "-"}
+                                        )
+                                    </label>
+                                    <input
+                                        id="quantity"
+                                        value={quantity}
+                                        min="1"
+                                        max={
+                                            selectedSize && product.sizesWithStock[selectedSize]
+                                                ? product.sizesWithStock[selectedSize] -
+                                                (cartItems.find(
+                                                    (item) => item.id === product.id && item.size === selectedSize
+                                                )?.quantity || 0)
+                                                : 1
+                                        }
+                                        onChange={(e) => {
+                                            const value = parseInt(e.target.value);
+                                            if (!isNaN(value) && value > 0) {
+                                                setQuantity(value);
+                                            } else {
+                                                setQuantity(1);
+                                            }
+                                        }}
+                                        className="form-control"
+                                        disabled={!selectedSize}
+                                    />
+                                </div>
+                            )}
                             <button className="btn btn-orange w-100" onClick={handleAddToCart}>Додати в кошик</button>
                         </div>
                         <div className="product-description mt-4">

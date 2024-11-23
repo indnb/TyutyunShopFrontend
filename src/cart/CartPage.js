@@ -24,6 +24,7 @@ function CartPage() {
     const { showAlert } = useContext(AlertContext);
 
     const totalCost = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -49,22 +50,22 @@ function CartPage() {
         };
         fetchUserData();
     }, [isAuthenticated]);
+
     const validateFieldWrapper = (name, value) => {
         const error = validateField(name, value, shippingData);
-        setErrors((prevErrors) => ({...prevErrors, [name]: error}));
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
     };
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setShippingData({...shippingData, [name]: value});
+        const { name, value } = e.target;
+        setShippingData({ ...shippingData, [name]: value });
         validateFieldWrapper(name, value);
     };
-
-    const check_payment = () => paymentType === "Оплата картою";
 
     const handlePaymentToggle = (selectedPaymentType) => {
         setPaymentType(selectedPaymentType);
     };
+
     const handlePurchase = async (e) => {
         e.preventDefault();
 
@@ -166,13 +167,30 @@ function CartPage() {
                                 <td>{item.size}</td>
                                 <td>
                                     <div className="quantity-controls">
-                                        <button className="quantity-button" onClick={() => removeOneItem(item)}>
+                                        <button
+                                            className="quantity-button"
+                                            onClick={() => removeOneItem(item)}
+                                            disabled={item.quantity <= 1}
+                                        >
                                             -
                                         </button>
                                         <span className="quantity">{item.quantity}</span>
-                                        <button className="quantity-button" onClick={() => addOneItem(item)}>
+                                        <button
+                                            className="quantity-button"
+                                            onClick={() => {
+                                                if (item.quantity < item.stock) {
+                                                    addOneItem(item);
+                                                } else {
+                                                    showAlert(`Максимальна доступна кількість для розміру ${item.size}: ${item.stock}`);
+                                                }
+                                            }}
+                                            disabled={item.quantity >= item.stock}
+                                        >
                                             +
                                         </button>
+                                    </div>
+                                    <div className="stock-info">
+                                        <small>В наявності: {item.stock - item.quantity}</small>
                                     </div>
                                 </td>
                                 <td>{item.price} грн</td>
@@ -269,7 +287,7 @@ function CartPage() {
                     </div>
                 </>
             ) : (
-                <h1 className="text-center">порожній</h1>
+                <h1 className="text-center">Порожній</h1>
             )}
         </div>
     );
