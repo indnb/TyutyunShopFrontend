@@ -15,10 +15,11 @@ import OrderManagement from './admin/OrderManagement';
 import PhotoGallery from './admin/PhotoGallery';
 import CategoryManagement from './admin/CategoryManagement';
 import ProductManagement from './admin/ProductManagement';
-
+import ScrollToTop from "./utils/ScrollToTop";
 function App() {
     return (
         <Template>
+            <ScrollToTop />
             <Switch>
                 <Route path="/" exact component={Landing} />
                 <Route path="/products/category/:category" exact component={ProductList} />
