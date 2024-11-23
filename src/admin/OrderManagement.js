@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from '../axiosConfig';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { translateStatus } from '../utils/statusTranslation'; // Import the utility
+import { translateStatus } from '../utils/statusTranslation';
 
 function OrderManagement() {
     const [orders, setOrders] = useState([]);

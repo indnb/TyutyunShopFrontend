@@ -1,4 +1,3 @@
-// src/components/admin/CategoryManagement.js
 import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
 import {Button, Form, Modal, Table} from 'react-bootstrap';
