@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
-import { Button, Form } from 'react-bootstrap';
+import {Button, Form} from 'react-bootstrap';
 import './PproductForm.css';
+import {useCustomAlert} from "../template/CustomAlert";
 
-function ProductForm({ product, onClose }) {
+function ProductForm({product, onClose}) {
     const [formData, setFormData] = useState({
         name: '',
         price: 0,
@@ -54,7 +55,7 @@ function ProductForm({ product, onClose }) {
 
     const fetchPhotosByProductId = async () => {
         try {
-            const response = await axios.get('/product_image_all', { params: { product_id: product.id } });
+            const response = await axios.get('/product_image_all', {params: {product_id: product.id}});
             const photosWithSelection = response.data.map((photo) => ({
                 ...photo,
                 selected: true,
@@ -85,7 +86,7 @@ function ProductForm({ product, onClose }) {
     const handlePhotoPositionChange = (photoId, position) => {
         setPhotos((prevPhotos) =>
             prevPhotos.map((photo) =>
-                photo.id === photoId ? { ...photo, position: Number(position) } : photo
+                photo.id === photoId ? {...photo, position: Number(position)} : photo
             )
         );
     };
@@ -94,9 +95,9 @@ function ProductForm({ product, onClose }) {
         setPhotos((prevPhotos) => {
             const photoExists = prevPhotos.find((p) => p.id === photo.id);
             if (photoExists) {
-                return prevPhotos.map((p) => (p.id === photo.id ? { ...p, selected: true } : p));
+                return prevPhotos.map((p) => (p.id === photo.id ? {...p, selected: true} : p));
             } else {
-                return [...prevPhotos, { ...photo, selected: true, isNew: false }];
+                return [...prevPhotos, {...photo, selected: true, isNew: false}];
             }
         });
     };
@@ -104,14 +105,15 @@ function ProductForm({ product, onClose }) {
     const handlePhotoRemove = (photoId) => {
         setPhotos((prevPhotos) =>
             prevPhotos.map((photo) =>
-                photo.id === photoId ? { ...photo, selected: false } : photo
+                photo.id === photoId ? {...photo, selected: false} : photo
             )
         );
     };
 
+
     const handlePhotoUpload = () => {
         if (!newPhoto) {
-            alert('Please select a photo to upload.');
+            alert('Будь ласка оберіть фото для завантаження.');
             return;
         }
 
@@ -134,7 +136,7 @@ function ProductForm({ product, onClose }) {
             let createdProductId;
 
             if (product) {
-                await axios.put(`/product/update`, { ...formData, id: product.id });
+                await axios.put(`/product/update`, {...formData, id: product.id});
                 createdProductId = product.id;
             } else {
                 const response = await axios.post('/product', formData);
@@ -142,9 +144,9 @@ function ProductForm({ product, onClose }) {
             }
 
             if (product) {
-                await axios.put('/size/update', { ...sizes });
+                await axios.put('/size/update', {...sizes});
             } else {
-                await axios.post('/size', { product_id: createdProductId, ...sizes  });
+                await axios.post('/size', {product_id: createdProductId, ...sizes});
             }
 
             for (const photo of photos) {
@@ -156,7 +158,8 @@ function ProductForm({ product, onClose }) {
                         if (photo.position) photoFormData.append('position', photo.position);
 
                         await axios.post('/product_image', photoFormData, {
-                            headers: { 'Content-Type': 'multipart/form-data' },
+                            params: {position: photo.position},
+                            headers: {'Content-Type': 'multipart/form-data'},
                         });
                     } else {
                         await axios.put(`/product_image/update`, {
@@ -189,7 +192,7 @@ function ProductForm({ product, onClose }) {
                 <Form.Control
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
                     required
                 />
             </Form.Group>
@@ -198,7 +201,7 @@ function ProductForm({ product, onClose }) {
                 <Form.Label>Ціна</Form.Label>
                 <Form.Control
                     value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                    onChange={(e) => setFormData({...formData, price: Number(e.target.value)})}
                     required
                 />
             </Form.Group>
@@ -209,7 +212,7 @@ function ProductForm({ product, onClose }) {
                     as="textarea"
                     rows={3}
                     value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
                 />
             </Form.Group>
 
@@ -217,7 +220,7 @@ function ProductForm({ product, onClose }) {
                 <Form.Label>Категорія</Form.Label>
                 <Form.Select
                     value={formData.category_id}
-                    onChange={(e) => setFormData({ ...formData, category_id: Number(e.target.value) })}
+                    onChange={(e) => setFormData({...formData, category_id: Number(e.target.value)})}
                     required
                 >
                     <option value="">Обрати категорію</option>
@@ -291,7 +294,7 @@ function ProductForm({ product, onClose }) {
                                 <img
                                     src={photo.image_url}
                                     alt={`Photo ${photo.id}`}
-                                    style={{ width: '100px', height: '100px'}}
+                                    style={{width: '100px', height: '100px'}}
                                 />
                             </div>
                         ))}

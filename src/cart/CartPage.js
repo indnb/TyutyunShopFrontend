@@ -76,7 +76,7 @@ function CartPage() {
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
-            showAlert("Please correct the errors before submitting.");
+            showAlert("Будь ласка виріште помилки.");
             return;
         }
 

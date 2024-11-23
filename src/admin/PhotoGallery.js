@@ -46,9 +46,8 @@ function PhotoGallery() {
 
         try {
             await axios.post('/product_image', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                params: {position: null},
+                headers: {'Content-Type': 'multipart/form-data'},
             });
             setNewPhotoFile(null);
             fetchPhotos();
