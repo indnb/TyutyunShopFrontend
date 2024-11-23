@@ -294,8 +294,6 @@
     color: #e59400;
 }
 
-/* Existing styles... */
-
 @media (max-width: 600px) {
     .user-profile {
         padding: 10px;
@@ -375,26 +373,26 @@
     }
 
     .modal-header, .modal-footer {
-        padding: 8px; /* Smaller padding */
+        padding: 8px;
     }
 
     .modal-title {
-        font-size: 1.2rem; /* Slightly smaller title */
+        font-size: 1.2rem;
     }
 
     .table th, .table td {
-        font-size: 12px; /* Smaller text in the table */
-        padding: 6px; /* Compact the cells */
+        font-size: 12px;
+        padding: 6px;
     }
 
     .btn {
-        font-size: 14px; /* Adjust button font size */
-        padding: 8px 12px; /* Adjust button padding */
+        font-size: 14px;
+        padding: 8px 12px;
     }
 
     .table-responsive {
-        overflow-x: auto; /* Ensure horizontal scrolling */
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 }
 

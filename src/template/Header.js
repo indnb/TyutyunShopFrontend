@@ -80,23 +80,23 @@ function Header() {
                   >
                     <FontAwesomeIcon icon={['fas', 'user-alt']} />
                   </a>
-                  <ul className="dropdown-menu dropdown-menu-end bg-dark border-orange" aria-labelledby="userDropdown">
+                  <ul className="mt-2 dropdown-menu dropdown-menu-end bg-dark border-orange" aria-labelledby="userDropdown">
                     {isAuthenticated ? (
                         <>
                           <li>
-                            <Link to="/user/profile" className="nav-link dropdown-item text-orange" onClick={changeNav}>
+                            <Link to="/user/profile" className="btn dropdown-item text-orange" onClick={changeNav}>
                               Профіль
                             </Link>
                           </li>
                           {isAdmin && (
                               <li>
-                                <Link to="/admin" className="nav-link dropdown-item text-orange" onClick={changeNav}>
+                                <Link to="/admin" className="btn dropdown-item text-orange" onClick={changeNav}>
                                   Адмін-панель
                                 </Link>
                               </li>
                           )}
                           <li>
-                            <button className="nav-link dropdown-item text-orange" onClick={handleLogout}>
+                            <button className="btn dropdown-item text-orange" onClick={handleLogout}>
                               Вийти
                             </button>
                           </li>
@@ -104,12 +104,12 @@ function Header() {
                     ) : (
                         <>
                           <li>
-                            <Link to="/login" className="nav-link dropdown-item text-orange" onClick={changeNav}>
+                            <Link to="/login" className="btn dropdown-item text-orange" onClick={changeNav}>
                               Вхід
                             </Link>
                           </li>
                           <li>
-                            <Link to="/register" className="nav-link dropdown-item text-orange" onClick={changeNav}>
+                            <Link to="/register" className="btn dropdown-item text-orange" onClick={changeNav}>
                               Реєстрація
                             </Link>
                           </li>

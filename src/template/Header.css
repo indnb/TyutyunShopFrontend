@@ -181,4 +181,5 @@ button:hover,
 }
 .dropdown-item:hover{
     background-color: rgba(250, 250, 250, 0) !important;
+    color: #e59400 !important;
 }
