@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from '../axiosConfig';
-import {Button, Form, Modal, Table} from 'react-bootstrap';
-import {useHistory} from "react-router-dom";
+import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+import { translateStatus } from '../utils/statusTranslation'; // Import the utility
 
 function OrderManagement() {
     const [orders, setOrders] = useState([]);
@@ -32,7 +33,7 @@ function OrderManagement() {
     };
 
     const handleStatusChange = (orderId, newStatus) => {
-        axios.put(`/order/${orderId}`, {status: newStatus})
+        axios.put(`/order/${orderId}`, { status: newStatus })
             .then(() => fetchOrders())
             .catch((error) => console.error('Error updating order status:', error));
     };
@@ -44,16 +45,18 @@ function OrderManagement() {
                 .catch((error) => console.error('Error deleting order:', error));
         }
     };
+
     const navigate = useHistory();
+
     return (
         <div className="orders-section container mt-5">
-            <div>
+            <div className="margin-top">
                 <h2 className="mb-4">Управління замовленнями</h2>
                 <Button
                     variant="warning"
                     className="btn mb-4"
                     onClick={() => navigate.goBack()}
-                    style={{margin: "auto", padding: "10px"}}
+                    style={{ margin: 'auto', padding: '10px' }}
                 >
                     Назад
                 </Button>
@@ -68,7 +71,7 @@ function OrderManagement() {
                 </Form.Select>
             </Form.Group>
 
-            <Table table table-striped table-bordered table-hover>
+            <Table table-striped table-bordered table-hover>
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -84,7 +87,7 @@ function OrderManagement() {
                     <tr key={order.id}>
                         <td>{order.id}</td>
                         <td>{order.user_id}</td>
-                        <td>{order.status}</td>
+                        <td>{translateStatus(order.status)}</td>
                         <td>{order.total_price} грн</td>
                         <td>{new Date(order.date).toLocaleDateString()}</td>
                         <td className="d-flex">
@@ -135,7 +138,7 @@ function OrderManagement() {
                             </p>
                             <p><strong>Телефон:</strong> {orderDetails.shipping.phone_number}</p>
                             <p><strong>Пошта:</strong> {orderDetails.shipping.email}</p>
-                            <hr/>
+                            <hr />
                             <h5>Товари</h5>
                             <Table striped bordered hover>
                                 <thead>
@@ -163,7 +166,9 @@ function OrderManagement() {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Закрити</Button>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Закрити
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </div>
