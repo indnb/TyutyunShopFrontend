@@ -17,8 +17,8 @@ function AdminPage() {
     }, [isAdmin, checkAuth, history]);
 
     return (
-        <div className="container mt-5">
-            <h1 className="mb-4">Тютюн Панель</h1>
+        <div className="container">
+            <h1 className="margin-top">Тютюн Панель</h1>
             <div className="list-group">
                 <Link to="/admin/products" className="list-group-item list-group-item-action">
                     Управління товарами

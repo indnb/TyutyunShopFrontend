@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import axios from '../../axiosConfig';
 import { CartContext } from '../../context/CartContext';
 import './ProductDetail.css';
-import { AlertContext } from "../../template/Template";
+import { AlertContext } from '../../template/Template';
 
 function ProductDetail() {
     const { id } = useParams();
@@ -16,6 +16,9 @@ function ProductDetail() {
     const [availableSizes, setAvailableSizes] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [recommendedProducts, setRecommendedProducts] = useState([]);
+
+    const [touchStartX, setTouchStartX] = useState(0);
+    const [touchEndX, setTouchEndX] = useState(0);
 
     useEffect(() => {
         const fetchProductData = async () => {
@@ -41,8 +44,8 @@ function ProductDetail() {
                 const sizesWithStock = {};
 
                 if (sizeData.single_size > 0) {
-                    sizes.push("Базовий");
-                    sizesWithStock["Базовий"] = sizeData.single_size;
+                    sizes.push('Базовий');
+                    sizesWithStock['Базовий'] = sizeData.single_size;
                 } else {
                     if (sizeData.s > 0) {
                         sizes.push('S');
@@ -71,9 +74,9 @@ function ProductDetail() {
                     sizesWithStock,
                 });
 
-                if (sizes.length === 1 && sizes[0] === "Базовий") {
+                if (sizes.length === 1 && sizes[0] === 'Базовий') {
                     if (sizes[0] in sizesWithStock) {
-                        setSelectedSize("Базовий");
+                        setSelectedSize('Базовий');
                     } else {
                         setSelectedSize('');
                     }
@@ -117,7 +120,7 @@ function ProductDetail() {
 
     const handleAddToCart = () => {
         if (!selectedSize || !(selectedSize in product.sizesWithStock)) {
-            showAlert("Будь ласка, оберіть коректний розмір.");
+            showAlert('Будь ласка, оберіть коректний розмір.');
             return;
         }
 
@@ -135,7 +138,7 @@ function ProductDetail() {
         const desiredQuantity = Number(quantity);
 
         if (isNaN(desiredQuantity) || desiredQuantity <= 0) {
-            showAlert("Будь ласка, введіть коректну кількість.");
+            showAlert('Будь ласка, введіть коректну кількість.');
             return;
         }
 
@@ -157,7 +160,7 @@ function ProductDetail() {
             stock: availableStock,
         });
 
-        showAlert("Товар додано до кошика!");
+        showAlert('Товар додано до кошика!');
     };
 
     const handleSizeChange = (e) => {
@@ -166,7 +169,7 @@ function ProductDetail() {
             setSelectedSize(newSize);
             setQuantity(1);
         } else {
-            showAlert("Будь ласка, оберіть коректний розмір.");
+            showAlert('Будь ласка, оберіть коректний розмір.');
             setSelectedSize('');
         }
     };
@@ -198,8 +201,25 @@ function ProductDetail() {
         }
     };
 
-    if (!product) return <div>Завантаження...</div>;
+    const handleTouchStart = (e) => {
+        setTouchStartX(e.targetTouches[0].clientX);
+    };
 
+    const handleTouchMove = (e) => {
+        setTouchEndX(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+        if (touchStartX - touchEndX > 50) {
+            handleNextImage();
+        } else if (touchEndX - touchStartX > 50) {
+            handlePreviousImage();
+        }
+        setTouchStartX(0);
+        setTouchEndX(0);
+    };
+
+    if (!product) return <div>Завантаження...</div>;
 
     return (
         <div className="product-detail-page">
@@ -210,6 +230,9 @@ function ProductDetail() {
                             <div
                                 className="main-image text-center"
                                 onClick={handleImageClick}
+                                onTouchStart={handleTouchStart}
+                                onTouchMove={handleTouchMove}
+                                onTouchEnd={handleTouchEnd}
                             >
                                 {selectedImage ? (
                                     <img
@@ -260,8 +283,7 @@ function ProductDetail() {
                             {selectedSize && (
                                 <div className="quantity-selection mb-3">
                                     <label htmlFor="quantity" className="form-label text-orange">
-                                        Кількість
-                                        (макс:{" "}
+                                        Кількість (макс:{" "}
                                         {selectedSize && product.sizesWithStock[selectedSize]
                                             ? product.sizesWithStock[selectedSize] -
                                             (cartItems.find(

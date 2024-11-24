@@ -91,7 +91,7 @@ function Header() {
                           {isAdmin && (
                               <li>
                                 <Link to="/admin" className="btn dropdown-item text-orange" onClick={changeNav}>
-                                  Адмін-панель
+                                  ТЮТЮН ПАНЕЛЬ
                                 </Link>
                               </li>
                           )}
