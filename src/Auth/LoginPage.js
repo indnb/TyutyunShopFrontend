@@ -99,7 +99,7 @@ function LoginPage() {
                         required
                     />
                 </label>
-                <button type="submit" disabled={cooldown > 0}>
+                <button className="mt-4" type="submit" disabled={cooldown > 0}>
                     {cooldown > 0 ? `Зачекайте ${cooldown} с` : 'Увійти'}
                 </button>
             </form>

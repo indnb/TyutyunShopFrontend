@@ -56,10 +56,21 @@ const RegisterPage = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        const error = validateField(name, value, formData);
+        if (!error) {
+            setErrors((prevErrors) => {
+                const { [name]: removedError, ...restErrors } = prevErrors;
+                return restErrors;
+            });
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+        }
+
         setFormData({ ...formData, [name]: value });
-        validateField(name, value);
         setServerMessage("");
     };
+
 
     const startCooldown = () => {
         setTimer(30);
@@ -175,7 +186,7 @@ const RegisterPage = () => {
                     />
                     {errors.phone_number && <small className="server-message error">{errors.phone_number}</small>}
                 </div>
-                <button type="submit" disabled={isButtonDisabled}>
+                <button className="mt-4" type="submit" disabled={isButtonDisabled}>
                     {isButtonDisabled ? `Повторна спроба через ${timer} с` : "Зареєструватись"}
                 </button>
                 {serverMessage && <p className={`server-message ${(errors.username || errors.email || errors.phone_number) ? 'error' : 'success'}`}>{serverMessage}</p>}
