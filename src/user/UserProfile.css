@@ -85,7 +85,8 @@
 }
 
 .error-text {
-    color: red;
+    padding: 10px 0;
+    color: #fd7e14;
     font-size: 0.8rem;
 }
 

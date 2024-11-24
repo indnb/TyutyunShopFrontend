@@ -17,7 +17,7 @@
 
 .auth-container h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .auth-container form {
@@ -26,7 +26,7 @@
 }
 
 .auth-container label {
-    margin-bottom: 15px;
+    padding: 10px 0 0 0;
     display: flex;
     flex-direction: column;
 }
@@ -62,4 +62,7 @@
 
 .server-message.success {
     color: #ff9800;
+}
+button {
+    margin-top: 15px;
 }

@@ -82,7 +82,7 @@ function LoginPage() {
             {error && <div className="alert alert-danger">{error}</div>}
             <form onSubmit={handleSubmit}>
                 <label>
-                    Email:
+                    Пошта:
                     <input
                         type="text"
                         value={email}
