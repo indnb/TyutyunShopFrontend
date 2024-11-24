@@ -84,14 +84,16 @@ button,
 
 button:hover,
 .btn:hover {
-    background-color: #ff9800 !important;
-    outline: none;
+    outline: none !important;
     color: #000000;
 }
-
+button:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+}
 .btn:active {
     background-color: #1a1a1a !important;
-    border: 1px solid #FFA500;
+    border: 1px solid #FFA500 !important;
 }
 
 .dropdown-item:active {
