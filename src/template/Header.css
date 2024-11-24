@@ -82,18 +82,20 @@ button,
     border-color: #ff9800;
 }
 
-button:hover,
 .btn:hover {
-    outline: none !important;
+    background-color: #ff9800 !important;
+    outline: none;
     color: #000000;
 }
+
+.btn:active {
+    background-color: #1a1a1a !important;
+    border: 1px solid #FFA500;
+}
+
 button:focus:not(:focus-visible) {
     outline: none;
     box-shadow: none;
-}
-.btn:active {
-    background-color: #1a1a1a !important;
-    border: 1px solid #FFA500 !important;
 }
 
 .dropdown-item:active {

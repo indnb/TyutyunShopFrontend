@@ -174,17 +174,6 @@ function ProductDetail() {
         }
     };
 
-    const handleImageClick = (e) => {
-        const clickPositionX = e.nativeEvent.offsetX;
-        const imageWidth = e.target.clientWidth;
-
-        if (clickPositionX < imageWidth / 2) {
-            handlePreviousImage();
-        } else {
-            handleNextImage();
-        }
-    };
-
     const handleNextImage = () => {
         if (images.length > 1) {
             const currentIndex = images.indexOf(selectedImage);
@@ -229,7 +218,6 @@ function ProductDetail() {
                         <div className="product-images">
                             <div
                                 className="main-image text-center"
-                                onClick={handleImageClick}
                                 onTouchStart={handleTouchStart}
                                 onTouchMove={handleTouchMove}
                                 onTouchEnd={handleTouchEnd}
