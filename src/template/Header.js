@@ -47,7 +47,7 @@ function Header() {
         <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark border-bottom-orange">
           <div className="container-fluid">
             <Link className="navbar-brand text-orange" to="/" onClick={changeNav}>
-              <span className="ms-2 h5">tyutyun.shop</span>
+              <span className="ms-2 h5">tyutyunshop</span>
             </Link>
 
             <div className={'navbar-collapse offcanvas-collapse ' + (openedDrawer ? 'open' : '')}>
