@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: "http://" + (process.env.SERVER_ADDRESS || '127.0.0.1') + ':' + (process.env.SERVER_PORT || '8181') + '/api',
+    baseURL: '/api',
 });
 
 instance.interceptors.request.use(
