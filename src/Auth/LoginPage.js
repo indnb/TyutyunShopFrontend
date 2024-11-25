@@ -79,7 +79,7 @@ function LoginPage() {
     return (
         <div className="auth-container margin-top margin-bottom">
             <h2>Вхід</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
+            {error && <div className="mt-4 mb-3 alert alert-danger">{error}</div>}
             <form onSubmit={handleSubmit}>
                 <label>
                     Пошта:
