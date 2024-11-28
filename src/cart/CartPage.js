@@ -1,70 +1,242 @@
-import React, { useContext, useEffect, useState } from "react";
-import { CartContext } from "../context/CartContext";
-import { AuthContext } from "../context/AuthContext";
+import React, {useContext, useEffect, useState, useRef} from "react";
+import {CartContext} from "../context/CartContext";
+import {AuthContext} from "../context/AuthContext";
 import axios from "../axiosConfig";
 import ToggleButtons from "./ToggleButtons";
 import "./CartPage.css";
-import { validateField } from "../utils/validation";
-import { AlertContext } from "../template/Template";
+import {validateField} from "../utils/validation";
+import {AlertContext} from "../template/Template";
+
+function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => setDebouncedValue(value), delay);
+        return () => clearTimeout(handler);
+    }, [value, delay]);
+
+    return debouncedValue;
+}
+
+const Dropdown = React.memo(
+    ({options, onSelect, placeholder, value, onSearch, isVisible, onFocus}) => {
+        const containerRef = useRef(null);
+
+        useEffect(() => {
+            const handleClickOutside = (event) => {
+                if (containerRef.current && !containerRef.current.contains(event.target)) {
+                    onFocus(false);
+                }
+            };
+
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [onFocus]);
+
+        return (
+            <div ref={containerRef} className="dropdown-container mt-4">
+                <input
+                    type="text"
+                    value={value}
+                    placeholder={placeholder}
+                    onChange={(e) => onSearch(e.target.value)}
+                    onFocus={() => onFocus(true)}
+                    required
+                />
+                {isVisible && options.length > 0 && (
+                    <ul className="dropdown-list">
+                        {options.map((option, index) => (
+                            <li
+                                key={index}
+                                onClick={() => onSelect(option)}
+                                className="dropdown-item"
+                            >
+                                {option.Description}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+        );
+    }
+);
 
 function CartPage() {
-    const { isAuthenticated } = useContext(AuthContext);
-    const { cartItems, addOneItem, removeOneItem, removeItem, clearCart } = useContext(CartContext);
+    const {isAuthenticated} = useContext(AuthContext);
+    const {cartItems, addOneItem, removeOneItem, removeItem, clearCart} = useContext(CartContext);
     const [shippingData, setShippingData] = useState({
         order_id: 0,
-        address: "",
         first_name: "",
         last_name: "",
         phone_number: "",
         email: "",
+        city: "",
+        branch: "",
     });
+    const [cities, setCities] = useState([]);
+    const [filteredBranches, setFilteredBranches] = useState([]);
+    const [branches, setBranches] = useState([]);
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentType, setPaymentType] = useState("Наложний платіж");
-    const { showAlert } = useContext(AlertContext);
+    const {showAlert} = useContext(AlertContext);
 
-    const totalCost = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const [isCityDropdownVisible, setIsCityDropdownVisible] = useState(false);
+    const [isBranchDropdownVisible, setIsBranchDropdownVisible] = useState(false);
 
+    const containerRef = useRef(null);
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        const error = validateField(name, value);
+        setErrors((prevErrors) => ({...prevErrors, [name]: error}));
+    };
+    const debouncedCitySearch = useDebounce(shippingData.city, 300);
+    const debouncedBranchSearch = useDebounce(shippingData.branch, 300);
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                if (isAuthenticated) {
-                    const response = await axios.get("/user/profile", {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`,
-                        },
-                    });
-
-                    setShippingData({
-                        id: response.data.id || null,
-                        first_name: response.data.first_name || "",
-                        last_name: response.data.last_name || "",
-                        email: response.data.email || "",
-                        phone_number: response.data.phone_number || "",
-                        address: response.data.address || "",
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching user profile data:", error);
-            }
-        };
-        fetchUserData();
+        if (isAuthenticated) {
+            axios
+                .get("/user/profile", {
+                    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`},
+                })
+                .then((response) => {
+                    const data = response.data || {};
+                    setShippingData((prev) => ({
+                        ...prev,
+                        id: data.id || null,
+                        first_name: data.first_name || "",
+                        last_name: data.last_name || "",
+                        email: data.email || "",
+                        phone_number: data.phone_number || "",
+                        address: data.address || "",
+                    }));
+                })
+                .catch((error) => console.error("Error fetching user profile data:", error));
+        }
     }, [isAuthenticated]);
 
-    const validateFieldWrapper = (name, value) => {
-        const error = validateField(name, value, shippingData);
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+    useEffect(() => {
+        if (debouncedBranchSearch.trim() === "" || branches.length === 0) {
+            setFilteredBranches([]);
+            setIsBranchDropdownVisible(false);
+            return;
+        }
+
+        const filtered = branches.filter((branch) =>
+            branch.Description.toLowerCase().includes(debouncedBranchSearch.toLowerCase())
+        );
+        setFilteredBranches(filtered);
+    }, [debouncedBranchSearch, branches]);
+
+    useEffect(() => {
+        const handleOutsideClick = (e) => {
+            if (containerRef.current && !containerRef.current.contains(e.target)) {
+                setIsCityDropdownVisible(false);
+                setIsBranchDropdownVisible(false);
+            }
+        };
+
+        document.addEventListener("click", handleOutsideClick);
+        return () => document.removeEventListener("click", handleOutsideClick);
+    }, []);
+
+    const handleBranchSearch = (query) => {
+        if (shippingData.city.trim() === "") {
+            showAlert("Спочатку оберіть місто");
+            return;
+        }
+        setIsBranchDropdownVisible(true);
+        setIsCityDropdownVisible(false);
+        setShippingData((prev) => ({...prev, branch: query}));
     };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setShippingData({ ...shippingData, [name]: value });
-        validateFieldWrapper(name, value);
+    const handleCitySearch = (query) => {
+        setIsCityDropdownVisible(true);
+        setShippingData((prev) => ({...prev, city: query, branch: ""}));
+        if (query.trim() === "") {
+            loadDefaultCities();
+        }
     };
 
-    const handlePaymentToggle = (selectedPaymentType) => {
-        setPaymentType(selectedPaymentType);
+    const loadDefaultCities = () => {
+        axios
+            .post("https://api.novaposhta.ua/v2.0/json/", {
+                apiKey: "618b7e802eba725d1094c7c56c13dddc",
+                modelName: "Address",
+                calledMethod: "getCities",
+                methodProperties: {FindByString: ""},
+            })
+            .then((response) => {
+                if (response.data.success) {
+                    setCities(response.data.data);
+                } else {
+                    setCities([]);
+                }
+            })
+            .catch((error) => console.error("Error fetching full city list:", error));
     };
+
+    useEffect(() => {
+        if (debouncedCitySearch.trim() === "") {
+            loadDefaultCities();
+            return;
+        }
+
+        axios
+            .post("https://api.novaposhta.ua/v2.0/json/", {
+                apiKey: "618b7e802eba725d1094c7c56c13dddc",
+                modelName: "Address",
+                calledMethod: "getCities",
+                methodProperties: {FindByString: debouncedCitySearch},
+            })
+            .then((response) => {
+                if (response.data.success) {
+                    setCities(response.data.data);
+                } else {
+                    setCities([]);
+                }
+            })
+            .catch((error) => console.error("Error fetching cities:", error));
+    }, [debouncedCitySearch]);
+
+
+    const handleCitySelect = async (city) => {
+        setShippingData((prev) => ({...prev, city: city.Description, branch: ""}));
+        setIsCityDropdownVisible(false);
+
+        try {
+            const response = await axios.post("https://api.novaposhta.ua/v2.0/json/", {
+                apiKey: "618b7e802eba725d1094c7c56c13dddc",
+                modelName: "Address",
+                calledMethod: "getWarehouses",
+                methodProperties: {CityRef: city.Ref},
+            });
+
+            if (response.data.success) {
+                setBranches(response.data.data);
+            } else {
+                setBranches([]);
+                setFilteredBranches([]);
+            }
+        } catch (error) {
+            console.error("Error fetching branches:", error);
+            setBranches([]);
+            setFilteredBranches([]);
+        }
+    };
+
+    const handleBranchSelect = (branch) => {
+        setShippingData((prev) => ({...prev, branch: branch.Description}));
+        setIsBranchDropdownVisible(false);
+    };
+
+    useEffect(() => {
+        if (shippingData.city.trim() === "") {
+            setBranches([]);
+            setFilteredBranches([]);
+        }
+    }, [shippingData.city]);
 
     const handlePurchase = async (e) => {
         e.preventDefault();
@@ -77,12 +249,44 @@ function CartPage() {
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
-            showAlert("Будь ласка виріште помилки.");
+            showAlert("Виправте некоректні дані!");
             return;
         }
 
-        setIsProcessing(true);
         try {
+            const cityResponse = await axios.post("https://api.novaposhta.ua/v2.0/json/", {
+                apiKey: "618b7e802eba725d1094c7c56c13dddc",
+                modelName: "Address",
+                calledMethod: "getCities",
+                methodProperties: {FindByString: shippingData.city},
+            });
+
+            const cityData = cityResponse.data.data.find(
+                (city) => city.Description === shippingData.city
+            );
+
+            if (!cityData) {
+                showAlert("Місто не знайдено в базі Нової Пошти.");
+                return;
+            }
+
+            const branchResponse = await axios.post("https://api.novaposhta.ua/v2.0/json/", {
+                apiKey: "618b7e802eba725d1094c7c56c13dddc",
+                modelName: "Address",
+                calledMethod: "getWarehouses",
+                methodProperties: {CityRef: cityData.Ref},
+            });
+
+            const branchData = branchResponse.data.data.find(
+                (branch) => branch.Description === shippingData.branch
+            );
+
+            if (!branchData) {
+                showAlert("Відділення не знайдено в базі Нової Пошти.");
+                return;
+            }
+
+            setIsProcessing(true);
             const token = localStorage.getItem("token");
             const orderItems = cartItems.map((item) => ({
                 product_id: item.id,
@@ -92,43 +296,23 @@ function CartPage() {
                 size: item.size,
             }));
 
-            const online_payment = paymentType === "Оплата картою";
-            if (online_payment) {
-                showAlert("Оплата наразі тільки при отриманні :(");
-                setIsProcessing(false);
-                return;
-            }
-
             const orderData = {
                 order: {
                     user_id: Number(shippingData.id),
                     total_price: totalCost,
                     status: "pending",
-                    online_payment,
+                    online_payment: paymentType === "Оплата картою",
                 },
                 order_items: orderItems,
+                shipping: {
+                    ...shippingData,
+                    order_id: 0
+                },
             };
 
             const response = await axios.post("/order", orderData, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
-
-            shippingData.order_id = response.data;
-
-            await axios.post(`/shipping`, shippingData, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            await axios.post(
-                `/mail/new_order`,
-                null,
-                {
-                    params: {
-                        id: response.data,
-                    },
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
 
             showAlert("Замовлення оформлено успішно!");
             clearCart();
@@ -140,8 +324,10 @@ function CartPage() {
         }
     };
 
+    const totalCost = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
     return (
-        <div className="cart-page" style={{ marginTop: "56px" }}>
+        <div className="cart-page" style={{marginTop: "56px"}}>
             <h1 className="text-center">Кошик</h1>
             {cartItems.length > 0 && (
                 <button className="clear-cart-button" onClick={clearCart}>
@@ -181,7 +367,9 @@ function CartPage() {
                                                 if (item.quantity < item.stock) {
                                                     addOneItem(item);
                                                 } else {
-                                                    showAlert(`Максимальна доступна кількість для розміру ${item.size}: ${item.stock}`);
+                                                    showAlert(
+                                                        `Максимальна доступна кількість для розміру ${item.size}: ${item.stock}`
+                                                    );
                                                 }
                                             }}
                                             disabled={item.quantity >= item.stock}
@@ -195,7 +383,10 @@ function CartPage() {
                                 </td>
                                 <td>{item.price} грн</td>
                                 <td>
-                                    <button className="quantity-button-del" onClick={() => removeItem(item)}>
+                                    <button
+                                        className="quantity-button-del"
+                                        onClick={() => removeItem(item)}
+                                    >
                                         Видалити
                                     </button>
                                 </td>
@@ -207,6 +398,7 @@ function CartPage() {
 
                     <div className="purchase-block">
                         <h2>Дані для відправки</h2>
+
                         <form onSubmit={handlePurchase}>
                             <div>
                                 <label>Ім'я</label>
@@ -215,7 +407,12 @@ function CartPage() {
                                     name="first_name"
                                     value={shippingData.first_name}
                                     placeholder="Введіть ваше ім'я"
-                                    onChange={handleInputChange}
+                                    onChange={(e) => {
+                                        handleChange(e);
+                                        setShippingData({
+                                            ...shippingData, first_name: e.target.value
+                                        })
+                                    }}
                                     required
                                 />
                                 {errors.first_name && <small className="error-text">{errors.first_name}</small>}
@@ -227,7 +424,10 @@ function CartPage() {
                                     name="last_name"
                                     value={shippingData.last_name}
                                     placeholder="Введіть ваше прізвище"
-                                    onChange={handleInputChange}
+                                    onChange={(e) => {
+                                        handleChange(e);
+                                        setShippingData({...shippingData, last_name: e.target.value});
+                                    }}
                                     required
                                 />
                                 {errors.last_name && <small className="error-text">{errors.last_name}</small>}
@@ -239,7 +439,10 @@ function CartPage() {
                                     name="email"
                                     value={shippingData.email}
                                     placeholder="example@gmail.com"
-                                    onChange={handleInputChange}
+                                    onChange={(e) => {
+                                        handleChange(e);
+                                        setShippingData({...shippingData, email: e.target.value});
+                                    }}
                                     required
                                 />
                                 {errors.email && <small className="error-text">{errors.email}</small>}
@@ -251,33 +454,43 @@ function CartPage() {
                                     name="phone_number"
                                     value={shippingData.phone_number}
                                     placeholder="+380XXXXXXXXX"
-                                    onChange={handleInputChange}
+                                    onChange={(e) => {
+                                        handleChange(e);
+                                        setShippingData({...shippingData, phone_number: e.target.value});
+                                    }}
                                     required
                                 />
                                 {errors.phone_number && <small className="error-text">{errors.phone_number}</small>}
                             </div>
-                            <div>
-                                <label>Адреса доставки</label>
-                                <input
-                                    type="text"
-                                    name="address"
-                                    value={shippingData.address}
-                                    placeholder="Введіть адресу доставки"
-                                    onChange={handleInputChange}
-                                    required
+                            <Dropdown
+                                options={cities}
+                                onSelect={handleCitySelect}
+                                placeholder="Введіть ваше місто"
+                                value={shippingData.city}
+                                onSearch={handleCitySearch}
+                                isVisible={isCityDropdownVisible}
+                                onFocus={setIsCityDropdownVisible}
+                            />
+                            {shippingData.city.trim() !== "" && (
+                                <Dropdown
+                                    options={filteredBranches.length > 0 ? filteredBranches : branches}
+                                    onSelect={handleBranchSelect}
+                                    placeholder="Введіть ваше відділення"
+                                    value={shippingData.branch}
+                                    onSearch={handleBranchSearch}
+                                    isVisible={isBranchDropdownVisible}
+                                    onFocus={setIsBranchDropdownVisible}
                                 />
-                                {errors.address && <small className="error-text">{errors.address}</small>}
-                            </div>
+                            )}
+
 
                             <div className="payment-method mt-4">
                                 <h3>Вибір способу оплати</h3>
-                                <div>
-                                    <ToggleButtons
-                                        label1="Оплата картою"
-                                        label2="Наложний платіж"
-                                        onChange={handlePaymentToggle}
-                                    />
-                                </div>
+                                <ToggleButtons
+                                    label1="Оплата картою"
+                                    label2="Наложний платіж"
+                                    onChange={setPaymentType}
+                                />
                             </div>
 
                             <button className="w-100 mt-4" type="submit" disabled={isProcessing}>
