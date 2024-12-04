@@ -7,7 +7,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        if (token && config.url.startsWith("/api")) {
+        if (token && !config.url.startsWith("https://api.novaposhta.ua/v2.0/json/")) {
             console.log('Adding Authorization header:', token);
             config.headers['Authorization'] = `Bearer ${token}`;
         } else {
