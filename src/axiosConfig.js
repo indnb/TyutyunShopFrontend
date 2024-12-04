@@ -7,9 +7,11 @@ const instance = axios.create({
 instance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        console.log('Adding Authorization header:', token);
-        if (token) {
+        if (token && config.url.startsWith("/api")) {
+            console.log('Adding Authorization header:', token);
             config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            console.log('Skipping Authorization header for:', config.url);
         }
         return config;
     },
@@ -17,5 +19,6 @@ instance.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+
 
 export default instance;

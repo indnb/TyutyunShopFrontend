@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from '../axiosConfig';
-import { Button, Form, Modal, Table } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
-import { translateStatus } from '../utils/statusTranslation';
+import {Button, Form, Modal, Table} from 'react-bootstrap';
+import {useHistory} from 'react-router-dom';
+import {translateStatus} from '../utils/statusTranslation';
 
 function OrderManagement() {
     const [orders, setOrders] = useState([]);
@@ -15,7 +15,7 @@ function OrderManagement() {
     }, [statusFilter]);
 
     const fetchOrders = () => {
-        axios.get('/orders', { params: { status: statusFilter } })
+        axios.get('/orders', {params: {status: statusFilter}})
             .then((response) => {
                 const sortedOrders = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
                 setOrders(sortedOrders);
@@ -26,6 +26,7 @@ function OrderManagement() {
     const fetchOrderDetails = (orderId) => {
         axios.get(`/orders/${orderId}/details`)
             .then((response) => {
+                response.data.shipping.address = response.data.shipping.city + ", " + response.data.shipping.branch;
                 setOrderDetails(response.data);
                 setShowModal(true);
             })
@@ -33,7 +34,7 @@ function OrderManagement() {
     };
 
     const handleStatusChange = (orderId, newStatus) => {
-        axios.put(`/order/${orderId}`, { status: newStatus })
+        axios.put(`/order/${orderId}`, {status: newStatus})
             .then(() => fetchOrders())
             .catch((error) => console.error('Error updating order status:', error));
     };
@@ -56,7 +57,7 @@ function OrderManagement() {
                     variant="warning"
                     className="btn mb-4"
                     onClick={() => navigate.goBack()}
-                    style={{ margin: 'auto', padding: '10px' }}
+                    style={{margin: 'auto', padding: '10px'}}
                 >
                     Назад
                 </Button>
@@ -138,7 +139,7 @@ function OrderManagement() {
                             </p>
                             <p><strong>Телефон:</strong> {orderDetails.shipping.phone_number}</p>
                             <p><strong>Пошта:</strong> {orderDetails.shipping.email}</p>
-                            <hr />
+                            <hr/>
                             <h5>Товари</h5>
                             <Table striped bordered hover>
                                 <thead>

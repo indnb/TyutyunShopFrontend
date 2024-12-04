@@ -1,20 +1,36 @@
+:root {
+    --main-color: #FFA500;
+    --background-color: #1c1c1c;
+    --hover-color: #ffcc66;
+    --text-color: #FFA500;
+    --secondary-background: #222;
+    --font-size: 16px;
+    --button-bg-color: #FFA500;
+    --button-text-color: #000;
+    --button-hover-bg-color: #ffcc66;
+    --border-color: #FFA500;
+    --focus-border-color: #ffcc66;
+    --input-bg-color: #333;
+    --input-focus-bg-color: #2a2a2a;
+}
+
 .user-profile {
     max-width: 1000px;
-    color: #FFA500;
-    background-color: #1c1c1c;
+    color: var(--main-color);
+    background-color: var(--background-color);
     padding: 20px;
     border-radius: 8px;
-    border: 1px solid #FFA500;
+    border: 1px solid var(--main-color);
     font-family: Namu, sans-serif;
     margin-top: 20px;
 }
-
 
 .label-profile {
     text-align: center;
     font-size: 2em;
     font-weight: bold;
     margin-bottom: 20px;
+    color: var(--main-color);
 }
 
 .profile-header {
@@ -31,7 +47,8 @@
 .user-image img {
     width: 200px;
     height: 200px;
-    border-radius: 50%;
+    border-radius: 100%;
+    border: 2px solid var(--main-color);
 }
 
 .form-buttons {
@@ -44,31 +61,34 @@
 .logout-button, .cancel-button, .save-button {
     width: 100%;
     max-width: 200px;
-    background-color: #FFA500;
-    color: #000;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
+    transition: background-color 0.3s;
 }
-
+.save-button:disabled {
+    background-color: var(--input-bg-color);
+}
 .logout-button:hover, .cancel-button:hover, .save-button:hover {
-    opacity: 0.9;
+    background-color: var(--button-hover-bg-color);
 }
 
 .form-control {
     padding: 12px;
-    border: 1px solid #FFA500;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    background-color: #1111;
-    color: #e59400;
-    transition: background-color 0.3s;
+    background-color: #222;
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .form-control:focus {
-    background-color: #1c1c1c;
-    color: #e59400;
+    background-color: var(--input-focus-bg-color);
+    color: var(--text-color);
     outline: none;
 }
 
@@ -77,52 +97,60 @@
     gap: 20px;
     padding: 10px 0;
 }
-
+.section-title {
+    font-size: 22px;
+}
 .form-group {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
+.form-group.full-width {
+    width: 100%;
+}
+
 .error-text {
-    padding: 10px 0;
+    padding: 4px 0 0 0;
     color: #fd7e14;
     font-size: 0.8rem;
 }
-
+.error-text-margin-minus {
+    margin: 4px 0 -7px 0;
+}
 .orders-section .table-bordered {
-    border: 1px solid #FFA500 !important;
+    border: 1px solid var(--main-color) !important;
 }
 
 .orders-section .table th, .orders-section .table td {
-    border: 1px solid #FFA500 !important;
+    border: 1px solid var(--main-color) !important;
     text-align: center;
     padding: 12px;
 }
 
 .orders-section .table thead th {
-    background-color: #FFA500;
-    color: #000;
+    background-color: var(--main-color);
+    color: var(--button-text-color);
     font-weight: bold;
 }
 
 .orders-section .table tbody tr {
-    background-color: #1c1c1c;
+    background-color: var(--background-color);
     transition: background-color 0.3s;
 }
 
 .orders-section .table tbody tr:hover {
-    background-color: #333333;
+    background-color: var(--background-color);
 }
 
 .orders-section .table tbody td {
-    background-color: #1a1a1a;
-    color: #e59400;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .orders-section .table tbody td .btn-info {
-    background-color: #FFA500;
-    color: #000;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
     border: none;
     font-weight: bold;
     padding: 5px 10px;
@@ -131,40 +159,39 @@
 }
 
 .orders-section .table tbody td .btn-info:hover {
-    background-color: #e59400;
-    color: #1a1a1a;
+    background-color: var(--button-hover-bg-color);
     transform: scale(1.05);
 }
 
 .modal-content {
-    background-color: #1c1c1c;
-    color: #FFA500;
-    border: 1px solid #FFA500;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--main-color);
     border-radius: 8px;
     font-family: Namu, sans-serif;
 }
 
 .modal-header {
-    border-bottom: 1px solid #FFA500;
+    border-bottom: 1px solid var(--main-color);
 }
 
 .modal-header .modal-title {
-    color: #FFA500;
+    color: var(--main-color);
     font-weight: bold;
 }
 
 .modal-header .btn-close {
     background-color: transparent;
     border: none;
-    color: #FFA500;
+    color: var(--main-color);
 }
 
 .modal-header .btn-close:hover {
-    color: #e59400;
+    color: var(--hover-color);
 }
 
 .modal-body {
-    color: #e59400;
+    color: var(--text-color);
 }
 
 .modal-body h5 {
@@ -178,49 +205,49 @@
 }
 
 .modal-body hr {
-    border-top: 1px solid #FFA500;
+    border-top: 1px solid var(--main-color);
 }
 
 .modal-body .table {
-    color: #e59400;
-    background-color: #1111;
-    border: 1px solid #FFA500;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--main-color);
     border-radius: 4px;
     margin-bottom: 0;
 }
 
 .modal-body .table thead th {
-    background-color: #FFA500;
-    color: #000;
+    background-color: var(--main-color);
+    color: var(--button-text-color);
     text-align: center;
     font-weight: bold;
 }
 
 .modal-body .table tbody tr {
-    background-color: #1c1c1c;
+    background-color: var(--background-color);
 }
 
 .modal-body .table tbody tr:hover {
-    background-color: #333333;
+    background-color: var(--background-color);
 }
 
 .modal-body .table tbody td {
     text-align: center;
     padding: 12px;
-    border: 1px solid #FFA500;
-    color: #e59400;
-    background-color: #1a1a1a;
+    border: 1px solid var(--main-color);
+    color: var(--text-color);
+    background-color: var(--background-color);
 }
 
 .modal-footer {
-    border-top: 1px solid #FFA500;
+    border-top: 1px solid var(--main-color);
     display: flex;
     justify-content: flex-end;
 }
 
 .modal-footer .btn-secondary {
-    background-color: #FFA500;
-    color: #000;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
     border: none;
     font-weight: bold;
     padding: 10px 20px;
@@ -229,15 +256,14 @@
 }
 
 .modal-footer .btn-secondary:hover {
-    background-color: #e59400;
-    color: #1a1a1a;
+    background-color: var(--button-hover-bg-color);
     transform: scale(1.05);
 }
 
 .form-select {
-    background-color: #1c1c1c;
-    color: #FFA500;
-    border: 1px solid #FFA500;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 10px;
     font-size: 1em;
@@ -246,16 +272,16 @@
 }
 
 .form-select:focus {
-    background-color: #333333;
-    color: #FFA500;
-    border-color: #e59400;
+    background-color: var(--input-focus-bg-color);
+    color: var(--text-color);
+    border-color: var(--focus-border-color);
     outline: none;
     box-shadow: none;
 }
 
 .form-select option {
-    background-color: #1c1c1c;
-    color: #e59400;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 @media (max-width: 600px) {

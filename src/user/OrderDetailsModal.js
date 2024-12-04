@@ -18,7 +18,7 @@ function OrderDetailsModal({ orderDetails, showModal, setShowModal }) {
                 {orderDetails ? (
                     <>
                         <h5>Інформація про доставку</h5>
-                        <p><strong>Адреса:</strong> {orderDetails?.shipping?.address || 'N/A'}</p>
+                        <p><strong>Адреса:</strong> {orderDetails?.shipping?.city + ", " + orderDetails?.shipping?.branch}</p>
                         <p><strong>Ім'я:</strong> {orderDetails?.shipping?.first_name || ''} {orderDetails?.shipping?.last_name || ''}</p>
                         <p><strong>Телефон:</strong> {orderDetails?.shipping?.phone_number || 'N/A'}</p>
                         <p><strong>Пошта:</strong> {orderDetails?.shipping?.email || 'N/A'}</p>
