@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "../axiosConfig";
 import { validateField } from "../utils/validation";
+import './Error.css';
+
 
 function ChangePasswordModal({ showModal, setShowModal }) {
     const [passwordData, setPasswordData] = useState({
@@ -93,7 +95,7 @@ function ChangePasswordModal({ showModal, setShowModal }) {
             </Modal.Header>
             <Modal.Body>
                 {serverError && <div className="alert alert-danger">{serverError}</div>}
-                <Form onSubmit={handleChangePassword}>
+                <Form className="custom-error" onSubmit={handleChangePassword}>
                     {["old_password", "new_password", "confirm_password"].map((field) => (
                         <Form.Group controlId={field} key={field} className="mb-3">
                             <Form.Label>
@@ -110,7 +112,7 @@ function ChangePasswordModal({ showModal, setShowModal }) {
                                 onChange={handleInputChange}
                                 isInvalid={!!errors[field]}
                             />
-                            <Form.Control.Feedback type="invalid">
+                            <Form.Control.Feedback className="error-text" type="invalid">
                                 {errors[field]}
                             </Form.Control.Feedback>
                         </Form.Group>
