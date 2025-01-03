@@ -21,18 +21,14 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          Крок 1: Перехід до каталогу проекту
           cd /var/www/site1/TyutyunShopFrontend || { echo "Не вдалося перейти в каталог."; exit 1; }
 
-          # Крок 2: Оновлення коду з репозиторію
           echo "Оновлення коду з Git..."
           git pull || { echo "Не вдалося виконати git pull."; exit 1; }
 
-          # Крок 3: Перебудова Docker образу з новими змінами
           echo "Перебудова Docker образу..."
           docker build -t my-nginx-site .
 
-          # Крок 4: Оновлення контейнера (без зупинки)
           echo "Оновлення Docker контейнера..."
           docker exec my-nginx-container nginx -s reload || { echo "Не вдалося оновити контейнер."; exit 1; }
 
