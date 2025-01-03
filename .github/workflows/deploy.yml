@@ -20,16 +20,36 @@ jobs:
         port: ${{ secrets.SERVER_PORT }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          cd /var/www/site1/TyutyunShopFrontend || { echo "Не вдалося перейти в каталог."; exit 1; }
+- name: Pull the latest changes from git repository
+      run: |
+        cd /var/www/site1/TyutyunShopFrontend
+        git pull
 
-          echo "Оновлення коду з Git..."
-          git pull || { echo "Не вдалося виконати git pull."; exit 1; }
+    - name: Build Docker image
+      run: |
+        cd /var/www/site1/TyutyunShopFrontend
+        docker build -t my-nginx-site .
 
-          echo "Перебудова Docker образу..."
-          docker build -t my-nginx-site .
+    - name: Stop the running Docker container if exists
+      run: |
+        if docker ps -a --filter "name=my-nginx-container" -q; then
+          docker stop my-nginx-container
+        else
+          echo "Container is not running"
+        fi
 
-          echo "Оновлення Docker контейнера..."
-          docker exec my-nginx-container nginx -s reload || { echo "Не вдалося оновити контейнер."; exit 1; }
+    - name: Remove the old Docker container if exists
+      run: |
+        if docker ps -a --filter "name=my-nginx-container" -q; then
+          docker rm my-nginx-container
+        else
+          echo "No container to remove"
+        fi
 
-          echo "Оновлення завершено!"
+    - name: Run new Docker container
+      run: |
+        docker run -d -p 8080:80 -p 8443:443 --name my-nginx-container my-nginx-site
+
+    - name: Check if container is running
+      run: |
+        docker ps
